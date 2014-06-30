@@ -1,0 +1,6 @@
+Options +FollowSymlinks -MultiViews
+RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^api/lead/(.+)/(.+)$ ./api/lead.php?id=$2&apikey=$1
+    RewriteRule ^api/report/(.+)/(.+)/(.+)$ ./api/report.php?apikey=$1&metric=$2&type=$3
