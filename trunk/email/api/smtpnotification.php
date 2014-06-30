@@ -24,13 +24,6 @@ class SmtpNotification {
         return $request;
     }
     
-    // function to insert a new activity
-    function addActivity ($record) 
-    {
-        
-    }
-
-
     // function to add a record into transaction table
     function addTransactions ($record, $type) 
     {
@@ -94,7 +87,7 @@ class SmtpNotification {
                         case 22 :
                         case 23 :
                         case 24 :
-                            Lead::scoreHardBounce($record->rcpt_to);
+                            Lead::scoreSoftBounce($record->rcpt_to);
                             break;
                         case 10 :
                         case 13 :
