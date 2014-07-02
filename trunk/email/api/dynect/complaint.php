@@ -37,8 +37,13 @@ class Complaint extends PostBack {
         $type = self::TRANSACTION_TYPE_COMPLAINT;
         Lead::scoreComplaint($request['email']);
         Suppression_Email::addEmailSuppression(mysql_real_escape_string($request['email']), self::SUPPRESSION_SOURCE, self::SUPRESS_REASON_COMPLAINT);
+        
         // Add transactions
         $this->addTransactions($request, $type);
+        
+        // add data to throttles table
+        $activityId = $request['X-Activity-ID'];
+        $this->addThrottles($type, $activityId);
         
     }
 }

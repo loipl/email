@@ -53,6 +53,12 @@ abstract class PostBack {
         }
     }
     
+    // function to add data to "throttles" table, matching "activity" table from activity_id
+    protected function addThrottles($type, $activityId) 
+    {
+        
+    }
+    
     // Main function 
     abstract function execute ();
 }
