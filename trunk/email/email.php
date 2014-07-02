@@ -78,6 +78,7 @@ require_once dirname(__FILE__) . '/Models/Probability.php';
 require_once dirname(__FILE__) . '/Models/CacheDataAppend.php';
 require_once dirname(__FILE__) . '/Models/TldList.php';
 require_once dirname(__FILE__) . '/Models/Transaction.php';
+require_once dirname(__FILE__) . '/Models/Throttle.php';
 
 require_once dirname(__FILE__) . '/Models/Suppression/Email.php';
 require_once dirname(__FILE__) . '/Models/Suppression/Domain.php';

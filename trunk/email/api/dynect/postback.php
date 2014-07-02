@@ -53,11 +53,28 @@ abstract class PostBack {
         }
     }
     
-    // function to add data to "throttles" table, matching "activity" table from activity_id
+    
     protected function addThrottles($type, $activityId) 
     {
+        $activityId = mysql_real_escape_string($activityId);
         
+        if (intval($activityId) > 0 && ! is_null(Activity::getEmailById($activityId))) {
+            $throttle = array(
+                'type'          => $type,
+                'domain'        => 'domain',
+                'channel'       => Activity::getChannelById($activityId),
+                'creative_id'   => Activity::getCreativeIdById($activityId),
+                'campaign_id'   => Activity::getCampaignIdById($activityId),
+                'category_id'   => Activity::getCategoryIdById($activityId)
+            );
+            
+            if (Throttle::checkThrottleExists($throttle) === FALSE) {
+                Throttle::addThrottle($throttle);
+            }
+        }
     }
+    //--------------------------------------------------------------------------
+    
     
     // Main function 
     abstract function execute ();
