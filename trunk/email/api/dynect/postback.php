@@ -58,13 +58,13 @@ abstract class PostBack {
     protected function addThrottles($type, $activityId) 
     {
         $activityId = mysql_real_escape_string($activityId);
+        $email = Activity::getEmailById($activityId);
         
-        if (intval($activityId) > 0 && ! is_null(Activity::getEmailById($activityId))) {
-            // get sender's domain
-            $senderEmail = Activity::getSenderById($activityId);
-            $senderDomain = explode('@', $senderEmail);
-            if (count($senderDomain) > 1) { 
-                $domain = $senderDomain[1];
+        if (intval($activityId) > 0 && ! is_null($email)) {
+            // get domain
+            $emailDomain = explode('@', $email);
+            if (count($emailDomain) > 1) { 
+                $domain = $emailDomain[1];
             } else {
                 $domain = '';
             }
