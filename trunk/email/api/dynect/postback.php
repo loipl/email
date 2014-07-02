@@ -52,6 +52,7 @@ abstract class PostBack {
             }
         }
     }
+    //--------------------------------------------------------------------------
     
     
     protected function addThrottles($type, $activityId) 
@@ -59,15 +60,25 @@ abstract class PostBack {
         $activityId = mysql_real_escape_string($activityId);
         
         if (intval($activityId) > 0 && ! is_null(Activity::getEmailById($activityId))) {
+            // get sender's domain
+            $senderEmail = Activity::getSenderById($activityId);
+            $senderDomain = explode('@', $senderEmail);
+            if (count($senderDomain) > 1) { 
+                $domain = $senderDomain[1];
+            } else {
+                $domain = '';
+            }
+
             $throttle = array(
                 'type'          => $type,
-                'domain'        => 'domain',
+                'domain'        => $domain,
                 'channel'       => Activity::getChannelById($activityId),
                 'creative_id'   => Activity::getCreativeIdById($activityId),
                 'campaign_id'   => Activity::getCampaignIdById($activityId),
                 'category_id'   => Activity::getCategoryIdById($activityId)
             );
             
+            // insert throttle if not exist
             if (Throttle::checkThrottleExists($throttle) === FALSE) {
                 Throttle::addThrottle($throttle);
             }

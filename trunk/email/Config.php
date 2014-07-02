@@ -153,10 +153,10 @@ class Config
     );
 
     public static $database = array(
-        'host'     => 'staging.ccgbj1e357hi.us-west-2.rds.amazonaws.com:3306',
+        'host'     => 'localhost',
         'database' => 'email',
-        'username' => 'email',
-        'password' => 'BaGj5XGEySbU4Qwy'
+        'username' => 'root',
+        'password' => ''
     );
 
     public static $validMetrics = array(

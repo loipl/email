@@ -20,7 +20,11 @@ class SmtpNotification {
     function getRequestParams () 
     {
         $request = array();
-        $request = json_decode($_REQUEST['data']);
+        try {
+            $request = json_decode($_REQUEST['data']);
+        } catch (Exception $ex) {
+            $request = array();
+        }
         return $request;
     }
     
