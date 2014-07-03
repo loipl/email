@@ -53,7 +53,15 @@ class Engine_Sender
                 $this->textBody    = $sendRecord->getTextBody();
                 $this->subId       = $sendRecord->getSubId();
                 $this->channelId   = $sendRecord->getChannelId();
-
+                
+                // process throttle
+                $emailDomain = explode('@', $this->email);
+                if ($this->processThrottle($emailDomain[1], $this->channelId, $this->creativeId, $this->campaignId, $this->categoryId) === false) {
+                    $sendRecord->removeRecord();
+                    
+                    continue;
+                }
+                
                 if ($this->send($this->email, $this->campaignId, $this->creativeId, $this->categoryId, $this->fromName, $this->senderEmail, $this->subject, $this->htmlBody, $this->textBody, $this->subId, $this->channelId)) {
                     $sendRecord->removeRecord();
                 }
@@ -62,7 +70,45 @@ class Engine_Sender
     }
     //--------------------------------------------------------------------------
 
+    
+    public function processThrottle($domain, $channelId, $creativeId, $campaignId, $categoryId) 
+    {
+        $throttleType = Throttle::getThrottleExistsType($domain, $channelId, $creativeId, $campaignId, $categoryId);
 
+        if ($throttleType) {
+            $delaySecond = 0;
+            
+            switch ($throttleType) {
+                case Config::TRANSACTION_TYPE_COMPLAINT:
+                    $delaySecond = Config::COMPLAINT_DELAY_SECONDS;
+                    break;
+                
+                case Config::TRANSACTION_TYPE_HARDBOUNCE:
+                    $delaySecond = Config::HARD_BOUNCE_DELAY_SECONDS;
+                    break;
+                
+                case Config::TRANSACTION_TYPE_SOFTBOUNCE:
+                    $delaySecond = Config::SOFT_BOUNCE_DELAY_SECONDS;
+                    break;
+                
+                default:
+                    break;
+            }
+
+            if ($delaySecond > Config::THRESHOLD_DELAY_SECONDS) {
+                // abandom the lead
+                return false;
+            } else {
+                // delay sender
+                sleep($delaySecond);
+            }
+        }
+        
+        return true;
+    }
+    //--------------------------------------------------------------------------
+    
+    
     public function sendSingleEmail($sendQueueId = NULL)
     {
         if (empty($sendQueueId)) {

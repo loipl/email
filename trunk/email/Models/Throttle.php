@@ -37,6 +37,7 @@ class Throttle extends Database
 
         $sql  = "SELECT `id` FROM `" . self::tableName . "`";
         $sql .= " WHERE `type`              = '" . mysql_real_escape_string($data['type']). "'";
+        $sql .= " AND   `domain`            = '" . mysql_real_escape_string($data['domain']) . "'";
         $sql .= " AND   `channel`           = '" . mysql_real_escape_string($data['channel']) . "'";
         $sql .= " AND   `campaign_id`       = '" . mysql_real_escape_string($data['campaign_id']) . "'";
         $sql .= " AND   `creative_id`       = '" . mysql_real_escape_string($data['creative_id']) . "'";
@@ -52,6 +53,49 @@ class Throttle extends Database
         }
     }
     //--------------------------------------------------------------------------
+    
+    
+    public static function getThrottleExistsType($domain, $channelId, $creativeId, $campaignId, $categoryId)
+    {
+        $db = new Database;
+
+        $sql  = "SELECT `type` FROM `" . self::tableName . "`";
+        $sql .= " WHERE `domain`            = '" . mysql_real_escape_string($domain). "'";
+        $sql .= " AND   `channel`           = '" . mysql_real_escape_string($channelId) . "'";
+        $sql .= " AND   `campaign_id`       = '" . mysql_real_escape_string($campaignId) . "'";
+        $sql .= " AND   `creative_id`       = '" . mysql_real_escape_string($creativeId) . "'";
+        $sql .= " AND   `category_id`       = '" . mysql_real_escape_string($categoryId) . "'";
+        $sql .= " LIMIT 1;";
+
+        $result = $db->getArray($sql);
+        
+        if ( ! empty($result)) {
+            return (int) $result[0]['type'];
+        } else {
+            return false;
+        }
+    }
+    //--------------------------------------------------------------------------
+    
+    
+    public static function checkThrottleExistsByDomain($domain) 
+    {
+        $db = new Database;
+
+        $sql  = "SELECT `id` FROM `" . self::tableName . "`";
+        $sql .= " WHERE `domain`              = '" . mysql_real_escape_string($domain). "'";
+        $sql .= " LIMIT 1;";
+
+        $result = $db->getUpperLeft($sql);
+
+        if ($result > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    //--------------------------------------------------------------------------
+    
     
     public static function addThrottle($data)
     {

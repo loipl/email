@@ -3,23 +3,6 @@
 require_once dirname(__FILE__) . '/../../email.php';
 
 abstract class PostBack {
-    CONST TRANSACTION_TYPE_OPEN         = 1;    // open
-    CONST TRANSACTION_TYPE_CLICK        = 2;    // click
-    CONST TRANSACTION_TYPE_UNSUB        = 3;    // unsubcribe
-    CONST TRANSACTION_TYPE_SOFTBOUNCE   = 4;    // soft bounce
-    CONST TRANSACTION_TYPE_COMPLAINT    = 5;    // complaint
-    CONST TRANSACTION_TYPE_HARDBOUNCE   = 6;    // hardbounce
-    CONST TRANSACTION_TYPE_CONVERSION   = 10;   // conversion
-    
-    CONST SUPRESS_REASON_HARDBOUNCE     = 1;    // hard bounce
-    CONST SUPRESS_REASON_PREVHARDBOUNCE = 2;    // previously hard bounce
-    CONST SUPRESS_REASON_COMPLAINT      = 3;    // complaint
-    CONST SUPRESS_REASON_PREVCOMPLAINT  = 4;    // previously complaint
-    CONST SUPRESS_REASON_IMPORTED       = 5;    // imported data
-    CONST SUPRESS_REASON_UNSUB          = 6;    // unsubcribe
-    CONST SUPRESS_REASON_HYGIENEFAIL    = 7;    // hygiene fail
-    
-    CONST SUPPRESSION_SOURCE    = 3;
 
     private $_db;
     

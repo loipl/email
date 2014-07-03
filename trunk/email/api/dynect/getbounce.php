@@ -43,9 +43,9 @@ class GetBounce extends PostBack {
         $mappingRespClassToTransType = array (
             // 0 : no type, 4: softBounce, 6: hardBounce
             ''                          => 0,
-            'soft'                      => self::TRANSACTION_TYPE_SOFTBOUNCE, // softbounce
-            'hard'                      => self::TRANSACTION_TYPE_HARDBOUNCE, // hardbounce
-            'previouslyhardbounced'     => self::TRANSACTION_TYPE_HARDBOUNCE  // hardbounce
+            'soft'                      => Config::TRANSACTION_TYPE_SOFTBOUNCE, // softbounce
+            'hard'                      => Config::TRANSACTION_TYPE_HARDBOUNCE, // hardbounce
+            'previouslyhardbounced'     => Config::TRANSACTION_TYPE_HARDBOUNCE  // hardbounce
         );
         
         $type = 0;
@@ -66,7 +66,7 @@ class GetBounce extends PostBack {
             
             // case hard bounce
             case self::HARD_BOUNCE :
-                Suppression_Email::addEmailSuppression(mysql_real_escape_string($request['email']), self::SUPPRESSION_SOURCE, self::SUPRESS_REASON_HARDBOUNCE);
+                Suppression_Email::addEmailSuppression(mysql_real_escape_string($request['email']), Config::SUPPRESSION_SOURCE, Config::SUPRESS_REASON_HARDBOUNCE);
                 Lead::scoreHardBounce($request['email']);
                 
                 // Add transactions
@@ -78,7 +78,7 @@ class GetBounce extends PostBack {
             
             // case previously hard bounce
             case self::PREV_HARD_BOUNCE :
-                Suppression_Email::addEmailSuppression(mysql_real_escape_string($request['email']), self::SUPPRESSION_SOURCE, self::SUPRESS_REASON_PREVHARDBOUNCE);
+                Suppression_Email::addEmailSuppression(mysql_real_escape_string($request['email']), Config::SUPPRESSION_SOURCE, Config::SUPRESS_REASON_PREVHARDBOUNCE);
                 Lead::scoreHardBounce($request['email']);
                 break;
             

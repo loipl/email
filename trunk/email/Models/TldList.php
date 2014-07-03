@@ -69,7 +69,6 @@ class TldList extends Database
         'rogers.com',
         'centurytel.net',
         'optonline.net',
-        'btinternet.com',
         'tds.net'
     );
 
@@ -89,6 +88,7 @@ class TldList extends Database
         'ameritech.net',
         'att.net',
         'bellsouth.net',
+        'btinternet.com',
         'flash.net',
         'nvbell.net',
         'pacbell.net',

@@ -126,6 +126,11 @@ class Engine_Scheduler
     private function assignCreativesToLeads(&$leads, $creativeIds)
     {
         foreach ($leads AS &$lead) {
+            // if throttled, do not asssign creative_id to lead
+            if (Throttle::checkThrottleExistsByDomain($lead['domain'])) {
+                continue;
+            }
+            
             $lead['creative_id'] = Random::getRandomCreativeId($creativeIds);
         }
 

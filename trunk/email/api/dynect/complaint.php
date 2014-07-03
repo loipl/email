@@ -34,9 +34,9 @@ class Complaint extends PostBack {
             return;
         }
         
-        $type = self::TRANSACTION_TYPE_COMPLAINT;
+        $type = Config::TRANSACTION_TYPE_COMPLAINT;
         Lead::scoreComplaint($request['email']);
-        Suppression_Email::addEmailSuppression(mysql_real_escape_string($request['email']), self::SUPPRESSION_SOURCE, self::SUPRESS_REASON_COMPLAINT);
+        Suppression_Email::addEmailSuppression(mysql_real_escape_string($request['email']), Config::SUPPRESSION_SOURCE, Config::SUPRESS_REASON_COMPLAINT);
         
         // Add transactions
         $this->addTransactions($request, $type);
