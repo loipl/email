@@ -78,25 +78,6 @@ class Throttle extends Database
     //--------------------------------------------------------------------------
     
     
-    public static function checkThrottleExistsByDomain($domain) 
-    {
-        $db = new Database;
-
-        $sql  = "SELECT `id` FROM `" . self::tableName . "`";
-        $sql .= " WHERE `domain`              = '" . mysql_real_escape_string($domain). "'";
-        $sql .= " LIMIT 1;";
-
-        $result = $db->getUpperLeft($sql);
-
-        if ($result > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    //--------------------------------------------------------------------------
-    
-    
     public static function addThrottle($data)
     {
         $db = new Database;

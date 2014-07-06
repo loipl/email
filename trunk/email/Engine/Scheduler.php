@@ -126,11 +126,6 @@ class Engine_Scheduler
     private function assignCreativesToLeads(&$leads, $creativeIds)
     {
         foreach ($leads AS &$lead) {
-            // if throttled, do not asssign creative_id to lead
-            if (Throttle::checkThrottleExistsByDomain($lead['domain'])) {
-                continue;
-            }
-            
             $lead['creative_id'] = Random::getRandomCreativeId($creativeIds);
         }
 
@@ -210,27 +205,74 @@ class Engine_Scheduler
 
         foreach($leads AS $lead) {
             $record = new Queue_Build($lead['build_queue_id']);
-
-            if ($record->getHtmlBody() != '' || $record->getTextBody() != '') {
-                Queue_Send::addRecord(
-                    $record->getEmail(),
-                    $record->getFrom(),
-                    $record->getCampaignId(),
-                    $record->getCreativeId(),
-                    $record->getCategoryId(),
-                    $record->getSenderEmail(),
-                    $record->getSubject(),
-                    $record->getHtmlBody(),
-                    $record->getTextBody(),
-                    $record->getSubId(),
-                    $record->getChannel()
-                );
+            
+            $delayUntil = $this->getThrottleDelayUntil($record->getEmail(), $record->getChannel(), $record->getCreativeId(), $record->getCampaignId(), $record->getCategoryId());
+            
+            // if delay time > threshold, ignore the lead, will be removed belows
+            if ($delayUntil !== false) {
+                
+                // if the lead have assigned creative, and delay_time < threshold, send it to queue_send
+                if ($record->getHtmlBody() != '' || $record->getTextBody() != '') {
+                    Queue_Send::addRecord(
+                        $record->getEmail(),
+                        $record->getFrom(),
+                        $record->getCampaignId(),
+                        $record->getCreativeId(),
+                        $record->getCategoryId(),
+                        $record->getSenderEmail(),
+                        $record->getSubject(),
+                        $record->getHtmlBody(),
+                        $record->getTextBody(),
+                        $record->getSubId(),
+                        $record->getChannel(),
+                        $delayUntil
+                    );
+                }
             }
 
             $record->removeRecord();
         }
 
         return true;
+    }
+    //--------------------------------------------------------------------------
+    
+    
+    private function getThrottleDelayUntil($email, $channelId, $creativeId, $campaignId, $categoryId) {
+        $emailDomain = explode('@', $email);
+        $domain = $emailDomain[1];
+        
+        $throttleType = Throttle::getThrottleExistsType($domain, $channelId, $creativeId, $campaignId, $categoryId);
+        
+        if ($throttleType) {
+            $delaySecond = 0;
+            
+            switch ($throttleType) {
+                case Config::TRANSACTION_TYPE_COMPLAINT:
+                    $delaySecond = Config::COMPLAINT_DELAY_SECONDS;
+                    break;
+                
+                case Config::TRANSACTION_TYPE_HARDBOUNCE:
+                    $delaySecond = Config::HARD_BOUNCE_DELAY_SECONDS;
+                    break;
+                
+                case Config::TRANSACTION_TYPE_SOFTBOUNCE:
+                    $delaySecond = Config::SOFT_BOUNCE_DELAY_SECONDS;
+                    break;
+                
+                default:
+                    break;
+            }
+
+            if ($delaySecond > Config::THRESHOLD_DELAY_SECONDS) {
+                // abandom the lead
+                return false;
+            } else {
+                return date('Y-m-d H:i:s', (time() + $delaySecond));
+            }
+        }
+        
+        return NULL;
     }
     //--------------------------------------------------------------------------
 }

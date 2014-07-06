@@ -11,3 +11,6 @@ CREATE TABLE IF NOT EXIST `throttles` (
   `category_id` int(7) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+
+#add "delay_until" for queue_send table - 2014/07/05
+ALTER TABLE `queue_send` ADD `delay_until` datetime DEFAULT NULL;

@@ -17,6 +17,7 @@ class Queue_Send extends Database
     protected $textBody;
     protected $subId;
     protected $channelId;
+    protected $delayUntil;
 
     protected $tableName = 'queue_send';
     const      tableName = 'queue_send';
@@ -43,6 +44,7 @@ class Queue_Send extends Database
         $this->textBody    = $result['text_body'];
         $this->subId       = $result['sub_id'];
         $this->channelId   = $result['channel'];
+        $this->delayUntil  = $result['delay_until'];
     }
     //--------------------------------------------------------------------------
 
@@ -51,13 +53,22 @@ class Queue_Send extends Database
     {
         $db = new Database;
 
-        $sql  = "SELECT `id` FROM `" . self::tableName . "`";
+        $sql  = "SELECT `id`, `delay_until` FROM `" . self::tableName . "`";
         $sql .= " WHERE `locked` = '0'";
         $sql .= " ORDER BY RAND()";
         $sql .= " LIMIT " . mysql_real_escape_string($limit) . "";
 
         $result = $db->getArray($sql);
-
+        
+        // remove throtted rows
+        foreach ($result as $index => $row) {
+            if (! is_null($row['delay_until']) && intval($row['delay_until']) > 0) {
+                if (time() < strtotime($row['delay_until'])) {
+                    unset($result[$index]);
+                }
+            }
+        }
+        
         return $result;
     }
     //--------------------------------------------------------------------------
@@ -150,6 +161,13 @@ class Queue_Send extends Database
     public function getChannelId()
     {
         return $this->channelId;
+    }
+    //--------------------------------------------------------------------------
+    
+    
+    public function getDelayUntil()
+    {
+        return $this->delayUntil;
     }
     //--------------------------------------------------------------------------
 
@@ -286,12 +304,12 @@ class Queue_Send extends Database
     //--------------------------------------------------------------------------
 
 
-    public static function addRecord($email, $from, $campaignId, $creativeId, $categoryId, $senderEmail, $subject, $htmlBody, $textBody, $subId, $channel)
+    public static function addRecord($email, $from, $campaignId, $creativeId, $categoryId, $senderEmail, $subject, $htmlBody, $textBody, $subId, $channel, $delayUntil)
     {
         $db = new Database;
 
         $sql  = "INSERT INTO `" . self::tableName . "` (id, created, locked, email, from_name, campaign_id,";
-        $sql .= " creative_id, category_id, sender_email, subject, html_body, text_body, sub_id, channel) VALUES (NULL, ";
+        $sql .= " creative_id, category_id, sender_email, subject, html_body, text_body, sub_id, channel, delay_until) VALUES (NULL, ";
         $sql .= " NOW(),";
         $sql .= " '0',";
         $sql .= " '" . mysql_real_escape_string($email). "',";
@@ -304,8 +322,8 @@ class Queue_Send extends Database
         $sql .= " '" . mysql_real_escape_string($htmlBody). "',";
         $sql .= " '" . mysql_real_escape_string($textBody). "',";
         $sql .= " '" . mysql_real_escape_string($subId). "',";
-        $sql .= " '" . mysql_real_escape_string($channel). "')";
-
+        $sql .= " '" . mysql_real_escape_string($channel). "',";
+        $sql .= " '" . $delayUntil. "')";
         $db->query($sql);
 
         return true;
