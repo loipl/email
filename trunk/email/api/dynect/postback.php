@@ -12,7 +12,7 @@ abstract class PostBack {
     }
     
     // function to get request from smtp server, should be modify to adapt with whatever they send
-    abstract function getRequestParams ();
+    abstract function getRequestParams();
 
     // function to add a record into transaction table
     protected function addTransactions ($record, $type) 
@@ -71,6 +71,6 @@ abstract class PostBack {
     
     
     // Main function 
-    abstract function execute ();
+    abstract function execute();
 }
 

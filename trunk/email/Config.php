@@ -23,12 +23,12 @@ class Config
     const SCOREMOD_UNSUBSCRIBE    =  -999;
     const SCOREMOD_HYGIENEFAIL    =  -999;
     
-    CONST TRANSACTION_TYPE_OPEN         = 1;    // open
-    CONST TRANSACTION_TYPE_CLICK        = 2;    // click
-    CONST TRANSACTION_TYPE_UNSUB        = 3;    // unsubcribe
-    CONST TRANSACTION_TYPE_SOFTBOUNCE   = 4;    // soft bounce
-    CONST TRANSACTION_TYPE_COMPLAINT    = 5;    // complaint
-    CONST TRANSACTION_TYPE_HARDBOUNCE   = 6;    // hardbounce
+    CONST TRANSACTION_TYPE_OPEN         =  1;    // open
+    CONST TRANSACTION_TYPE_CLICK        =  2;    // click
+    CONST TRANSACTION_TYPE_UNSUB        =  3;    // unsubcribe
+    CONST TRANSACTION_TYPE_SOFTBOUNCE   =  4;    // soft bounce
+    CONST TRANSACTION_TYPE_COMPLAINT    =  5;    // complaint
+    CONST TRANSACTION_TYPE_HARDBOUNCE   =  6;    // hardbounce
     CONST TRANSACTION_TYPE_CONVERSION   = 10;   // conversion
     
     CONST SUPRESS_REASON_HARDBOUNCE     = 1;    // hard bounce
@@ -41,9 +41,9 @@ class Config
     
     CONST SUPPRESSION_SOURCE            = 3;
     
-    const COMPLAINT_DELAY_SECONDS       =  30;
+    const COMPLAINT_DELAY_SECONDS       = 80;   // re-init for testing abandom leads which delay time > 1 minute, can be changed later
     const HARD_BOUNCE_DELAY_SECONDS     = 10;
-    const SOFT_BOUNCE_DELAY_SECONDS     = 5;
+    const SOFT_BOUNCE_DELAY_SECONDS     =  5;
     const THRESHOLD_DELAY_SECONDS       = 60;    // ignore leads which delay time > 1 minute
 
     const SEPARATOR_EMAIL         = 'dRm415';
@@ -178,6 +178,13 @@ class Config
     public static $database = array(
         'host'     => 'localhost',
         'database' => 'email',
+        'username' => 'root',
+        'password' => ''
+    );
+    
+    public static $testDatabase = array(
+        'host'     => 'localhost',
+        'database' => 'emailTest',
         'username' => 'root',
         'password' => ''
     );

@@ -9,16 +9,23 @@ class Database
 
     public function __construct()
     {
-        $this->link = mysql_connect(Config::$database['host'],
-                                    Config::$database['username'],
-                                    Config::$database['password']
+        $database = Config::$database;
+        
+        // using test database for test script
+        if (isset($_SERVER['test_environment'])) {
+            $database = Config::$testDatabase;
+        }
+        
+        $this->link = mysql_connect($database['host'],
+                                    $database['username'],
+                                    $database['password']
                                    );
 
         if (!$this->link) {
             die('Cannot connect to DB server');
         }
 
-        mysql_query('USE `' . Config::$database['database'] . '`', $this->link) or die('Cannot access DB ' . Config::$database['database']);
+        mysql_query('USE `' . $database['database'] . '`', $this->link) or die('Cannot access DB ' . $database['database']);
     }
     //--------------------------------------------------------------------------
 
@@ -94,6 +101,13 @@ class Database
     public function getMySQLVersion()
     {
         return $this->getUpperLeft("SELECT VERSION() as mysql_version");
+    }
+    //--------------------------------------------------------------------------
+    
+    
+    public function getDatabaseName()
+    {
+        return $this->getUpperLeft("SELECT DATABASE();");
     }
     //--------------------------------------------------------------------------
 }

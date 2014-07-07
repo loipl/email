@@ -109,7 +109,36 @@ class Queue_Build extends Database
         return true;
     }
     //--------------------------------------------------------------------------
+    
+    
+    public static function addFullRecord($data) {
+        $db = new Database;
 
+        $sql  = "INSERT INTO `" . self::tableName . "` (id, created, locked, email, stage, campaign_id, creative_id, category_id, from_name,";
+        $sql .= " sender_email, subject, html_body, text_body, sub_id, channel) VALUES (NULL, ";
+        $sql .= " NOW(),";
+        $sql .= " '0',";
+        $sql .= " '" . mysql_real_escape_string($data['email']). "',";
+        $sql .= " '" . mysql_real_escape_string($data['stage']). "',";
+        $sql .= " '" . mysql_real_escape_string($data['campaign_id']). "',";
+        $sql .= " '" . mysql_real_escape_string($data['creative_id']). "',";
+        $sql .= " '" . mysql_real_escape_string($data['category_id']). "',";
+        $sql .= " '" . mysql_real_escape_string($data['from_name']). "',";
+        $sql .= " '" . mysql_real_escape_string($data['sender_email']). "',";
+        $sql .= " '" . mysql_real_escape_string($data['subject']). "',";
+        $sql .= " '" . mysql_real_escape_string($data['html_body']). "',";
+        $sql .= " '" . mysql_real_escape_string($data['text_body']). "',";
+        $sql .= " '" . mysql_real_escape_string($data['sub_id']). "',";
+        $sql .= " '" . mysql_real_escape_string($data['channel']). "'";
+
+        $sql .= ");";
+
+        $db->query($sql);
+
+        return true;
+    }
+    //--------------------------------------------------------------------------
+    
 
     public static function addCreativeAndCampaignIds($id, $creativeId, $campaignId)
     {
@@ -207,6 +236,19 @@ class Queue_Build extends Database
         $db = new Database;
 
         $sql = "DELETE FROM `" . self::tableName . "` WHERE `id` = '" . mysql_real_escape_string($this->id) . "' LIMIT 1;";
+
+        $db->query($sql);
+
+        return true;
+    }
+    //--------------------------------------------------------------------------
+    
+    
+    public static function removeAllRecords()
+    {
+        $db = new Database;
+
+        $sql = "TRUNCATE `" . self::tableName;
 
         $db->query($sql);
 

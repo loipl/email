@@ -197,7 +197,7 @@ class Engine_Scheduler
     //--------------------------------------------------------------------------
 
 
-    private function moveRecordsFromBuildQueueToSendQueue($leads)
+    public static function moveRecordsFromBuildQueueToSendQueue($leads)
     {
         if (empty($leads) || !is_array($leads)) {
             return false;
@@ -206,7 +206,7 @@ class Engine_Scheduler
         foreach($leads AS $lead) {
             $record = new Queue_Build($lead['build_queue_id']);
             
-            $delayUntil = $this->getThrottleDelayUntil($record->getEmail(), $record->getChannel(), $record->getCreativeId(), $record->getCampaignId(), $record->getCategoryId());
+            $delayUntil = Engine_Scheduler::getThrottleDelayUntil($record->getEmail(), $record->getChannel(), $record->getCreativeId(), $record->getCampaignId(), $record->getCategoryId());
             
             // if delay time > threshold, ignore the lead, will be removed belows
             if ($delayUntil !== false) {
@@ -238,7 +238,7 @@ class Engine_Scheduler
     //--------------------------------------------------------------------------
     
     
-    private function getThrottleDelayUntil($email, $channelId, $creativeId, $campaignId, $categoryId) {
+    public static function getThrottleDelayUntil($email, $channelId, $creativeId, $campaignId, $categoryId) {
         $emailDomain = explode('@', $email);
         $domain = $emailDomain[1];
         

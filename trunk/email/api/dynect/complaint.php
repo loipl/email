@@ -15,7 +15,7 @@ class Complaint extends PostBack {
     {
         $request = array();
         if(isset($_GET['email'])) {
-            $request['email'] = mysql_escape_string($_GET['email']);
+            $request['email'] = mysql_real_escape_string($_GET['email']);
         } else {
             return array();
         }

@@ -30,7 +30,7 @@ class Throttle extends Database
         $this->channel     = $result['channel'];
     }
     //--------------------------------------------------------------------------
-    
+
     public static function checkThrottleExists($data) 
     {
         $db = new Database;
@@ -91,6 +91,19 @@ class Throttle extends Database
         $sql .= ' \'' . mysql_real_escape_string($data['creative_id']) . '\',';
         $sql .= ' \'' . mysql_real_escape_string($data['category_id']) . '\'';
         $sql .= ')';
+
+        $db->query($sql);
+
+        return true;
+    }
+    //--------------------------------------------------------------------------
+    
+    
+    public static function removeAllRecords()
+    {
+        $db = new Database;
+
+        $sql = "TRUNCATE `" . self::tableName;
 
         $db->query($sql);
 

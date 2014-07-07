@@ -2,6 +2,7 @@
 
 define('TEST_START_TIME', microtime(true));
 define('RUN_ALL_TESTS', 1);
+$_SERVER['test_environment'] = true;
 
 chdir(dirname(__FILE__) . '/');
 
@@ -13,6 +14,7 @@ if (!isset($skipOtherTests)) {
 
 require_once dirname(__FILE__) . '/simpletest/autorun.php';
 require_once dirname(dirname(__FILE__)) . '/email.php';
+require_once dirname(__FILE__) . '/SetupTestData.php';
 
 if (empty($skipOtherTests)) {
     foreach (Utilities::listFiles(dirname(__FILE__) . '/unit_tests/', true) as $fileName) {
