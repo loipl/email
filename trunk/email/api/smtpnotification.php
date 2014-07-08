@@ -70,12 +70,12 @@ class SmtpNotification {
             '23'  => 4, // The message bounced because it was too large for the recipient. (Too Large)
             '24'  => 4, // The message timed out. (Timeout)
             '30'  => 6, // No recipient could be determined for the message. (Generic Bounce: No RCPT)
-            '40'  => 6, // The message failed for unspecified reasons. (Generic Bounce)
-            '50'  => 6, // The message was blocked by the receiver. (Mail Block)
-            '51'  => 6, // The message was blocked by the receiver as coming from a known spam source. (Spam Block)
-            '52'  => 6, // The message was blocked by the receiver as spam (Spam Content)
-            '53'  => 6, // The message was blocked by the receiver because it contained an attachment (Prohibited Attachment)
-            '54'  => 6, // The message was blocked by the receiver because relaying is not allowed. (Relay Denied)
+            '40'  => 4, // The message failed for unspecified reasons. (Generic Bounce)
+            '50'  => 4, // The message was blocked by the receiver. (Mail Block)
+            '51'  => 4, // The message was blocked by the receiver as coming from a known spam source. (Spam Block)
+            '52'  => 4, // The message was blocked by the receiver as spam (Spam Content)
+            '53'  => 4, // The message was blocked by the receiver because it contained an attachment (Prohibited Attachment)
+            '54'  => 4, // The message was blocked by the receiver because relaying is not allowed. (Relay Denied)
         );
         foreach ($data as $record) {
             $type = 0;

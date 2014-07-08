@@ -82,8 +82,10 @@ class Throttle extends Database
     {
         $db = new Database;
 
-        $sql  = 'INSERT INTO `' . self::tableName . '` (id, type, domain, channel, campaign_id, creative_id, category_id) VALUES (';
+        $sql  = 'INSERT INTO `' . self::tableName . '` (id, created, type, domain, channel, campaign_id, creative_id,';
+        $sql .= 'category_id) VALUES (';
         $sql .= 'NULL,';
+        $sql .= ' NOW(),';
         $sql .= ' \'' . mysql_real_escape_string($data['type']) . '\',';
         $sql .= ' \'' . mysql_real_escape_string($data['domain']) . '\',';
         $sql .= ' \'' . mysql_real_escape_string($data['channel']) . '\',';
@@ -97,18 +99,4 @@ class Throttle extends Database
         return true;
     }
     //--------------------------------------------------------------------------
-    
-    
-    public static function removeAllRecords()
-    {
-        $db = new Database;
-
-        $sql = "TRUNCATE `" . self::tableName;
-
-        $db->query($sql);
-
-        return true;
-    }
-    //--------------------------------------------------------------------------
-
 }

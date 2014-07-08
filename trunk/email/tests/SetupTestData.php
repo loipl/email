@@ -1,30 +1,9 @@
 <?php
 
-require_once '/../email.php';
+require_once '../email.php';
 
 class SetupTestData {
-    
-    public static function resetQueueBuildData() 
-    {
-        Queue_Build::removeAllRecords();
-    }
-    //--------------------------------------------------------------------------
-    
-    
-    public static function resetQueueSendData() 
-    {
-        Queue_Send::removeAllRecords();
-    }
-    //--------------------------------------------------------------------------
-    
-    
-    public static function resetThrottleData() 
-    {
-        Throttle::removeAllRecords();
-    }
-    //--------------------------------------------------------------------------
-    
-    
+
     public static function addQueueBuildData($data) 
     {
         if ( ! empty($data)) {

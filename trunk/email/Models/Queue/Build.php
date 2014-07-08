@@ -243,19 +243,6 @@ class Queue_Build extends Database
     }
     //--------------------------------------------------------------------------
     
-    
-    public static function removeAllRecords()
-    {
-        $db = new Database;
-
-        $sql = "TRUNCATE `" . self::tableName;
-
-        $db->query($sql);
-
-        return true;
-    }
-    //--------------------------------------------------------------------------
-
 
     public static function setLock($id)
     {

@@ -12,13 +12,13 @@ class GetBounce extends PostBack {
     {
         parent::__construct();
     }
-    
+
     // function to get request from smtp server, should be modify to adapt with whatever they send
     function getRequestParams () 
     {
         $request = array();
         if(isset($_GET['email'])) {
-            $request['email'] = mysql_escape_string($_GET['email']);
+            $request['email'] = mysql_real_escape_string($_GET['email']);
         } else {
             return array();
         }

@@ -355,19 +355,6 @@ class Queue_Send extends Database
         return true;
     }
     //--------------------------------------------------------------------------
-    
-    
-    public static function removeAllRecords()
-    {
-        $db = new Database;
-
-        $sql = "TRUNCATE `" . self::tableName;
-
-        $db->query($sql);
-
-        return true;
-    }
-    //--------------------------------------------------------------------------
 
 
     public function setLock()
