@@ -184,7 +184,7 @@ class Config
     
     public static $testDatabase = array(
         'host'     => 'localhost',
-        'database' => 'emailTest',
+        'database' => 'emailtest',
         'username' => 'root',
         'password' => ''
     );
