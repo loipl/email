@@ -206,7 +206,7 @@ class Engine_Scheduler
         foreach($leads AS $lead) {
             $record = new Queue_Build($lead['build_queue_id']);
             
-            $delayUntil = Engine_Scheduler::getThrottleDelayUntil($record->getEmail(), $record->getChannel(), $record->getCreativeId(), $record->getCampaignId(), $record->getCategoryId());
+            $delayUntil = Engine_Scheduler::getThrottleDelayUntil($record->getEmail(), $record->getChannel(), $record->getCreativeId(), $record->getCategoryId());
             
             // if delay time > threshold, ignore the lead, will be removed belows
             if ($delayUntil !== false) {
@@ -238,11 +238,11 @@ class Engine_Scheduler
     //--------------------------------------------------------------------------
     
     
-    public static function getThrottleDelayUntil($email, $channelId, $creativeId, $campaignId, $categoryId) {
+    public static function getThrottleDelayUntil($email, $channelId, $creativeId, $categoryId) {
         $emailDomain = explode('@', $email);
         $domain = $emailDomain[1];
         
-        $throttleType = Throttle::getThrottleExistsType($domain, $channelId, $creativeId, $campaignId, $categoryId);
+        $throttleType = Throttle::getThrottleExistsType($domain, $channelId, $creativeId, $categoryId);
         
         if ($throttleType) {
             $delaySecond = 0;

@@ -39,7 +39,6 @@ class Throttle extends Database
         $sql .= " WHERE `type`              = '" . mysql_real_escape_string($data['type']). "'";
         $sql .= " AND   `domain`            = '" . mysql_real_escape_string($data['domain']) . "'";
         $sql .= " AND   `channel`           = '" . mysql_real_escape_string($data['channel']) . "'";
-        $sql .= " AND   `campaign_id`       = '" . mysql_real_escape_string($data['campaign_id']) . "'";
         $sql .= " AND   `creative_id`       = '" . mysql_real_escape_string($data['creative_id']) . "'";
         $sql .= " AND   `category_id`       = '" . mysql_real_escape_string($data['category_id']) . "'";
         $sql .= " LIMIT 1;";
@@ -55,14 +54,13 @@ class Throttle extends Database
     //--------------------------------------------------------------------------
     
     
-    public static function getThrottleExistsType($domain, $channelId, $creativeId, $campaignId, $categoryId)
+    public static function getThrottleExistsType($domain, $channelId, $creativeId, $categoryId)
     {
         $db = new Database;
 
         $sql  = "SELECT `type` FROM `" . self::tableName . "`";
         $sql .= " WHERE `domain`            = '" . mysql_real_escape_string($domain). "'";
         $sql .= " AND   `channel`           = '" . mysql_real_escape_string($channelId) . "'";
-        $sql .= " AND   `campaign_id`       = '" . mysql_real_escape_string($campaignId) . "'";
         $sql .= " AND   `creative_id`       = '" . mysql_real_escape_string($creativeId) . "'";
         $sql .= " AND   `category_id`       = '" . mysql_real_escape_string($categoryId) . "'";
         $sql .= " LIMIT 1;";
