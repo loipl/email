@@ -54,21 +54,19 @@ class Throttle extends Database
     //--------------------------------------------------------------------------
     
     
-    public static function getThrottleExistsType($domain, $channelId, $creativeId, $categoryId)
+    public static function getThrottles($domain, $channel)
     {
         $db = new Database;
 
         $sql  = "SELECT `type` FROM `" . self::tableName . "`";
         $sql .= " WHERE `domain`            = '" . mysql_real_escape_string($domain). "'";
-        $sql .= " AND   `channel`           = '" . mysql_real_escape_string($channelId) . "'";
-        $sql .= " AND   `creative_id`       = '" . mysql_real_escape_string($creativeId) . "'";
-        $sql .= " AND   `category_id`       = '" . mysql_real_escape_string($categoryId) . "'";
-        $sql .= " LIMIT 1;";
+        $sql .= " AND   `channel`           = '" . mysql_real_escape_string($channel). "'";
+        $sql .= " ;";
 
         $result = $db->getArray($sql);
         
         if ( ! empty($result)) {
-            return (int) $result[0]['type'];
+            return $result;
         } else {
             return false;
         }

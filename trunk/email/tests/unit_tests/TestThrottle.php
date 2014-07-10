@@ -60,7 +60,7 @@ class TestThrottle extends UnitTestCase
         
         SetupTestData::addThrottleData(array(
             array(
-                'type'          => '6',
+                'type'          => Config::TRANSACTION_TYPE_HARDBOUNCE,
                 'domain'        => 'edgeprod.com',
                 'channel'       => '1',
                 'creative_id'   => '106',
@@ -68,7 +68,7 @@ class TestThrottle extends UnitTestCase
                 'category_id'   => '7'
             ),
             array(
-                'type'          => '4',
+                'type'          => Config::TRANSACTION_TYPE_SOFTBOUNCE,
                 'domain'        => 'leadwrench.com',
                 'channel'       => '1',
                 'creative_id'   => '100',
@@ -154,7 +154,7 @@ class TestThrottle extends UnitTestCase
         
         SetupTestData::addThrottleData(array(
             array(
-                'type'          => '4',
+                'type'          => Config::TRANSACTION_TYPE_SOFTBOUNCE,
                 'domain'        => 'edgeprod.com',
                 'channel'       => '1',
                 'creative_id'   => '106',
@@ -162,7 +162,7 @@ class TestThrottle extends UnitTestCase
                 'category_id'   => '7'
             ),
             array(
-                'type'          => '4',
+                'type'          => Config::TRANSACTION_TYPE_SOFTBOUNCE,
                 'domain'        => 'leadwrench.com',
                 'channel'       => '1',
                 'creative_id'   => '100',
@@ -249,7 +249,7 @@ class TestThrottle extends UnitTestCase
         
         SetupTestData::addThrottleData(array(
             array(
-                'type'          => '5',
+                'type'          => Config::TRANSACTION_TYPE_COMPLAINT,
                 'domain'        => 'edgeprod.com',
                 'channel'       => '1',
                 'creative_id'   => '106',
@@ -257,7 +257,7 @@ class TestThrottle extends UnitTestCase
                 'category_id'   => '7'
             ),
             array(
-                'type'          => '4',
+                'type'          => Config::TRANSACTION_TYPE_SOFTBOUNCE,
                 'domain'        => 'leadwrench.com',
                 'channel'       => '1',
                 'creative_id'   => '100',
@@ -280,6 +280,116 @@ class TestThrottle extends UnitTestCase
         
         if (count($queueSends) < count($queueBuildData)) {
             $this->assertEqual(1, 1);
+        } else {
+            $this->assertEqual(1, 2);
+        }
+    }
+    //--------------------------------------------------------------------------
+    
+    
+    public function testThrotleMultipleMatchStack()
+    {
+        // reset data
+        SetupTestData::resetQueueBuildData();
+        SetupTestData::resetQueueSendData();
+        SetupTestData::resetThrottleData();
+        
+        // add test data
+        SetupTestData::addQueueBuildData(array(
+            array(
+                'email'         => 'test@edgeprod.com',
+                'stage'         => '1',
+                'campaign_id'   => '3',
+                'creative_id'   => '106',
+                'category_id'   => '7',
+                'from_name'     => 'Potato Express',
+                'sender_email'  => 'jason@matchquota.com',
+                'subject'       => 'Fast and Easy Potatoes',
+                'html_body'     => 'html body',
+                'text_body'     => 'text body',
+                'sub_id'        => '1',
+                'channel'       => '1'
+            ),
+            array(
+                'email'         => 'dom@leadwrench.com',
+                'stage'         => '1',
+                'campaign_id'   => '3',
+                'creative_id'   => '106',
+                'category_id'   => '7',
+                'from_name'     => 'Potato Express',
+                'sender_email'  => 'jason@matchquota.com',
+                'subject'       => 'Fast and Easy Potatoes',
+                'html_body'     => 'html body',
+                'text_body'     => 'text body',
+                'sub_id'        => '2',
+                'channel'       => '1'
+            ),
+            array(
+                'email'         => 'dom@edgeprod.com',
+                'stage'         => '1',
+                'campaign_id'   => '3',
+                'creative_id'   => '107',
+                'category_id'   => '8',
+                'from_name'     => 'Potato Express BOGO',
+                'sender_email'  => 'jason@matchquota.com',
+                'subject'       => 'Fast and Easy Potatoes',
+                'html_body'     => 'html body',
+                'text_body'     => 'text body',
+                'sub_id'        => '3',
+                'channel'       => '1'
+            ),
+        ));
+        
+        SetupTestData::addThrottleData(array(
+            array(
+                'type'          => Config::TRANSACTION_TYPE_HARDBOUNCE,
+                'domain'        => 'edgeprod.com',
+                'channel'       => '1',
+                'creative_id'   => '106',
+                'campaign_id'   => '3',
+                'category_id'   => '7'
+            ),
+            array(
+                'type'          => Config::TRANSACTION_TYPE_SOFTBOUNCE,
+                'domain'        => 'leadwrench.com',
+                'channel'       => '1',
+                'creative_id'   => '100',
+                'campaign_id'   => '5',
+                'category_id'   => '1'
+            ),
+            array(
+                'type'          => Config::TRANSACTION_TYPE_SOFTBOUNCE,
+                'domain'        => 'edgeprod.com',
+                'channel'       => '1',
+                'creative_id'   => '106',
+                'campaign_id'   => '3',
+                'category_id'   => '7'
+            ),
+            array(
+                'type'          => Config::TRANSACTION_TYPE_SOFTBOUNCE,
+                'domain'        => 'edgeprod.com',
+                'channel'       => '1',
+                'creative_id'   => '107',
+                'campaign_id'   => '3',
+                'category_id'   => '8'
+            )
+        ));
+        
+        // execute function
+        $leads = array(
+            0 => array('build_queue_id' => '1'),
+            1 => array('build_queue_id' => '2'),
+            2 => array('build_queue_id' => '3')
+        );
+        
+        $startTime = $startTime = time();
+        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads);
+        $send = new Queue_Send(1);
+        $delayUntil = $send->getDelayUntil();
+        
+        // compare results
+        if (! is_null($delayUntil) && intval($delayUntil) > 0) {
+            $this->assertEqual(Config::HARD_BOUNCE_DELAY_SECONDS + 2 * Config::SOFT_BOUNCE_DELAY_SECONDS, strtotime($delayUntil) - $startTime);
         } else {
             $this->assertEqual(1, 2);
         }

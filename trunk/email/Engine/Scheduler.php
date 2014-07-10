@@ -206,7 +206,7 @@ class Engine_Scheduler
         foreach($leads AS $lead) {
             $record = new Queue_Build($lead['build_queue_id']);
             
-            $delayUntil = Engine_Scheduler::getThrottleDelayUntil($record->getEmail(), $record->getChannel(), $record->getCreativeId(), $record->getCategoryId());
+            $delayUntil = Engine_Scheduler::getThrottleDelayUntil($record->getEmail(), $record->getChannel());
             
             // if delay time > threshold, ignore the lead, will be removed belows
             if ($delayUntil !== false) {
@@ -238,30 +238,33 @@ class Engine_Scheduler
     //--------------------------------------------------------------------------
     
     
-    public static function getThrottleDelayUntil($email, $channelId, $creativeId, $categoryId) {
+    public static function getThrottleDelayUntil($email, $channel) {
         $emailDomain = explode('@', $email);
         $domain = $emailDomain[1];
         
-        $throttleType = Throttle::getThrottleExistsType($domain, $channelId, $creativeId, $categoryId);
-        
-        if ($throttleType) {
+        $throttles = Throttle::getThrottles($domain, $channel);
+
+        if ($throttles) {
             $delaySecond = 0;
-            
-            switch ($throttleType) {
-                case Config::TRANSACTION_TYPE_COMPLAINT:
-                    $delaySecond = Config::COMPLAINT_DELAY_SECONDS;
-                    break;
+            foreach ($throttles as $record) {
+                $throttleType = (int) $record['type'];
                 
-                case Config::TRANSACTION_TYPE_HARDBOUNCE:
-                    $delaySecond = Config::HARD_BOUNCE_DELAY_SECONDS;
-                    break;
-                
-                case Config::TRANSACTION_TYPE_SOFTBOUNCE:
-                    $delaySecond = Config::SOFT_BOUNCE_DELAY_SECONDS;
-                    break;
-                
-                default:
-                    break;
+                switch ($throttleType) {
+                    case Config::TRANSACTION_TYPE_COMPLAINT:
+                        $delaySecond += Config::COMPLAINT_DELAY_SECONDS;
+                        break;
+
+                    case Config::TRANSACTION_TYPE_HARDBOUNCE:
+                        $delaySecond += Config::HARD_BOUNCE_DELAY_SECONDS;
+                        break;
+
+                    case Config::TRANSACTION_TYPE_SOFTBOUNCE:
+                        $delaySecond += Config::SOFT_BOUNCE_DELAY_SECONDS;
+                        break;
+
+                    default:
+                        break;
+                }
             }
 
             if ($delaySecond > Config::THRESHOLD_DELAY_SECONDS) {
