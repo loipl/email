@@ -59,16 +59,18 @@ class Queue_Send extends Database
         $sql .= " LIMIT " . mysql_real_escape_string($limit) . "";
 
         $result = $db->getArray($sql);
-        
-        // remove throtted rows
-        foreach ($result as $index => $row) {
-            if (! is_null($row['delay_until']) && intval($row['delay_until']) > 0) {
-                if (time() < strtotime($row['delay_until'])) {
-                    unset($result[$index]);
+
+        if (!empty($result)) {
+            // remove throtted rows
+            foreach ($result as $index => $row) {
+                if (! is_null($row['delay_until']) && intval($row['delay_until']) > 0) {
+                    if (time() < strtotime($row['delay_until'])) {
+                        unset($result[$index]);
+                    }
                 }
             }
         }
-        
+
         return $result;
     }
     //--------------------------------------------------------------------------

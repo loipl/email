@@ -263,4 +263,30 @@ class Campaign extends Database
         return $result;
     }
     //--------------------------------------------------------------------------
+    
+    
+    public static function getAllCampaign()
+    {
+        $db = new Database;
+
+        $sql  = "SELECT * FROM `" . self::tableName . "` LIMIT 20";
+
+        $result = $db->getArray($sql);
+
+        return $result;
+    }
+    //--------------------------------------------------------------------------
+    
+    public static function updateAttributesById($id, $attributes)
+    {
+        $db = new Database;
+
+        $sql  = "UPDATE `" . self::tableName . "` SET attributes = '" . mysql_real_escape_string($attributes) . "'";
+        $sql .= " WHERE id= '" . mysql_real_escape_string($id) . "'";
+
+        $db->query($sql);
+
+        return true;
+    }
+    //--------------------------------------------------------------------------
 }

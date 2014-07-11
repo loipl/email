@@ -169,4 +169,87 @@ class HTML
         return $unsubUrl;
     }
     //--------------------------------------------------------------------------
+    
+    public static function getHtmlForCampaignAttributes($attributes) {
+        
+        $attrTypes = self::getCampaignAttributeType();
+        $attrOptions = self::getCampaignAttributeOptions();
+        
+        $html = '<table class="no-border"><tbody>';
+        foreach ($attributes as $attrName => $attrValue) {
+            $html .= '<tr>';
+            $html .= '<td class="attrName" abbr="' . $attrName . '">' . $attrName . '</td>';
+            $html .= '<td></td>';
+            $html .= '<td class="attrData">';
+            switch ($attrTypes[$attrName]){
+                case 'number':
+                    $html .= '<input value="' . $attrValue . '" type="number">' ;
+                    break;
+                case 'bool':
+                    $checkedStr = $attrValue ? 'checked' : '';
+                    $html .= '<input type="checkbox" ' . $checkedStr . '>';
+                    break;
+                case 'select':
+                    $html .= self::getHtmlForSelect($attrOptions[$attrName], $attrValue);
+                    break;
+                default:
+                    $html .= '<input value="' . $attrValue . '" type="text">' ;
+                    break;
+            }
+            $html .= '</td>';
+            $html .= '</tr>';
+        }
+        $html .= '<tr><td></td><td></td><td><input class="edit_attr_button" type="button" value="Set"></td></tr>';
+        $html .= '</tbody></table>';
+        return $html;
+    }
+    //--------------------------------------------------------------------------
+    
+    public static function getHtmlForSelect($options, $value) {
+        $html = '<select>';
+        foreach ($options as $optionValue => $optionText) {
+            if ($optionValue == $value) {
+                $html .= '<option value="' . $optionValue . '" selected="selected">';
+            } else {
+                $html .= '<option value="' . $optionValue . '">';
+            }
+            $html .= $optionText;
+            $html .= '</option>';
+        }
+        $html .= '</select>';
+        return $html;
+    }
+    
+    //--------------------------------------------------------------------------
+    public static function getCampaignAttributeOptions() {
+        return array (
+            'gender' => array(
+                ''  => 'Both',
+                'M' => 'Male',
+                'F' => 'Female'
+            ),
+            'type' => array (
+                'verified' => 'Verified',
+                'openers'  => 'Openers',
+                'clickers'  => 'Clickers'
+            )
+        );
+    }
+    
+    //--------------------------------------------------------------------------
+    public static function getCampaignAttributeType() {
+        return array (
+            'countOnly' => 'bool',
+            'queryName' => 'text',
+            'count' => 'number',
+            'interval' => 'number',
+            'type' => 'select',
+            'minScore' => 'number',
+            'campaignId' => 'number',
+            'tldList' => 'text',
+            'gender' => 'select',
+            'country' => 'text',
+            'state' => 'text'
+          );
+    }
 }

@@ -45,7 +45,9 @@ class Config
     const HARD_BOUNCE_DELAY_SECONDS     = 10;
     const SOFT_BOUNCE_DELAY_SECONDS     =  5;
     const THRESHOLD_DELAY_SECONDS       = 60;   // ignore leads which delay time > 1 minute
-
+    
+    const PURGE_THROTTLE_THRESHOLD      = 1;    // purge throttle which older than this threshold (in minutes)
+    
     const SEPARATOR_EMAIL         = 'dRm415';
     const SEPARATOR_CAMPAIGN      = 'bMm207';
     const SEPARATOR_OFFER         = 'hRp113';

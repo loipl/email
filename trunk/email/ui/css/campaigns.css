@@ -1,0 +1,18 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jul 10, 2014, 10:11:42 PM
+    Author     : DiepBuiHuu
+*/
+
+table.campaigns_table th, table.campaigns_table td {
+    border-bottom: 1px solid black;
+    border-left: none;
+    border-right: none;
+}
+table.no-border td {
+     border: none;
+}

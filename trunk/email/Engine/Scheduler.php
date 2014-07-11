@@ -240,11 +240,16 @@ class Engine_Scheduler
     
     public static function getThrottleDelayUntil($email, $channel) {
         $emailDomain = explode('@', $email);
-        $domain = $emailDomain[1];
+        if (isset($emailDomain[1])) {
+            $domain = $emailDomain[1];
+        }
         
-        $throttles = Throttle::getThrottles($domain, $channel);
+        $throttles = array();
+        if ( ! is_null($domain)) {
+            $throttles = Throttle::getThrottles($domain, $channel);
+        }
 
-        if ($throttles) {
+        if ( ! empty($throttles)) {
             $delaySecond = 0;
             foreach ($throttles as $record) {
                 $throttleType = (int) $record['type'];

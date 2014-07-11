@@ -65,11 +65,7 @@ class Throttle extends Database
 
         $result = $db->getArray($sql);
         
-        if ( ! empty($result)) {
-            return $result;
-        } else {
-            return false;
-        }
+        return $result;
     }
     //--------------------------------------------------------------------------
     
@@ -89,6 +85,50 @@ class Throttle extends Database
         $sql .= ' \'' . mysql_real_escape_string($data['creative_id']) . '\',';
         $sql .= ' \'' . mysql_real_escape_string($data['category_id']) . '\'';
         $sql .= ')';
+
+        $db->query($sql);
+
+        return true;
+    }
+    //--------------------------------------------------------------------------
+    
+    
+    public static function purgeThrottle()
+    {
+        $throttles = Throttle::getAllThrottles();
+        
+        if ( ! empty($throttles)) {
+            foreach ($throttles as $record) {
+                $id = $record['id'];
+                $created = $record['created'];
+
+                if ( (time() - strtotime($created)) > Config::PURGE_THROTTLE_THRESHOLD * 60 ) {
+                    Throttle::removeRecord($id);
+                }
+            }
+        }
+    }
+    //--------------------------------------------------------------------------
+    
+    
+    public static function getAllThrottles()
+    {
+        $db = new Database;
+        
+        $sql  = "SELECT * FROM ".self::tableName;
+        
+        $result = $db->getArray($sql);
+        
+        return $result;
+    }
+    //--------------------------------------------------------------------------
+    
+    
+    public static function removeRecord($id)
+    {
+        $db = new Database;
+
+        $sql = "DELETE FROM `" . self::tableName . "` WHERE `id` = '" . mysql_real_escape_string($id) . "' LIMIT 1;";
 
         $db->query($sql);
 
