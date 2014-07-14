@@ -44,9 +44,9 @@ class Config
     const COMPLAINT_DELAY_SECONDS       = 80;   // re-init for testing abandom leads which delay time > 1 minute, can be changed later
     const HARD_BOUNCE_DELAY_SECONDS     = 10;
     const SOFT_BOUNCE_DELAY_SECONDS     =  5;
-    const THRESHOLD_DELAY_SECONDS       = 60;   // ignore leads which delay time > 1 minute
+    const THRESHOLD_DELAY_SECONDS       = 1200;   // ignore leads which delay time > 20 minutes
     
-    const PURGE_THROTTLE_THRESHOLD      = 1;    // purge throttle which older than this threshold (in minutes)
+    const PURGE_THROTTLE_THRESHOLD      = 20;    // purge throttle which older than this threshold (in minutes)
     
     const SEPARATOR_EMAIL         = 'dRm415';
     const SEPARATOR_CAMPAIGN      = 'bMm207';
