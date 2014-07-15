@@ -135,4 +135,48 @@ class Throttle extends Database
         return true;
     }
     //--------------------------------------------------------------------------
+    
+    
+    public static function getThrottledChannelsByCreativeId($creativeId) 
+    {
+        $db = new Database;
+
+        $sql  = "SELECT `channel` FROM `" . self::tableName . "`";
+        $sql .= " WHERE `creative_id`            = '" . mysql_real_escape_string($creativeId). "'";
+        $sql .= " ;";
+
+        $queryResult = $db->getArray($sql);
+        $result = array();
+        
+        if (!empty ($queryResult)) {
+            foreach ($queryResult as $record) {
+                $result[] = $record['channel'];
+            }
+        }
+        
+        return array_unique($result);
+    }
+    //--------------------------------------------------------------------------
+    
+    
+    public static function getThrottledChannelsByCategoryId($categoryId) 
+    {
+        $db = new Database;
+
+        $sql  = "SELECT `channel` FROM `" . self::tableName . "`";
+        $sql .= " WHERE `category_id`            = '" . mysql_real_escape_string($categoryId). "'";
+        $sql .= " ;";
+
+        $queryResult = $db->getArray($sql);
+        $result = array();
+        
+        if (!empty ($queryResult)) {
+            foreach ($queryResult as $record) {
+                $result[] = $record['channel'];
+            }
+        }
+        
+        return array_unique($result);
+    }
+    //--------------------------------------------------------------------------
 }

@@ -166,4 +166,24 @@ class Channel extends Database
         return $this->smtp_pass;
     }
     //--------------------------------------------------------------------------
+    
+    
+    public static function getAllChannels()
+    {
+        $db = new Database;
+
+        $sql = "SELECT `id` FROM `" . self::tableName;
+        $queryResult = $db->getArray($sql);
+
+        $result = array();
+        
+        if (!empty($queryResult)) {
+            foreach ($queryResult as $record) {
+                $result[] = $record['id'];
+            }
+        }
+        
+        return $result;
+    }
+    //--------------------------------------------------------------------------
 }

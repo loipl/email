@@ -34,9 +34,10 @@ class Engine_Scheduler
         $this->pushSubIdsToBuildQueue($this->leads);
 
         Engine_Scheduler_Creatives::pushCreativeAndCampaignIdsToBuildQueue($this->leads, $this->campaignId);
-        Engine_Scheduler_Channels::pushChannelsToBuildQueue($this->leads);
 
         $batches = new Engine_Scheduler_Batches($this->leads);
+        
+        Engine_Scheduler_Channels::pushChannelsToBuildQueue($this->leads);
 
         $this->removeBlankRecordsFromBuildQueue($this->leads);
         $this->moveRecordsFromBuildQueueToSendQueue($this->leads);
