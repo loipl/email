@@ -42,7 +42,9 @@ $campaigns = Campaign::getAllCampaign();
                 <?php foreach ($campaigns as $campaign): ?>
                 <tr abbr="<?php echo $campaign['id']; ?>" class="campaign_row">
                         <td><?php echo $campaign['id']; ?></td>
-                        <td><?php echo $campaign['name']; ?></td>
+                        <td>
+                            <textarea class="campaign_name"><?php echo trim($campaign['name']); ?></textarea>
+                        </td>
                         <td class="attributes">
                             <?php 
                                 $attributes = unserialize($campaign['attributes']);
@@ -50,15 +52,20 @@ $campaigns = Campaign::getAllCampaign();
                                 echo $html;
                             ?>
                         </td>
-                        <td><?php echo $campaign['send_limit']; ?></td>
-                        <td><?php echo !empty($campaign['send_count']) ? $campaign['send_count'] : 0; ?></td>
+                        <td><input class="send_limit" value="<?php echo $campaign['send_limit']; ?>" type="number"></td>
+                        <td><?php $send_count = !empty($campaign['sent_count']) ? $campaign['sent_count'] : 0; ?>
+                            <input class="sent_count" value="<?php echo $send_count; ?>" type="number">
+                        </td>
                         <td>
                             <?php 
                                 $creativeIds = unserialize($campaign['creative_ids']);
-                                echo implode(',', $creativeIds);
+                                $creativeStr = is_array($creativeIds) ? implode(',', $creativeIds) : "";   
                             ?>
+                            <input class="creative_ids" value="<?php echo $creativeStr; ?>">
                         </td>
-                        <td><?php echo $campaign['end_date']; ?></td>
+                        <td>
+                            <input class="end_date" value="<?php echo $campaign['end_date']; ?>">
+                        </td>
                     </tr>
                 <?php endforeach;?>
             </tbody>
@@ -74,7 +81,10 @@ $campaigns = Campaign::getAllCampaign();
         $id = $data['id'];
         if (!empty($data['attributes'])) {
             $attributes = serialize($data['attributes']);
-            Campaign::updateAttributesById($id, $attributes);
+            $creativeIds = serialize($data['creative_ids']);
+            Campaign::updateCampaignById($id, $data['campaign_name'], $attributes, 
+                                            $data['send_limit'], $data['sent_count'],
+                                            $creativeIds, $data['end_date']);
             echo "Complete successfully";
         } else {
             echo "Empty attributes";

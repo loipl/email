@@ -16,3 +16,6 @@ table.campaigns_table th, table.campaigns_table td {
 table.no-border td {
      border: none;
 }
+.campaign_name {
+    height: 100px;
+}

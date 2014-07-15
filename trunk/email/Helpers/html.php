@@ -172,16 +172,16 @@ class HTML
     
     public static function getHtmlForCampaignAttributes($attributes) {
         
-        $attrTypes = self::getCampaignAttributeType();
-        $attrOptions = self::getCampaignAttributeOptions();
+        $allAttributes = self::getCampaignAttributeDescription();
         
         $html = '<table class="no-border"><tbody>';
-        foreach ($attributes as $attrName => $attrValue) {
+        foreach ($allAttributes as $attrName => $description) {
+            $attrValue = isset($attributes[$attrName]) ? $attributes[$attrName] : null;
             $html .= '<tr>';
             $html .= '<td class="attrName" abbr="' . $attrName . '">' . $attrName . '</td>';
             $html .= '<td></td>';
             $html .= '<td class="attrData">';
-            switch ($attrTypes[$attrName]){
+            switch ($description['type']){
                 case 'number':
                     $html .= '<input value="' . $attrValue . '" type="number">' ;
                     break;
@@ -190,13 +190,36 @@ class HTML
                     $html .= '<input type="checkbox" ' . $checkedStr . '>';
                     break;
                 case 'select':
-                    $html .= self::getHtmlForSelect($attrOptions[$attrName], $attrValue);
+                    $html .= self::getHtmlForSelect($description['options'], $attrValue);
+                    break;
+                case 'list':
+                    if (is_array($attrValue)) {
+                        $attrValue = implode(',', $attrValue);
+                    }
+                    $html .= '<input value="' . $attrValue . '" type="list">' ;
+                    break;
+                case 'bool_list':
+                    $list = $description['list'];
+                    foreach ($list as $item) {
+                        if (!empty($attrValue) && is_array($attrValue) && $attrValue[$item]) {
+                            $html .= ' <div><input type="checkbox" name="' . $item . '" checked>' . $item . '</div>';
+                        } else {
+                            $html .= ' <div><input type="checkbox" name="' . $item . '">' . $item . '</div>';
+                        }
+                    }
                     break;
                 default:
                     $html .= '<input value="' . $attrValue . '" type="text">' ;
                     break;
             }
             $html .= '</td>';
+            if (isset($description['enableIgnore']) && $description['enableIgnore']) {
+                if ($attrValue === false) {
+                    $html .= ' <td><input type="checkbox" class="ignore" checked> Ignore </td>';
+                } else {
+                    $html .= ' <td><input type="checkbox" class="ignore"> Ignore </td>' ;
+                }
+            }
             $html .= '</tr>';
         }
         $html .= '<tr><td></td><td></td><td><input class="edit_attr_button" type="button" value="Set"></td></tr>';
@@ -220,36 +243,72 @@ class HTML
         return $html;
     }
     
-    //--------------------------------------------------------------------------
-    public static function getCampaignAttributeOptions() {
-        return array (
-            'gender' => array(
-                ''  => 'Both',
-                'M' => 'Male',
-                'F' => 'Female'
-            ),
-            'type' => array (
-                'verified' => 'Verified',
-                'openers'  => 'Openers',
-                'clickers'  => 'Clickers'
-            )
-        );
-    }
     
     //--------------------------------------------------------------------------
-    public static function getCampaignAttributeType() {
+    public static function getCampaignAttributeDescription() {
         return array (
-            'countOnly' => 'bool',
-            'queryName' => 'text',
-            'count' => 'number',
-            'interval' => 'number',
-            'type' => 'select',
-            'minScore' => 'number',
-            'campaignId' => 'number',
-            'tldList' => 'text',
-            'gender' => 'select',
-            'country' => 'text',
-            'state' => 'text'
+            'categoryId' => array (
+                'type' => 'number', 'default' => null
+            ),
+            'categoryAction' => array (
+                'type' => 'text', 'default' => null
+            ),
+            'count' => array (
+                'type' => 'number', 'default' => 0
+            ),
+            'interval' => array (
+                'type' => 'number', 'default' => null
+            ), 
+            'minScore' => array (
+                'type' => 'number', 'default' => 0
+            ),
+            'campaignId' => array (
+                'type' => 'number', 'default' => null
+            ),
+            
+            'type' => array (
+                'type' => 'select', 
+                'options' => array (
+                    'verified' => 'Verified',
+                    'openers'  => 'Openers',
+                    'clickers'  => 'Clickers'
+                )
+            ),
+            
+            'country' => array (
+                'type' => 'list',
+                'default' => null,
+            ),
+            'state' => array (
+                'type' => 'list',
+                'default' => null,
+            ),
+            'tldList' => array (
+                'type' => 'list',
+                'default' => null,
+                'enableIgnore' => true
+            ),
+            'inverse' => array(
+                'type' => 'bool_list',
+                'list' => array('country', 'state', 'tldList')
+            ),
+            'gender' => array (
+                'type' => 'select', 
+                'options' => array(
+                    ''  => 'Both',
+                    'M' => 'Male',
+                    'F' => 'Female'
+                ),
+                'enableIgnore' => true
+            ),
+            'lastHygiene' => array (
+                'type' => 'text', 
+                'enableIgnore' => true
+            ),
+            'lastVerification' => array (
+                'type' => 'text', 
+                'enableIgnore' => true
+            )
           );
     }
 }

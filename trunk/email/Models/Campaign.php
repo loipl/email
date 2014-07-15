@@ -277,12 +277,19 @@ class Campaign extends Database
     }
     //--------------------------------------------------------------------------
     
-    public static function updateAttributesById($id, $attributes)
+    public static function updateCampaignById($id, $name, $attributes, $sendLimit, $sentCount, $creativeIds, $endDate)
     {
         $db = new Database;
 
-        $sql  = "UPDATE `" . self::tableName . "` SET attributes = '" . mysql_real_escape_string($attributes) . "'";
+        $sql  = "UPDATE `" . self::tableName . "` " .
+                "SET name = '" . mysql_real_escape_string($name) . "'" .
+                ", attributes = '" . mysql_real_escape_string($attributes) . "'" .
+                ", send_limit = '" . mysql_real_escape_string($sendLimit) . "'" .
+                ", sent_count = '" . mysql_real_escape_string($sentCount) . "'" .
+                ", creative_ids = '" . mysql_real_escape_string($creativeIds) . "'" .
+                ", end_date = '" . mysql_real_escape_string($endDate) . "'";
         $sql .= " WHERE id= '" . mysql_real_escape_string($id) . "'";
+        
 
         $db->query($sql);
 
