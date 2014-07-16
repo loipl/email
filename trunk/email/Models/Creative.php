@@ -226,4 +226,47 @@ class Creative extends Database
         return $text;
     }
     //--------------------------------------------------------------------------
+    public static function getAllCreatives()
+    {
+        $db = new Database;
+
+        $sql  = "SELECT * FROM `" . self::tableName . "` LIMIT 20";
+
+        $result = $db->getArray($sql);
+
+        return $result;
+    }
+    //--------------------------------------------------------------------------
+    
+    public static function updateCreativeById($id, $class, $categoryId, $senderId, $name, $from, $subject, $htlmBody, $textBody)
+    {
+        $db = new Database;
+
+        $sql  = "UPDATE `" . self::tableName . "` SET";
+        $updateData = array(
+            'class' => $class,
+            'category_id' => $categoryId,
+            'sender_id' => $senderId,
+            'name' => $name,
+            'from' => $from,
+            'subject' => $subject,
+            'html_body' => $htlmBody,
+            'text_body' => $textBody
+        );
+        
+        foreach ($updateData as $field => $data) {
+            if (!empty($data)) {
+                $sql .= " `$field` = '" . mysql_real_escape_string($data) . "',";
+            } else {
+                $sql .= " `$field` = null,";
+            }
+        }
+        $sql = rtrim($sql, ',');
+
+        $sql .= " WHERE `id` = '" . mysql_real_escape_string($id) . "'";
+        $db->query($sql);
+
+        return true;
+    }
+    //--------------------------------------------------------------------------
 }
