@@ -111,7 +111,8 @@ class Queue_Build extends Database
     //--------------------------------------------------------------------------
     
     
-    public static function addFullRecord($data) {
+    public static function addFullRecord($data) 
+    {
         $db = new Database;
 
         $sql  = "INSERT INTO `" . self::tableName . "` (id, created, locked, email, stage, campaign_id, creative_id, category_id, from_name,";
