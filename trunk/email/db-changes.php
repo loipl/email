@@ -16,5 +16,8 @@ CREATE TABLE IF NOT EXISTS `throttles` (
 #add "delay_until" for queue_send table - 2014/07/05
 ALTER TABLE `queue_send` ADD `delay_until` datetime DEFAULT NULL;
 
+#add "delay_seconds" for queue_send table - 2014/07/05
+ALTER TABLE `queue_send` ADD `delay_seconds` int(7) DEFAULT NULL;
+
 #add channel SMTP.com - 2014/07/15
 INSERT INTO `email`.`channels` (`id`, `name`, `type`, `class`, `smtp_host`, `smtp_port`, `smtp_user`, `smtp_pass`) VALUES ('2', 'SMTP.com', '2', 'SmtpCom', NULL, NULL, NULL, NULL);

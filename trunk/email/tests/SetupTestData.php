@@ -81,6 +81,30 @@ class SetupTestData {
     //--------------------------------------------------------------------------
     
     
+    public static function addQueueSendData($data) 
+    {
+        $db = new Database();
+        
+        if (strtolower($db->getDatabaseName()) === strtolower(Config::$testDatabase['database'])) {
+            if ( ! empty($data)) {
+                foreach ($data as $row) {
+                    try {
+                        Queue_Send::addRecord($row['email'], $row['from_name'], $row['campaign_id'], $row['creative_id'], $row['category_id'], $row['sender_email'], 
+                                $row['subject'], $row['html_body'], $row['text_body'], $row['sub_id'], $row['channel'], $row['delay_until'], $row['delay_seconds']);
+                    } catch (Exception $e) {
+                        echo '*** ERROR: Cannot add new queue_send at email: '. $row['email'];
+                        continue;
+                    }
+                }
+            }
+        } else {
+            echo '=== TEST DATABASE NOT MATCH ===';
+            die;
+        }
+    }
+    //--------------------------------------------------------------------------
+    
+    
     public static function addThrottleData($data) 
     {
         $db = new Database();

@@ -207,13 +207,16 @@ class Engine_Scheduler
         foreach($leads AS $lead) {
             $record = new Queue_Build($lead['build_queue_id']);
             
-            $delayUntil = Engine_Scheduler::getThrottleDelayUntil($record->getEmail(), $record->getChannel());
+            $delayInfo = Engine_Scheduler::getDelayInfo($record->getEmail(), $record->getChannel());
             
             // if delay time > threshold, ignore the lead, will be removed belows
-            if ($delayUntil !== false) {
+            if ($delayInfo !== false) {
                 
                 // if the lead have assigned creative, and delay_time < threshold, send it to queue_send
                 if ($record->getHtmlBody() != '' || $record->getTextBody() != '') {
+                    $delayUntil = $delayInfo['delay_until'];
+                    $delaySeconds = $delayInfo['delay_seconds'];
+                
                     Queue_Send::addRecord(
                         $record->getEmail(),
                         $record->getFrom(),
@@ -226,7 +229,8 @@ class Engine_Scheduler
                         $record->getTextBody(),
                         $record->getSubId(),
                         $record->getChannel(),
-                        $delayUntil
+                        $delayUntil,
+                        $delaySeconds
                     );
                 }
             }
@@ -239,21 +243,22 @@ class Engine_Scheduler
     //--------------------------------------------------------------------------
     
     
-    public static function getThrottleDelayUntil($email, $channel) {
+    public static function getDelayInfo($email, $channel) {
         $emailDomain = explode('@', $email);
 
         if (isset($emailDomain[1])) {
             $domain = $emailDomain[1];
         }
         
-        $throttles = array();
-
         if (!empty($domain)) {
             $throttles = Throttle::getThrottles($domain, $channel);
+            $stackingDelayLeads = Queue_Send::getStackingDelayByTLD($domain);
         }
-
+        
+        $delaySecond = 0;
+        
+        // get delay seconds by throttle
         if (!empty($throttles)) {
-            $delaySecond = 0;
             foreach ($throttles as $record) {
                 $throttleType = (int) $record['type'];
                 
@@ -274,16 +279,31 @@ class Engine_Scheduler
                         break;
                 }
             }
+        }
 
+        // get delay seconds by stacking delays
+        if (!empty($stackingDelayLeads)) {
+            foreach ($stackingDelayLeads as $record) {
+                $delaySecond += (int) $record['delay_seconds'];
+            }
+        }
+        
+        if ($delaySecond !== 0) {
             if ($delaySecond > Config::THRESHOLD_DELAY_SECONDS) {
                 // abandom the lead
                 return false;
             } else {
-                return date('Y-m-d H:i:s', (time() + $delaySecond));
+                return array(
+                    'delay_seconds' => $delaySecond,
+                    'delay_until' => date('Y-m-d H:i:s', (time() + $delaySecond))
+                );
             }
         }
         
-        return NULL;
+        return array(
+            'delay_until' => null,
+            'delay_seconds' => null
+        );
     }
     //--------------------------------------------------------------------------
 }

@@ -18,7 +18,8 @@ class Queue_Send extends Database
     protected $subId;
     protected $channelId;
     protected $delayUntil;
-
+    protected $delaySeconds;
+    
     protected $tableName = 'queue_send';
     const      tableName = 'queue_send';
 
@@ -45,6 +46,7 @@ class Queue_Send extends Database
         $this->subId       = $result['sub_id'];
         $this->channelId   = $result['channel'];
         $this->delayUntil  = $result['delay_until'];
+        $this->delaySeconds= $result['delay_seconds'];
     }
     //--------------------------------------------------------------------------
 
@@ -172,7 +174,14 @@ class Queue_Send extends Database
         return $this->delayUntil;
     }
     //--------------------------------------------------------------------------
-
+    
+    
+    public function getDelaySeconds()
+    {
+        return $this->delaySeconds;
+    }
+    //--------------------------------------------------------------------------
+    
 
     public static function getCreatedById($id)
     {
@@ -306,12 +315,12 @@ class Queue_Send extends Database
     //--------------------------------------------------------------------------
 
 
-    public static function addRecord($email, $from, $campaignId, $creativeId, $categoryId, $senderEmail, $subject, $htmlBody, $textBody, $subId, $channel, $delayUntil)
+    public static function addRecord($email, $from, $campaignId, $creativeId, $categoryId, $senderEmail, $subject, $htmlBody, $textBody, $subId, $channel, $delayUntil, $delaySeconds)
     {
         $db = new Database;
 
         $sql  = "INSERT INTO `" . self::tableName . "` (id, created, locked, email, from_name, campaign_id,";
-        $sql .= " creative_id, category_id, sender_email, subject, html_body, text_body, sub_id, channel, delay_until) VALUES (NULL, ";
+        $sql .= " creative_id, category_id, sender_email, subject, html_body, text_body, sub_id, channel, delay_until, delay_seconds) VALUES (NULL, ";
         $sql .= " NOW(),";
         $sql .= " '0',";
         $sql .= " '" . mysql_real_escape_string($email). "',";
@@ -325,7 +334,8 @@ class Queue_Send extends Database
         $sql .= " '" . mysql_real_escape_string($textBody). "',";
         $sql .= " '" . mysql_real_escape_string($subId). "',";
         $sql .= " '" . mysql_real_escape_string($channel). "',";
-        $sql .= " '" . $delayUntil. "')";
+        $sql .= " '" . mysql_real_escape_string($delayUntil). "',";
+        $sql .= " '" . mysql_real_escape_string($delaySeconds). "')";
         $db->query($sql);
 
         return true;
@@ -435,4 +445,19 @@ class Queue_Send extends Database
         }
     }
     //--------------------------------------------------------------------------
+    
+    
+    public static function getStackingDelayByTLD($domain)
+    {
+        $db = new Database;
+
+        $sql  = "SELECT `delay_seconds` FROM `" . self::tableName . "`";
+        $sql .= " WHERE `email` LIKE '%$domain'";
+        $sql .= " AND   `delay_seconds` != '0'";
+        $sql .= ";";
+        
+        $result = $db->getArray($sql);
+
+        return $result;
+    }
 }
