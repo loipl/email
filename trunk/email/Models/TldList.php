@@ -110,4 +110,48 @@ class TldList extends Database
             TldList::$yahooTldList
         );
     }
+    //--------------------------------------------------------------------------
+    
+    
+    public static function getTldGroupByDomain($domain)
+    {
+        foreach (self::$aolTldList as $tld) {
+            if ($tld === $domain) {
+                return Config::AOL_TLD_LIST;
+            }
+        }
+        
+        foreach (self::$microsoftTldList as $tld) {
+            if ($tld === $domain) {
+                return Config::MICROSOFT_TLD_LIST;
+            }
+        }
+        
+        foreach (self::$gmailTldList as $tld) {
+            if ($tld === $domain) {
+                return Config::GMAIL_TLD_LIST;
+            }
+        }
+        
+        foreach (self::$unitedOnlineTldList as $tld) {
+            if ($tld === $domain) {
+                return Config::UNITED_ONLINE_TLD_LIST;
+            }
+        }
+        
+        foreach (self::$cableTldList as $tld) {
+            if ($tld === $domain) {
+                return Config::CABLE_TLD_LIST;
+            }
+        }
+        
+        foreach (self::$yahooTldList as $tld) {
+            if ($tld === $domain) {
+                return Config::YAHOO_TLD_LIST;
+            }
+        }
+        
+        return '';
+    }
+    //--------------------------------------------------------------------------
 }

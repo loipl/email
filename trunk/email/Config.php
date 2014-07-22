@@ -23,23 +23,23 @@ class Config
     const SCOREMOD_UNSUBSCRIBE    =  -999;
     const SCOREMOD_HYGIENEFAIL    =  -999;
     
-    CONST TRANSACTION_TYPE_OPEN         =  1;   // open
-    CONST TRANSACTION_TYPE_CLICK        =  2;   // click
-    CONST TRANSACTION_TYPE_UNSUB        =  3;   // unsubcribe
-    CONST TRANSACTION_TYPE_SOFTBOUNCE   =  4;   // soft bounce
-    CONST TRANSACTION_TYPE_COMPLAINT    =  5;   // complaint
-    CONST TRANSACTION_TYPE_HARDBOUNCE   =  6;   // hardbounce
-    CONST TRANSACTION_TYPE_CONVERSION   = 10;   // conversion
+    const TRANSACTION_TYPE_OPEN         =  1;   // open
+    const TRANSACTION_TYPE_CLICK        =  2;   // click
+    const TRANSACTION_TYPE_UNSUB        =  3;   // unsubcribe
+    const TRANSACTION_TYPE_SOFTBOUNCE   =  4;   // soft bounce
+    const TRANSACTION_TYPE_COMPLAINT    =  5;   // complaint
+    const TRANSACTION_TYPE_HARDBOUNCE   =  6;   // hardbounce
+    const TRANSACTION_TYPE_CONVERSION   = 10;   // conversion
     
-    CONST SUPRESS_REASON_HARDBOUNCE     = 1;    // hard bounce
-    CONST SUPRESS_REASON_PREVHARDBOUNCE = 2;    // previously hard bounce
-    CONST SUPRESS_REASON_COMPLAINT      = 3;    // complaint
-    CONST SUPRESS_REASON_PREVCOMPLAINT  = 4;    // previously complaint
-    CONST SUPRESS_REASON_IMPORTED       = 5;    // imported data
-    CONST SUPRESS_REASON_UNSUB          = 6;    // unsubcribe
-    CONST SUPRESS_REASON_HYGIENEFAIL    = 7;    // hygiene fail
+    const SUPRESS_REASON_HARDBOUNCE     = 1;    // hard bounce
+    const SUPRESS_REASON_PREVHARDBOUNCE = 2;    // previously hard bounce
+    const SUPRESS_REASON_COMPLAINT      = 3;    // complaint
+    const SUPRESS_REASON_PREVCOMPLAINT  = 4;    // previously complaint
+    const SUPRESS_REASON_IMPORTED       = 5;    // imported data
+    const SUPRESS_REASON_UNSUB          = 6;    // unsubcribe
+    const SUPRESS_REASON_HYGIENEFAIL    = 7;    // hygiene fail
     
-    CONST SUPPRESSION_SOURCE            = 3;
+    const SUPPRESSION_SOURCE            = 3;
     
     const COMPLAINT_DELAY_SECONDS       = 720;
     const HARD_BOUNCE_DELAY_SECONDS     = 60;
@@ -47,6 +47,20 @@ class Config
     const THRESHOLD_DELAY_SECONDS       = 1200;   // ignore leads which delay time > 20 minutes
     
     const PURGE_THROTTLE_THRESHOLD      = 20;    // purge throttle which older than this threshold (in minutes)
+    
+    const AOL_TLD_LIST                  = 'aol';
+    const MICROSOFT_TLD_LIST            = 'microsoft';
+    const GMAIL_TLD_LIST                = 'gmail';
+    const UNITED_ONLINE_TLD_LIST        = 'united_online';
+    const CABLE_TLD_LIST                = 'cable';
+    const YAHOO_TLD_LIST                = 'yahoo';
+    
+    const AOL_TLD_LIST_DELAY_SECONDS            = 1;
+    const MICROSOFT_TLD_LIST_DELAY_SECONDS      = 2;
+    const GMAIL_TLD_LIST_DELAY_SECONDS          = 3;
+    const UNITED_ONLINE_TLD_LIST_DELAY_SECONDS  = 4;
+    const CABLE_TLD_LIST_DELAY_SECONDS          = 5;
+    const YAHOO_TLD_LIST_DELAY_SECONDS          = 6;
     
     const SEPARATOR_EMAIL         = 'dRm415';
     const SEPARATOR_CAMPAIGN      = 'bMm207';

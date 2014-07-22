@@ -43,3 +43,6 @@ INSERT INTO `email`.`channels` (`id`, `name`, `type`, `class`, `smtp_host`, `smt
 
 #add "source_campaign" to throttles table - 2014/07/22
 ALTER TABLE `throttles` ADD `source_campaign` VARCHAR(32) DEFAULT NULL AFTER `domain` ;
+
+#add "tld_group" to throttles table - 2014/07/22
+ALTER TABLE `throttles` ADD `tld_group` VARCHAR(32) DEFAULT NULL AFTER `source_campaign` ;

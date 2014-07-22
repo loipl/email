@@ -283,6 +283,12 @@ class Engine_Scheduler
         if (!empty($domain)) {
             $throttlesByDomain = Throttle::getThrottlesByDomain($domain, $channel);
             $stackingDelayLeads = Queue_Send::getStackingDelayByTLD($domain);
+            
+            $tldGroup = TldList::getTldGroupByDomain($domain);
+
+            if (!empty($tldGroup)) {
+                $throttlesByTldGroup = Throttle::getThrottlesByTldGroup($tldGroup, $channel);
+            }
         }
         
         $lead = new Lead($email);
@@ -309,6 +315,11 @@ class Engine_Scheduler
             foreach ($stackingDelayLeads as $record) {
                 $delaySecond += (int) $record['delay_seconds'];
             }
+        }
+        
+        // get delay seconds by tld group throttles
+        if (!empty($throttlesByTldGroup)) {
+            self::addDelaySecondByTldGroupThrottles($throttlesByTldGroup, $delaySecond);
         }
         
         if ($delaySecond !== 0) {
@@ -349,6 +360,46 @@ class Engine_Scheduler
                     $delaySecond += Config::SOFT_BOUNCE_DELAY_SECONDS;
                     break;
 
+                default:
+                    break;
+            }
+        }
+        
+        return true;
+    }
+    //--------------------------------------------------------------------------
+    
+    
+    public static function addDelaySecondByTldGroupThrottles($throttlesByTldGroup, &$delaySecond)
+    {
+        foreach ($throttlesByTldGroup as $record) {
+            $tldGroup = $record['tld_group'];
+            
+            switch ($tldGroup) {
+                case Config::AOL_TLD_LIST:
+                    $delaySecond += Config::AOL_TLD_LIST_DELAY_SECONDS;
+                    break;
+                
+                case Config::MICROSOFT_TLD_LIST:
+                    $delaySecond += Config::MICROSOFT_TLD_LIST_DELAY_SECONDS;
+                    break;
+                
+                case Config::GMAIL_TLD_LIST:
+                    $delaySecond += Config::GMAIL_TLD_LIST_DELAY_SECONDS;
+                    break;
+                
+                case Config::UNITED_ONLINE_TLD_LIST:
+                    $delaySecond += Config::UNITED_ONLINE_TLD_LIST_DELAY_SECONDS;
+                    break;
+                
+                case Config::CABLE_TLD_LIST:
+                    $delaySecond += Config::CABLE_TLD_LIST_DELAY_SECONDS;
+                    break;
+                
+                case Config::YAHOO_TLD_LIST:
+                    $delaySecond += Config::YAHOO_TLD_LIST_DELAY_SECONDS;
+                    break;
+                
                 default:
                     break;
             }

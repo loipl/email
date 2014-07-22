@@ -70,6 +70,22 @@ class Throttle extends Database
     //--------------------------------------------------------------------------
     
     
+    public static function getThrottlesByTldGroup($tldGroup, $channel)
+    {
+        $db = new Database;
+
+        $sql  = "SELECT `tld_group` FROM `" . self::tableName . "`";
+        $sql .= " WHERE `tld_group`            = '" . mysql_real_escape_string($tldGroup). "'";
+        $sql .= " AND   `channel`           = '" . mysql_real_escape_string($channel). "'";
+        $sql .= " ;";
+
+        $result = $db->getArray($sql);
+        
+        return $result;
+    }
+    //--------------------------------------------------------------------------
+    
+    
     public static function getThrottlesBySourceCampaign($sourceCampaign, $channel)
     {
         $db = new Database;
@@ -90,13 +106,14 @@ class Throttle extends Database
     {
         $db = new Database;
 
-        $sql  = 'INSERT INTO `' . self::tableName . '` (id, created, type, domain, source_campaign, channel, campaign_id, creative_id,';
+        $sql  = 'INSERT INTO `' . self::tableName . '` (id, created, type, domain, source_campaign, tld_group, channel, campaign_id, creative_id,';
         $sql .= 'category_id) VALUES (';
         $sql .= 'NULL,';
         $sql .= ' NOW(),';
         $sql .= ' \'' . mysql_real_escape_string($data['type']) . '\',';
         $sql .= ' \'' . mysql_real_escape_string($data['domain']) . '\',';
         $sql .= ' \'' . mysql_real_escape_string($data['source_campaign']) . '\',';
+        $sql .= ' \'' . mysql_real_escape_string($data['tld_group']) . '\',';
         $sql .= ' \'' . mysql_real_escape_string($data['channel']) . '\',';
         $sql .= ' \'' . mysql_real_escape_string($data['campaign_id']) . '\',';
         $sql .= ' \'' . mysql_real_escape_string($data['creative_id']) . '\',';

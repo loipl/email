@@ -48,16 +48,22 @@ abstract class PostBack {
         if (intval($activityId) > 0 && ! is_null($email)) {
             // get domain
             $emailDomain = explode('@', $email);
+            $domain = '';
+            $tldGroup = '';
+            
             if (count($emailDomain) > 1) { 
                 $domain = $emailDomain[1];
-            } else {
-                $domain = '';
+            }
+            
+            if (!empty($domain)) {
+                $tldGroup = TldList::getTldGroupByDomain($domain);
             }
 
             $throttle = array(
                 'type'            => $type,
                 'domain'          => $domain,
                 'source_campaign' => $sourceCampaign,
+                'tld_group'       => $tldGroup,
                 'channel'         => Activity::getChannelById($activityId),
                 'creative_id'     => Activity::getCreativeIdById($activityId),
                 'campaign_id'     => Activity::getCampaignIdById($activityId),
