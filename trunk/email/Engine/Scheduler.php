@@ -19,6 +19,8 @@ class Engine_Scheduler
             $this->cronIdentifier = 'process-scheduler';
         }
 
+        LogScheduler::init();
+
         if (empty($email) && empty($campaignId)) {
             $this->setupCampaign();
             $this->setupLeads();
@@ -41,12 +43,20 @@ class Engine_Scheduler
 
         $this->removeBlankRecordsFromBuildQueue($this->leads);
         $this->moveRecordsFromBuildQueueToSendQueue($this->leads);
+        
+        LogScheduler::save();
+        LogScheduler::reset();
     }
     //--------------------------------------------------------------------------
 
 
     private function exitProcess($message)
     {
+        
+        LogScheduler::addAttributes(array('message' => $message));
+        LogScheduler::save();
+        LogScheduler::reset();
+        
         if (!empty($message)) {
             Locks_Cron::removeLock($this->cronIdentifier);
 
@@ -79,6 +89,11 @@ class Engine_Scheduler
         if (Config::$debugLevel > 0) {
             Logging::logDebugging('[Scheduler: setupCampaign] attributes', serialize($this->attributes));
         }
+        
+        LogScheduler::addAttributes(array(
+            'chosen_campaign_id' => $this->campaignId,
+            'chosen_campaign_attribute' => $this->campaign->getAttributes()
+        ));
 
         return true;
     }
@@ -102,6 +117,11 @@ class Engine_Scheduler
 
             self::exitProcess('No Leads to Process');
         }
+        
+        LogScheduler::addAttributes(array(
+            'lead_count' => count($this->leads),
+            'leads'      => serialize($this->leads)
+        ));
 
         Engine_Scheduler_Leads::lockLeads($this->leads);
         Engine_Scheduler_Leads::pushLeadsToBuildQueue($this->leads);
@@ -203,6 +223,8 @@ class Engine_Scheduler
         if (empty($leads) || !is_array($leads)) {
             return false;
         }
+        
+        $sendQueueCount = 0;
 
         foreach($leads AS $lead) {
             $record = new Queue_Build($lead['build_queue_id']);
@@ -214,29 +236,36 @@ class Engine_Scheduler
                 
                 // if the lead have assigned creative, and delay_time < threshold, send it to queue_send
                 if ($record->getHtmlBody() != '' || $record->getTextBody() != '') {
-                    $delayUntil = $delayInfo['delay_until'];
-                    $delaySeconds = $delayInfo['delay_seconds'];
-                
-                    Queue_Send::addRecord(
-                        $record->getEmail(),
-                        $record->getFrom(),
-                        $record->getCampaignId(),
-                        $record->getCreativeId(),
-                        $record->getCategoryId(),
-                        $record->getSenderEmail(),
-                        $record->getSubject(),
-                        $record->getHtmlBody(),
-                        $record->getTextBody(),
-                        $record->getSubId(),
-                        $record->getChannel(),
-                        $delayUntil,
-                        $delaySeconds
-                    );
+                    
+                    if (!Queue_Send::checkQueueSendExist($record->getEmail(), $record->getCreativeId())) {
+                        
+                        $delayUntil = $delayInfo['delay_until'];
+                        $delaySeconds = $delayInfo['delay_seconds'];
+
+                        Queue_Send::addRecord(
+                            $record->getEmail(),
+                            $record->getFrom(),
+                            $record->getCampaignId(),
+                            $record->getCreativeId(),
+                            $record->getCategoryId(),
+                            $record->getSenderEmail(),
+                            $record->getSubject(),
+                            $record->getHtmlBody(),
+                            $record->getTextBody(),
+                            $record->getSubId(),
+                            $record->getChannel(),
+                            $delayUntil,
+                            $delaySeconds
+                        );
+                    }
+                    $sendQueueCount ++;
                 }
             }
 
             $record->removeRecord();
         }
+        
+        LogScheduler::addAttributes(array('queued_lead_count' => $sendQueueCount));
 
         return true;
     }

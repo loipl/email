@@ -396,7 +396,7 @@ class Lead extends Database
 
     public function processSuppressionCampaignCheck(&$leadGroup, $suppressionList)
     {
-        if (!is_null($suppressionList)) {
+        if (!empty($suppressionList)) {
             foreach ($leadGroup AS $int => $lead) {
                 if (in_array($lead['md5_email'], $suppressionList)) {
                     unset($leadGroup[$int]);

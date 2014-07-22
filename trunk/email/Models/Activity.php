@@ -201,7 +201,7 @@ class Activity extends Database
         $sql .= ");";
 
         $db->query($sql);
-        echo $sql;
+        
         return mysql_insert_id();
     }
     //--------------------------------------------------------------------------
@@ -218,6 +218,27 @@ class Activity extends Database
         $sql .= ", `sender`      = '" . mysql_real_escape_string($senderEmail) . "'";
         $sql .= " WHERE `id`     = '" . mysql_real_escape_string($subId) . "'";
         $sql .= " LIMIT 1;";
+
+        $db->query($sql);
+
+        return mysql_insert_id();
+    }
+    //--------------------------------------------------------------------------
+
+    public static function logActivity($email, $campaignId, $creativeId = NULL, $sender = NULL, $channel = NULL, $categoryId = NULL)
+    {
+        $db = new Database;
+
+        $sql  = "INSERT INTO `" . self::tableName . "` (email, datetime, campaign_id, creative_id, sender, channel";
+        if (!empty($categoryId)) {
+            $sql .= ", category_id";
+        }
+        $sql .= ") VALUES (";
+        $sql .= "'" . mysql_real_escape_string($email) . "', NOW(), '" . $campaignId . "', '" . $creativeId . "', '" . $sender . "', '" . $channel . "'";
+        if (!empty($categoryId)) {
+            $sql .= ", '" . $categoryId . "'";
+        }
+        $sql .= ");";
 
         $db->query($sql);
 

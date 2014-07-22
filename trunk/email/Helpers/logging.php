@@ -3,38 +3,6 @@
 class Logging
 {
 
-    public static function logActivity($email, $campaignId, $creativeId = NULL, $sender = NULL, $channel = NULL, $categoryId = NULL)
-    {
-        $db = new Database;
-
-        $sql  = "INSERT INTO `activity` (email, datetime, campaign_id, creative_id, sender, channel";
-        if (!empty($categoryId)) {
-            $sql .= ", category_id";
-        }
-        $sql .= ") VALUES (";
-        $sql .= "'" . mysql_real_escape_string($email) . "', NOW(), '" . $campaignId . "', '" . $creativeId . "', '" . $sender . "', '" . $channel . "'";
-        if (!empty($categoryId)) {
-            $sql .= ", '" . $categoryId . "'";
-        }
-        $sql .= ");";
-
-        $db->query($sql);
-
-        return mysql_insert_id();
-    }
-    //--------------------------------------------------------------------------
-
-
-    public static function removeActivity($subId)
-    {
-        $db = new Database;
-
-        $sql = "DELETE FROM `activity` WHERE `id` = '" . $subId . "' LIMIT 1;";
-
-        $db->query($sql);
-    }
-    //--------------------------------------------------------------------------
-
 
     public static function logSendError($espName, $errorCode, $errorNumber, $error, $to, $fromPerson, $fromEmail, $subject, $bodyHtml, $bodyText)
     {

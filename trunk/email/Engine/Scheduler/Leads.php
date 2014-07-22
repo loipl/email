@@ -11,6 +11,10 @@ class Engine_Scheduler_Leads
             return false;
         } else {
             $campaign = self::selectRandomCampaign($campaigns);
+            LogScheduler::addAttributes(array(
+                'eligible_campaign_count' => count($campaigns),
+                'eligible_campaign_ids'   => serialize($campaigns) 
+            ));
         }
 
         if (!empty($campaign) && is_numeric($campaign)) {

@@ -126,4 +126,20 @@ class SetupTestData {
         }
     }
     //--------------------------------------------------------------------------
+    
+     public static function resetLogScheduler() {
+        $db = new Database();
+        $tableName = 'log_scheduler';
+        
+        if (strtolower($db->getDatabaseName()) === strtolower(Config::$testDatabase['database'])) {
+            $sql = 'TRUNCATE '. $tableName;
+            
+            $db->query($sql);
+
+            return true;
+        } else {
+            echo '=== TEST DATABASE NOT MATCH ===';
+            die;
+        }
+    }
 }

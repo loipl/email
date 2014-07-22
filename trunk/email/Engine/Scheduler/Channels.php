@@ -36,8 +36,10 @@ class Engine_Scheduler_Channels
         
         if (!empty($channels)) {
             return $channels[mt_rand(0, count($channels) - 1)];
-        } else {
+        } elseif (!empty($allChannels)){
             return $allChannels[mt_rand(0, count($allChannels) - 1)];
         }
+        
+        return '1';
     }
 }

@@ -460,4 +460,25 @@ class Queue_Send extends Database
 
         return $result;
     }
+    //--------------------------------------------------------------------------
+    
+    
+    public static function checkQueueSendExist($email, $creativeId)
+    {
+        $db = new Database;
+
+        $sql  = "SELECT `id` FROM `" . self::tableName . "`";
+        $sql .= " WHERE `email` = '$email'";
+        $sql .= " AND   `creative_id` = '$creativeId'";
+        $sql .= ";";
+
+        $result = $db->getArray($sql);
+        
+        if (!empty ($result)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    //--------------------------------------------------------------------------
 }

@@ -21,3 +21,17 @@ ALTER TABLE `queue_send` ADD `delay_seconds` int(7) DEFAULT NULL;
 
 #add channel SMTP.com - 2014/07/15
 INSERT INTO `email`.`channels` (`id`, `name`, `type`, `class`, `smtp_host`, `smtp_port`, `smtp_user`, `smtp_pass`) VALUES ('2', 'SMTP.com', '2', 'SmtpCom', NULL, NULL, NULL, NULL);
+
+# add table for log_scheduler's 2014/07/22
+    CREATE TABLE IF NOT EXISTS `log_scheduler` (
+        `id` int(7) NOT NULL AUTO_INCREMENT,
+        `eligible_campaign_count` INT(8),
+        `eligible_campaign_ids` VARCHAR(50),
+        `chosen_campaign_id` INT(8),
+        `chosen_campaign_attribute` text CHARACTER SET latin1,
+        `lead_count` INT(8),
+        `leads` text CHARACTER SET latin1,
+        `queued_lead_count` INT(8),
+        `message` VARCHAR(50),
+        PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

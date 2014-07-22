@@ -116,7 +116,7 @@ class Engine_Sender
                 Campaign::addSentCount($campaignId);
             } else {
                 if (isset($subId) && is_numeric($subId) && $subId > 0) {
-                    Logging::removeActivity($subId);
+                    Activity::removeActivity($subId);
 
                     return false;
                 }

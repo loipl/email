@@ -172,7 +172,7 @@ class Channel extends Database
     {
         $db = new Database;
 
-        $sql = "SELECT `id` FROM `" . self::tableName;
+        $sql = "SELECT `id` FROM `" . self::tableName . "`;";
         $queryResult = $db->getArray($sql);
 
         $result = array();
