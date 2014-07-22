@@ -1193,4 +1193,32 @@ class Lead extends Database
         return false;
     }
     //--------------------------------------------------------------------------
+    
+    
+    public static function addRecord($data)
+    {
+        $db = new Database;
+
+        $sql  = "INSERT INTO `" . self::tableName . "` (email, domain, score, md5_email, md5_domain, country, source_campaign,";
+        $sql .= " birth_day, birth_month, birth_year, gender, seeking) VALUES (";
+        $sql .= " '" . mysql_real_escape_string($data['email']). "',";
+        $sql .= " '" . mysql_real_escape_string($data['domain']). "',";
+        $sql .= " '" . mysql_real_escape_string($data['score']). "',";
+        $sql .= " '" . mysql_real_escape_string($data['md5_email']). "',";
+        $sql .= " '" . mysql_real_escape_string($data['md5_domain']). "',";
+        $sql .= " '" . mysql_real_escape_string($data['country']). "',";
+        $sql .= " '" . mysql_real_escape_string($data['source_campaign']). "',";
+        $sql .= " '" . mysql_real_escape_string($data['birth_day']). "',";
+        $sql .= " '" . mysql_real_escape_string($data['birth_month']). "',";
+        $sql .= " '" . mysql_real_escape_string($data['birth_year']). "',";
+        $sql .= " '" . mysql_real_escape_string($data['gender']). "',";
+        $sql .= " '" . mysql_real_escape_string($data['seeking']). "'";
+
+        $sql .= ");";
+
+        $db->query($sql);
+
+        return true;
+    }
+    //--------------------------------------------------------------------------
 }

@@ -4,9 +4,8 @@ require_once '../email.php';
 
 class SetupTestData {
     
-    public static function resetQueueBuildData() {
+    public static function resetTableData($tableName) {
         $db = new Database();
-        $tableName = 'queue_build';
         
         if (strtolower($db->getDatabaseName()) === strtolower(Config::$testDatabase['database'])) {
             $sql = 'TRUNCATE '. $tableName;
@@ -22,34 +21,21 @@ class SetupTestData {
     //--------------------------------------------------------------------------
     
     
-    public static function resetQueueSendData() {
+    public static function addLeadData($data)
+    {
         $db = new Database();
-        $tableName = 'queue_send';
         
         if (strtolower($db->getDatabaseName()) === strtolower(Config::$testDatabase['database'])) {
-            $sql = 'TRUNCATE '. $tableName;
-            
-            $db->query($sql);
-
-            return true;
-        } else {
-            echo '=== TEST DATABASE NOT MATCH ===';
-            die;
-        }
-    }
-    //--------------------------------------------------------------------------
-    
-    
-    public static function resetThrottleData() {
-        $db = new Database();
-        $tableName = 'throttles';
-        
-        if (strtolower($db->getDatabaseName()) === strtolower(Config::$testDatabase['database'])) {
-            $sql = 'TRUNCATE '. $tableName;
-            
-            $db->query($sql);
-
-            return true;
+            if ( ! empty($data)) {
+                foreach ($data as $row) {
+                    try {
+                        Lead::addRecord($row);
+                    } catch (Exception $e) {
+                        echo '*** ERROR: Cannot add new lead at email: '. $row['email'];
+                        continue;
+                    }
+                }
+            }
         } else {
             echo '=== TEST DATABASE NOT MATCH ===';
             die;

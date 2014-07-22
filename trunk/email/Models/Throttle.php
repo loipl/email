@@ -75,7 +75,7 @@ class Throttle extends Database
         $db = new Database;
 
         $sql  = "SELECT `type` FROM `" . self::tableName . "`";
-        $sql .= " WHERE `source_campaign`            = '" . mysql_real_escape_string($sourceCampaign). "'";
+        $sql .= " WHERE `source_campaign`   = '" . mysql_real_escape_string($sourceCampaign). "'";
         $sql .= " AND   `channel`           = '" . mysql_real_escape_string($channel). "'";
         $sql .= " ;";
 
