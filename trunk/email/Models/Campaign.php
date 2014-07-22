@@ -295,5 +295,24 @@ class Campaign extends Database
 
         return true;
     }
+    
+    //--------------------------------------------------------------------------
+    public static function insertCampaign($name, $attributes, $sendLimit, $sentCount, $creativeIds, $endDate)
+    {
+        $db = new Database;
+
+        $sql  = "INSERT INTO `" . self::tableName . "` " .
+                "SET name = '" . mysql_real_escape_string($name) . "'" .
+                ", attributes = '" . mysql_real_escape_string($attributes) . "'" .
+                ", send_limit = '" . mysql_real_escape_string($sendLimit) . "'" .
+                ", sent_count = '" . mysql_real_escape_string($sentCount) . "'" .
+                ", creative_ids = '" . mysql_real_escape_string($creativeIds) . "'" .
+                ", end_date = '" . mysql_real_escape_string($endDate) . "'";
+
+        $db->query($sql);
+        
+        return mysql_insert_id();
+
+    }
     //--------------------------------------------------------------------------
 }

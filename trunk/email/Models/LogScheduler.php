@@ -12,6 +12,7 @@ class LogScheduler extends Database
     const tableName = 'log_scheduler';
     protected static $tableFields = array (
                                         'id', 
+                                        'scheduler_name', 
                                         'eligible_campaign_count', 
                                         'eligible_campaign_ids', 
                                         'chosen_campaign_id',
@@ -19,7 +20,8 @@ class LogScheduler extends Database
                                         'lead_count',
                                         'leads',
                                         'queued_lead_count',
-                                        'message'
+                                        'message',
+                                        'create_time'
                                     );
             
     //--------------------------------------------------------------------------
@@ -59,6 +61,7 @@ class LogScheduler extends Database
 
     public static function save()
     {
+        self::$attributes['create_time'] = date('Y-m-d H:i:s');
         if (is_null(self::$id)) {
             return false;
         } else {

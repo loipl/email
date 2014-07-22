@@ -54,7 +54,7 @@ class Throttle extends Database
     //--------------------------------------------------------------------------
     
     
-    public static function getThrottles($domain, $channel)
+    public static function getThrottlesByDomain($domain, $channel)
     {
         $db = new Database;
 
@@ -70,16 +70,33 @@ class Throttle extends Database
     //--------------------------------------------------------------------------
     
     
+    public static function getThrottlesBySourceCampaign($sourceCampaign, $channel)
+    {
+        $db = new Database;
+
+        $sql  = "SELECT `type` FROM `" . self::tableName . "`";
+        $sql .= " WHERE `source_campaign`            = '" . mysql_real_escape_string($sourceCampaign). "'";
+        $sql .= " AND   `channel`           = '" . mysql_real_escape_string($channel). "'";
+        $sql .= " ;";
+
+        $result = $db->getArray($sql);
+        
+        return $result;
+    }
+    //--------------------------------------------------------------------------
+    
+    
     public static function addThrottle($data)
     {
         $db = new Database;
 
-        $sql  = 'INSERT INTO `' . self::tableName . '` (id, created, type, domain, channel, campaign_id, creative_id,';
+        $sql  = 'INSERT INTO `' . self::tableName . '` (id, created, type, domain, source_campaign, channel, campaign_id, creative_id,';
         $sql .= 'category_id) VALUES (';
         $sql .= 'NULL,';
         $sql .= ' NOW(),';
         $sql .= ' \'' . mysql_real_escape_string($data['type']) . '\',';
         $sql .= ' \'' . mysql_real_escape_string($data['domain']) . '\',';
+        $sql .= ' \'' . mysql_real_escape_string($data['source_campaign']) . '\',';
         $sql .= ' \'' . mysql_real_escape_string($data['channel']) . '\',';
         $sql .= ' \'' . mysql_real_escape_string($data['campaign_id']) . '\',';
         $sql .= ' \'' . mysql_real_escape_string($data['creative_id']) . '\',';

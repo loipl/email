@@ -42,6 +42,8 @@ abstract class PostBack {
     {
         $activityId = mysql_real_escape_string($activityId);
         $email = Activity::getEmailById($activityId);
+        $lead = new Lead($email);
+        $sourceCampaign = $lead->getCampaign();
         
         if (intval($activityId) > 0 && ! is_null($email)) {
             // get domain
@@ -53,12 +55,13 @@ abstract class PostBack {
             }
 
             $throttle = array(
-                'type'          => $type,
-                'domain'        => $domain,
-                'channel'       => Activity::getChannelById($activityId),
-                'creative_id'   => Activity::getCreativeIdById($activityId),
-                'campaign_id'   => Activity::getCampaignIdById($activityId),
-                'category_id'   => Activity::getCategoryIdById($activityId)
+                'type'            => $type,
+                'domain'          => $domain,
+                'source_campaign' => $sourceCampaign,
+                'channel'         => Activity::getChannelById($activityId),
+                'creative_id'     => Activity::getCreativeIdById($activityId),
+                'campaign_id'     => Activity::getCampaignIdById($activityId),
+                'category_id'     => Activity::getCategoryIdById($activityId)
             );
             
             // insert throttle if not exist

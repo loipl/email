@@ -68,8 +68,9 @@ class Database
 
         if (!$result) {
             Logging::logDatabaseError($sql, mysql_error());
+            return false;
         }
-
+        
         while ($row = mysql_fetch_assoc($result)) {
             $data[] = $row;
         }

@@ -20,6 +20,7 @@ class Engine_Scheduler
         }
 
         LogScheduler::init();
+        LogScheduler::addAttributes(array('scheduler_name' => $this->cronIdentifier));
 
         if (empty($email) && empty($campaignId)) {
             $this->setupCampaign();
@@ -31,7 +32,7 @@ class Engine_Scheduler
 
         $this->setupCreatives();
         $this->assignCreativesToLeads($this->leads, $this->creativeIds);
-
+        
         $this->pushActivityAndAssignSubIds($this->leads, $this->campaignId);
         $this->pushSubIdsToBuildQueue($this->leads);
 
@@ -280,34 +281,27 @@ class Engine_Scheduler
         }
         
         if (!empty($domain)) {
-            $throttles = Throttle::getThrottles($domain, $channel);
+            $throttlesByDomain = Throttle::getThrottlesByDomain($domain, $channel);
             $stackingDelayLeads = Queue_Send::getStackingDelayByTLD($domain);
+        }
+        
+        $lead = new Lead($email);
+        $sourceCampaign = $lead->getCampaign();
+        
+        if (!empty($sourceCampaign)) {
+            $throttlesBySourceCampaign = Throttle::getThrottlesBySourceCampaign($sourceCampaign, $channel);
         }
         
         $delaySecond = 0;
         
-        // get delay seconds by throttle
-        if (!empty($throttles)) {
-            foreach ($throttles as $record) {
-                $throttleType = (int) $record['type'];
-                
-                switch ($throttleType) {
-                    case Config::TRANSACTION_TYPE_COMPLAINT:
-                        $delaySecond += Config::COMPLAINT_DELAY_SECONDS;
-                        break;
-
-                    case Config::TRANSACTION_TYPE_HARDBOUNCE:
-                        $delaySecond += Config::HARD_BOUNCE_DELAY_SECONDS;
-                        break;
-
-                    case Config::TRANSACTION_TYPE_SOFTBOUNCE:
-                        $delaySecond += Config::SOFT_BOUNCE_DELAY_SECONDS;
-                        break;
-
-                    default:
-                        break;
-                }
-            }
+        // get delay seconds by domain throttles
+        if (!empty($throttlesByDomain)) {
+            self::addDelaySecondByThrottles($throttlesByDomain, $delaySecond);
+        }
+        
+        // get delay seconds by domain throttles
+        if (!empty($throttlesBySourceCampaign)) {
+            self::addDelaySecondByThrottles($throttlesBySourceCampaign, $delaySecond);
         }
 
         // get delay seconds by stacking delays
@@ -333,6 +327,34 @@ class Engine_Scheduler
             'delay_until' => null,
             'delay_seconds' => null
         );
+    }
+    //--------------------------------------------------------------------------
+    
+    
+    public static function addDelaySecondByThrottles($throttles, &$delaySecond)
+    {
+        foreach ($throttles as $record) {
+            $throttleType = (int) $record['type'];
+
+            switch ($throttleType) {
+                case Config::TRANSACTION_TYPE_COMPLAINT:
+                    $delaySecond += Config::COMPLAINT_DELAY_SECONDS;
+                    break;
+
+                case Config::TRANSACTION_TYPE_HARDBOUNCE:
+                    $delaySecond += Config::HARD_BOUNCE_DELAY_SECONDS;
+                    break;
+
+                case Config::TRANSACTION_TYPE_SOFTBOUNCE:
+                    $delaySecond += Config::SOFT_BOUNCE_DELAY_SECONDS;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        
+        return true;
     }
     //--------------------------------------------------------------------------
 }

@@ -35,3 +35,11 @@ INSERT INTO `email`.`channels` (`id`, `name`, `type`, `class`, `smtp_host`, `smt
         `message` VARCHAR(50),
         PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+# add fields for table for log_scheduler's 2014/07/22
+    ALTER TABLE `log_scheduler`
+    ADD `scheduler_name` VARCHAR(20) DEFAULT NULL AFTER `id`,
+    ADD `create_time` datetime DEFAULT NULL>>>>>>> .r665
+
+#add "source_campaign" to throttles table - 2014/07/22
+ALTER TABLE `throttles` ADD `source_campaign` VARCHAR(32) DEFAULT NULL AFTER `domain` ;
