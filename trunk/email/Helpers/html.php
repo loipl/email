@@ -228,8 +228,8 @@ class HTML
     }
     //--------------------------------------------------------------------------
     
-    public static function getHtmlForSelect($options, $value) {
-        $html = '<select>';
+    public static function getHtmlForSelect($options, $value, $class = null) {
+        $html = '<select class="' . $class .'">';
         foreach ($options as $optionValue => $optionText) {
             if ($optionValue == $value) {
                 $html .= '<option value="' . $optionValue . '" selected="selected">';
@@ -242,8 +242,28 @@ class HTML
         $html .= '</select>';
         return $html;
     }
+    //--------------------------------------------------------------------------
     
-    
+    public static function getHtmlForPaging($numberOfPage, $pageNumber) {
+        $displayPages = array($pageNumber - 2, $pageNumber - 1, $pageNumber, $pageNumber + 1, $pageNumber + 2);
+        foreach ($displayPages as $key => $value) {
+            if ($value <= 0 || $value > $numberOfPage) {
+                unset($displayPages[$key]);
+            }
+        }
+        
+        $html = "<button class=\"page_number\" value=\"1\">First</button>";
+        foreach ($displayPages as $page) {
+            if ($page === $pageNumber) {
+                $html .= "<button class=\"page_number current\" value=\"$page\">$page</button>";
+            } else {
+                $html .= "<button class=\"page_number\" value=\"$page\">$page</button>";
+            }
+        }
+        $html .= "<button class=\"page_number\" value=\"$numberOfPage\">Last</button>";
+        return $html;
+    }
+
     //--------------------------------------------------------------------------
     public static function getCampaignAttributeDescription() {
         return array (

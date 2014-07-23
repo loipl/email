@@ -16,18 +16,18 @@ const HYGIENE_DATE   = '2014-05-20 00:00:00';
 date_default_timezone_set('UTC');
 
 $file     = '/home/ec2-user/aol-1.2mill-verifiedscored-legacy2014.csv';
+$sourceCampaign = 'AOLlegacyVerified_052014';
+$start = 0;
+
 $postUrl  = 'http://default-163604706.us-west-2.elb.amazonaws.com/email/api/lead.php?apikey=7CmCznYgpQgpOrV5PKf3RSbM98UTlZ';
 $errorLog = './error_log';
 $lastLog  = './last_log';
 
-$sourceCampaign = 'AOLlegacyVerified_052014';
-
-$start = 69492;
 $count = 0;
-
 $total = 0;
 $success = 0;
 $duplicate = 0;
+$failed = 0;
 
 if (($handle = fopen($file, "r")) !== FALSE) {
     while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
@@ -85,13 +85,17 @@ if (($handle = fopen($file, "r")) !== FALSE) {
 
         if(!sendPacket((string)$xml->asXML(), $postUrl, $duplicate, $success, $errorLog)) {
             echo "\nRetrying.";
-            sendPacket((string)$xml->asXML(), $postUrl, $duplicate, $success, $errorLog);
+            if(!sendPacket((string)$xml->asXML(), $postUrl, $duplicate, $success, $errorLog)) {
+            
+                $failed++;
+            }
         } else {
             $success++;
         }
     }
 
     fclose($handle);
+    echo "\n\nResults: $success accepted, $duplicate duplicate, $failed failed.";
 }
 
 

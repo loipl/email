@@ -1,0 +1,47 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jul 10, 2014, 10:11:42 PM
+    Author     : DiepBuiHuu
+*/
+
+table.campaigns_table th, table.campaigns_table td {
+    border-bottom: 1px solid black;
+    border-left: none;
+    border-right: none;
+    text-align: center;
+}
+table.no-border td {
+     border: none;
+     text-align: left;
+}
+
+table.campaigns_table td.leads {
+    text-align: left;
+}
+
+.hide {
+    display: none;
+}
+.attributes table, .show_hide {
+    display: none;
+}
+.edit_attr_button {
+    display: none;
+}
+.float_left {
+    float: left;
+    margin-left: 20px;
+}
+.filter_bar {
+    margin-top: 20px;
+}
+.page_number.current {
+    background-color: #2e6e9e;
+}
+.page_number {
+    cursor: pointer;
+}

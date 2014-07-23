@@ -1,0 +1,164 @@
+<?php
+
+require_once dirname(__FILE__) . '/../email.php';
+
+$sortBy = !empty($_GET['sort_by']) ? $_GET['sort_by'] : 'id';
+$sortOrder = !empty($_GET['sort_order']) ? $_GET['sort_order'] : 'DESC';
+$currentPage = !empty($_GET['page']) ? $_GET['page'] : '1';
+
+$sortItems = array(
+    'id' => 'Id',
+    'eligible_campaign_count' => "Campaign Count",
+    'lead_count' => 'Leads Count',
+    'queued_lead_count' => 'Queued Count',
+    'create_time' => 'Create Time'
+);
+
+$sortOrders = array (
+    'desc' => 'Desc',
+    'asc' => 'Asc'
+);
+
+$allLogs = LogScheduler::getAll($currentPage, $sortBy, $sortOrder);
+$countLog = LogScheduler::countAll();
+$pageSize = LogScheduler::pageSize;
+
+$numOfPage = ceil($countLog/$pageSize);
+
+?>
+
+<div class="filter_bar">  
+    <div class="float_left">
+        Sort By:
+        <?php echo Html::getHtmlForSelect($sortItems, $sortBy, 'sort_by')?>
+    </div>
+    <div class="float_left">
+        Sort Order:
+        <?php echo Html::getHtmlForSelect($sortOrders, $sortOrder, 'sort_order')?>
+    </div>
+    <div class="float_left">
+        <button class="update_table">Update</button>
+    </div>
+    <div style="clear: both;">
+</div>
+    
+<div class="paging_bar">
+    <?php echo Html::getHtmlForPaging($numOfPage,intval($currentPage));?>
+</div>
+
+<html>
+    <head>
+        <title>Log Scheduler</title>
+        <link rel="stylesheet" type="text/css" href="css/log_scheduler.css">
+        <script type="text/javascript" src="js/jquery-1.7.3.js"></script>
+    </head>
+    <body>
+        <table class="campaigns_table">
+            <thead>
+                <tr>
+                    <th>
+                        Id
+                    </th>
+                    <th>
+                        Scheduler Name
+                    </th>
+                    <th>
+                        Eligible Campaign Count
+                    </th>
+                    <th>
+                        Eligible Campaign Ids
+                    </th>
+                    <th>
+                        Chosen Campaign Id
+                    </th>
+                    <th>
+                        Chosen Campaign Attribute
+                    </th>
+                    <th>
+                        Lead Count
+                    </th>
+                    <th>
+                        Leads
+                    </th>
+                    <th>
+                        Queued Count
+                    </th>
+                    <th>
+                        Message
+                    </th>
+                    <th>
+                        Create Time
+                    </th>
+                </tr>
+            </thead>
+                        
+            <tbody>
+                <?php foreach ($allLogs as $log): ?>
+                <tr abbr="<?php echo $log['id']; ?>" class="campaign_row">
+                        <td><?php echo $log['id']; ?></td>
+                        <td>
+                            <?php echo trim($log['scheduler_name']); ?>
+                        </td>
+                        <td>
+                            <?php echo $log['eligible_campaign_count']; ?>
+                        </td>
+                        <td>
+                            <?php 
+                                if (!empty($log['eligible_campaign_ids'])) {
+                                    $campaignIds = unserialize($log['eligible_campaign_ids']);
+                                    $campaignIdsStr = implode(',', $campaignIds);
+                                    echo $campaignIdsStr;
+                                }
+                            ?>
+                        </td>
+                        <td>
+                            <?php echo $log['chosen_campaign_id']; ?>
+                        </td>
+                        <td class="attributes">
+                            <?php 
+                                if (!empty($log['chosen_campaign_attribute'])) {
+                                    $attributes = unserialize($log['chosen_campaign_attribute']);
+                                    $html = HTML::getHtmlForCampaignAttributes($attributes);
+                                    echo '<button class="show">Show</button>';
+                                    echo '<button class="hide">Hide</button>';
+                                    echo $html;
+                                }
+                            ?>
+                        </td>
+                        <td>
+                            <?php echo $log['lead_count']; ?>
+                        </td>
+                        <td class="leads">
+                            <?php 
+                                if (!empty($log['leads'])) {
+                                    $leads = unserialize($log['leads']);
+                                    
+                                    $html = '<button class="show">Show</button>';
+                                    $html .= '<button class="hide">Hide</button>';
+                                    
+                                    $html .= '<div class="show_hide">';
+                                    foreach ($leads as $lead) {
+                                        $html .= "<div>" . json_encode($lead) . '</div>';
+                                    }
+                                    $html .= '</div>';
+                                    echo $html;
+                                }
+                            ?>
+                        </td>
+                        <td>
+                            <?php echo $log['queued_lead_count']; ?>
+                        </td>
+                        <td>
+                            <?php echo $log['message']; ?>
+                        </td>
+                        <td>
+                            <?php echo $log['create_time']; ?>
+                        </td>
+                        
+                    </tr>
+                <?php endforeach;?>
+            </tbody>
+        </table>
+        <script type="text/javascript" src="js/log_scheduler.js"></script>
+    </body>
+</html>

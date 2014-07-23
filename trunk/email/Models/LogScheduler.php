@@ -8,8 +8,9 @@ class LogScheduler extends Database
     
     // array (table_column => column_value)
     protected static $attributes = array();
-
+    
     const tableName = 'log_scheduler';
+    const pageSize = 20;
     protected static $tableFields = array (
                                         'id', 
                                         'scheduler_name', 
@@ -114,4 +115,36 @@ class LogScheduler extends Database
     public static function getId () {     
         return self::$id;   
     }  
+    //--------------------------------------------------------------------------
+    
+    public static function getAll($page = '1', $sortBy = null, $sortOrder = null) {
+            
+        $sql = "SELECT * FROM `". self::tableName ."`";
+        
+        if (!empty($sortBy)) {
+            $sortBy = mysql_escape_string($sortBy);
+            $sortOrder = strtoupper($sortOrder) === 'ASC' ? 'ASC' : 'DESC';
+            $sql .= " ORDER BY `$sortBy` $sortOrder";
+        }
+        
+        $page = intval($page) > 0 ? intval($page) : 1;
+        $pageSize = self::pageSize;
+        $start = ($page - 1) * $pageSize;
+        $sql .= " LIMIT $start,$pageSize;";
+        $db = new Database;   
+        return $db->getArray($sql); 
+    }
+    
+    public static function countAll() {
+            
+        $sql = "SELECT count(*) as count FROM `". self::tableName ."`";      
+        
+        $db = new Database;   
+        $dbData = $db->getArray($sql); 
+        if (empty($dbData)) {
+            return 0;
+        } else {
+            return intval($dbData[0]['count']);
+        }
+    }
 }

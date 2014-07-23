@@ -39,10 +39,13 @@ INSERT INTO `email`.`channels` (`id`, `name`, `type`, `class`, `smtp_host`, `smt
 # add fields for table for log_scheduler's 2014/07/22
     ALTER TABLE `log_scheduler`
     ADD `scheduler_name` VARCHAR(20) DEFAULT NULL AFTER `id`,
-    ADD `create_time` datetime DEFAULT NULL>>>>>>> .r665
+    ADD `create_time` datetime DEFAULT NULL
 
 #add "source_campaign" to throttles table - 2014/07/22
 ALTER TABLE `throttles` ADD `source_campaign` VARCHAR(32) DEFAULT NULL AFTER `domain` ;
 
 #add "tld_group" to throttles table - 2014/07/22
 ALTER TABLE `throttles` ADD `tld_group` VARCHAR(32) DEFAULT NULL AFTER `source_campaign` ;
+
+#update log_scheduler, change eligible_campaign_ids for varchar(50) to varchar(255);
+ALTER TABLE log_scheduler CHANGE `eligible_campaign_ids` `eligible_campaign_ids` VARCHAR(255);
