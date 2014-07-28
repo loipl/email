@@ -137,6 +137,12 @@ class Config
             'port'     => '2525',
             'apikey'   => 'abde5e1060ff70398b64b0ee15d162a1c7d80271'
                            ),
+        'mailgun'   => array(
+            'username' => false,
+            'password' => false,
+            'apikey'   => 'key-5jee36xnpfb2f0xtgjw9y426vod5v7e3',
+            'domain' => 'https://api.mailgun.net/v2/datequota.com/'
+                            )
     );
 
     public static $adNetCredentials = array(
@@ -232,4 +238,27 @@ class Config
         'hour',
         'minute'
     );
+    // Setting the timezone similar to what it is on the DB server
+    // mysql> show variables like 'time_zone';
+    // +---------------+-------+
+    // | Variable_name | Value |
+    // +---------------+-------+
+    // | time_zone     | UTC   |
+    // +---------------+-------+
+    public static $db_timezone = 'UTC';
+
+    // Where to send email about failures to
+    public static $error_email_from = 'stats_aggregator@leadwrench';
+    public static $error_email_to = 'ovais.tariq@percona.com';
+
+    // logging and miscellaneous
+    public static $log_file = "/var/log/stats_aggregator.log";
+    public static $log_level = 'debug'; // one of debug or error
+    public static $pid_file = "/var/run/stats_aggregator.pid";
+
+    // purging thresholds
+    public static $age_minutely_stats = "P1D"; // purge all minutely records greater than 1 day old
+    public static $age_hourly_stats = "P7D"; // purge all hourly records greater than 7 days old
+    public static $age_daily_stats = "P1M"; // purge all daily records greater than 1 month old
+    public static $age_monthly_stats = "P50Y"; // dont purge the monthly records
 }

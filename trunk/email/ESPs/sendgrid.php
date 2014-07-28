@@ -25,7 +25,7 @@ class Sendgrid extends ESP
     //--------------------------------------------------------------------------
 
 
-    public function sendEmail($to, $fromPerson, $fromEmail, $subject, $htmlBody, $textBody, $subId, $unsubUrl, $debug = false)
+    public function sendEmail($to, $fromPerson, $fromEmail, $subject, $htmlBody, $textBody, $subId, $unsubUrl,$delaySeconds, $debug = false)
     {
         $result = $this->restCall(
             "mail.send.json",

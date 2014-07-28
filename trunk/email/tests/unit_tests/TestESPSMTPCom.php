@@ -71,7 +71,7 @@ class TestESPSMTPCom extends UnitTestCase
         
         $fromPerson = "Jason Hart";
         $fromEmail  = Config::$fromDomains[0]['sender'] . "@" . Config::$fromDomains[0]['domain'];
-        $api->sendEmail(Config::$emailTests, $fromPerson, $fromEmail, 'Email System Test - Smtp.com', 'Testing the Email system', '500', '', false);
+        $api->sendEmail(Config::$emailTests, $fromPerson, $fromEmail, 'Email System Test - Smtp.com', 'Testing the Email system', '500', '',0, false);
         $this->assertEqual($api->getLastStatus(),'sent');
     }
     //--------------------------------------------------------------------------

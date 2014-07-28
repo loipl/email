@@ -46,7 +46,7 @@ class SmtpCom extends ESP
         return self::SMTP_API_URL;
     }
 
-    public function sendEmail($to, $fromPerson, $fromEmail, $subject, $bodyHtml, $bodyText, $subId, $unsubUrl, $debug = false)
+    public function sendEmail($to, $fromPerson, $fromEmail, $subject, $bodyHtml, $bodyText, $subId, $unsubUrl, $delaySeconds, $debug = false)
     {
         $seperator = '';
         $isHtml = FALSE;

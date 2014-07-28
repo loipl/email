@@ -5,6 +5,8 @@ require_once dirname(__FILE__) . '/../email.php';
 $sortBy = !empty($_GET['sort_by']) ? $_GET['sort_by'] : 'id';
 $sortOrder = !empty($_GET['sort_order']) ? $_GET['sort_order'] : 'DESC';
 $currentPage = !empty($_GET['page']) ? $_GET['page'] : '1';
+$fromDate = !empty($_GET['from_date']) ? $_GET['from_date'] : date('Y-m-d');
+$toDate = !empty($_GET['to_date']) ? $_GET['to_date'] : date('Y-m-d');
 
 $sortItems = array(
     'id' => 'Id',
@@ -19,40 +21,51 @@ $sortOrders = array (
     'asc' => 'Asc'
 );
 
-$allLogs = LogScheduler::getAll($currentPage, $sortBy, $sortOrder);
-$countLog = LogScheduler::countAll();
+$allLogs = LogScheduler::getAll($fromDate, $toDate, $currentPage, $sortBy, $sortOrder);
+$countLog = LogScheduler::countAll($fromDate, $toDate);
 $pageSize = LogScheduler::pageSize;
 
 $numOfPage = ceil($countLog/$pageSize);
 
 ?>
 
-<div class="filter_bar">  
-    <div class="float_left">
-        Sort By:
-        <?php echo Html::getHtmlForSelect($sortItems, $sortBy, 'sort_by')?>
-    </div>
-    <div class="float_left">
-        Sort Order:
-        <?php echo Html::getHtmlForSelect($sortOrders, $sortOrder, 'sort_order')?>
-    </div>
-    <div class="float_left">
-        <button class="update_table">Update</button>
-    </div>
-    <div style="clear: both;">
-</div>
-    
-<div class="paging_bar">
-    <?php echo Html::getHtmlForPaging($numOfPage,intval($currentPage));?>
-</div>
+
 
 <html>
     <head>
         <title>Log Scheduler</title>
         <link rel="stylesheet" type="text/css" href="css/log_scheduler.css">
-        <script type="text/javascript" src="js/jquery-1.7.3.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css">
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/jquery-ui.min.js"></script>
     </head>
     <body>
+        <div class="filter_bar">  
+            <div class="float_left">
+                Sort By:
+                <?php echo Html::getHtmlForSelect($sortItems, $sortBy, 'sort_by')?>
+            </div>
+            <div class="float_left">
+                Sort Order:
+                <?php echo Html::getHtmlForSelect($sortOrders, $sortOrder, 'sort_order')?>
+            </div>
+            <div class="float_left">
+                From:
+                <input id="from_date" value="<?php echo $fromDate;?>">
+            </div>
+            <div class="float_left">
+                To:
+                <input id="to_date" value="<?php echo $toDate;?>">
+            </div>
+            <div class="float_left">
+                <button class="update_table">Update</button>
+            </div>
+            <div style="clear: both;">
+        </div>
+
+        <div class="paging_bar">
+            <?php echo Html::getHtmlForPaging($numOfPage,intval($currentPage));?>
+        </div>
         <table class="campaigns_table">
             <thead>
                 <tr>

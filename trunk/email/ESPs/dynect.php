@@ -26,7 +26,7 @@ class Dynect extends ESP
     //--------------------------------------------------------------------------
 
 
-    public function sendEmail($to, $fromPerson, $fromEmail, $subject, $bodyHtml, $bodyText, $subId, $unsubUrl, $debug = false)
+    public function sendEmail($to, $fromPerson, $fromEmail, $subject, $bodyHtml, $bodyText, $subId, $unsubUrl, $delaySeconds, $debug = false)
     {
         if (!empty($bodyHtml) && !empty($bodyText)) {
             $result = $this->restCall(
@@ -75,17 +75,17 @@ class Dynect extends ESP
         if (isset($response->response->status) && $response->response->status == 200) {
             $this->lastStatus = 'sent';
             if ($debug === true) {
-                Logging::logSendError('DynECT', $result['httpCode'], $result['httpErrno'], $result['httpErr'], $to, $fromPerson, $fromEmail, $subject, $bodyHtml, $bodyText);
+                Logging::logSendError('DynECT', $result['httpCode'], $result['httpErrno'], $result['httpErr'], $to, $fromPerson, $fromEmail, $subject, $bodyHtml, $bodyText, $delaySeconds);
             }
             
             $data = $response->response->data;
             if ( preg_match('/.*Error:.*/', $data) ) {
-                Logging::logSendError('DynECT', $result['httpCode'], $result['httpErrno'], $result['httpErr'], $to, $fromPerson, $fromEmail, $subject, $bodyHtml, $bodyText);
+                Logging::logSendError('DynECT', $result['httpCode'], $result['httpErrno'], $result['httpErr'], $to, $fromPerson, $fromEmail, $subject, $bodyHtml, $bodyText, $delaySeconds);
                 $this->lastStatus = 'error';
             }
         }
         else {
-            Logging::logSendError('DynECT', $result['httpCode'], $result['httpErrno'], $result['httpErr'], $to, $fromPerson, $fromEmail, $subject, $bodyHtml, $bodyText);
+            Logging::logSendError('DynECT', $result['httpCode'], $result['httpErrno'], $result['httpErr'], $to, $fromPerson, $fromEmail, $subject, $bodyHtml, $bodyText, $delaySeconds);
             $this->lastStatus = 'error';
         }
     }

@@ -201,7 +201,7 @@ class HTML
                 case 'bool_list':
                     $list = $description['list'];
                     foreach ($list as $item) {
-                        if (!empty($attrValue) && is_array($attrValue) && $attrValue[$item]) {
+                        if (!empty($attrValue) && is_array($attrValue) && !empty($attrValue[$item])) {
                             $html .= ' <div><input type="checkbox" name="' . $item . '" checked>' . $item . '</div>';
                         } else {
                             $html .= ' <div><input type="checkbox" name="' . $item . '">' . $item . '</div>';

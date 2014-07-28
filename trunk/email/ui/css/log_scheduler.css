@@ -42,6 +42,6 @@ table.campaigns_table td.leads {
 .page_number.current {
     background-color: #2e6e9e;
 }
-.page_number {
+button {
     cursor: pointer;
 }

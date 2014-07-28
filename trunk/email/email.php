@@ -13,6 +13,7 @@ require_once dirname(__FILE__) . '/utilities.php';
 require_once dirname(__FILE__) . '/ESP.php';
 require_once dirname(__FILE__) . '/ESPs/sendgrid.php';
 require_once dirname(__FILE__) . '/ESPs/dynect.php';
+require_once dirname(__FILE__) . '/ESPs/mailgun.php';
 
 require_once dirname(__FILE__) . '/AdNet.php';
 require_once dirname(__FILE__) . '/AdNets/adknowledge.php';

@@ -40,7 +40,7 @@ abstract class ESP
     //--------------------------------------------------------------------------
 
 
-    abstract public function sendEmail($to, $fromPerson, $fromEmail, $subject, $bodyHtml, $bodyText, $subId, $unsubUrl, $debug = false);
+    abstract public function sendEmail($to, $fromPerson, $fromEmail, $subject, $bodyHtml, $bodyText, $subId, $unsubUrl,$delaySeconds, $debug = false);
     //--------------------------------------------------------------------------
 
 
@@ -110,7 +110,7 @@ abstract class ESP
     
     
     
-    protected function restCall($method, $paramsGet=array(), $paramsPost=array())
+    protected function restCall($method, $paramsGet=array(), $paramsPost=array(), $curl_USERPWD_verify = false)
     {
         $url = $this->getRestUrl() . $method;
         if ($paramsGet) {
@@ -138,6 +138,12 @@ abstract class ESP
 
         $ch = curl_init();
         curl_setopt_array($ch, $options);
+
+        if ($curl_USERPWD_verify) {
+            curl_setopt($ch, CURLOPT_USERPWD, $this->getAuthenticationKey());
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        }
+        
         $content    = curl_exec($ch);
         $httpCode   = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $err        = curl_error($ch);

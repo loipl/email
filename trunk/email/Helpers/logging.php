@@ -4,12 +4,12 @@ class Logging
 {
 
 
-    public static function logSendError($espName, $errorCode, $errorNumber, $error, $to, $fromPerson, $fromEmail, $subject, $bodyHtml, $bodyText)
+    public static function logSendError($espName, $errorCode, $errorNumber, $error, $to, $fromPerson, $fromEmail, $subject, $bodyHtml, $bodyText, $delaySeconds = null)
     {
         $db = new Database;
 
         $sql  = "INSERT INTO `error_log_esp` (id, datetime, esp_name, error_code, error_number, error, destination, from_person, from_email,";
-        $sql .= " subject, body_html, body_text) VALUES (";
+        $sql .= " subject, body_html, body_text, delay_seconds) VALUES (";
         $sql .= "NULL, NOW(),";
         $sql .= " '" . mysql_real_escape_string($espName) . "',";
         $sql .= " '" . mysql_real_escape_string($errorCode) . "',";
@@ -20,7 +20,8 @@ class Logging
         $sql .= " '" . mysql_real_escape_string($fromEmail) . "',";
         $sql .= " '" . mysql_real_escape_string($subject) . "',";
         $sql .= " '" . mysql_real_escape_string($bodyHtml) . "',";
-        $sql .= " '" . mysql_real_escape_string($bodyText) . "'";
+        $sql .= " '" . mysql_real_escape_string($bodyText) . "',";
+        $sql .= " '" . mysql_real_escape_string($delaySeconds) . "'";
         $sql .= ");";
 
         $db->query($sql);

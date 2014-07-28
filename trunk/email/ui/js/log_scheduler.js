@@ -25,6 +25,9 @@ $(document).ready(function(){
         refreshPage(filters);
     })
     
+    $('#from_date').datepicker({ dateFormat: 'yy-mm-dd' });
+    $('#to_date').datepicker({ dateFormat: 'yy-mm-dd' });
+    
     $('.page_number').click(function(){
         var filters = getFilters();
         filters['page'] = $(this).val();
@@ -34,7 +37,9 @@ $(document).ready(function(){
     function getFilters() {
         return {
             sort_by: $('.sort_by').val(),
-            sort_order: $('.sort_order').val()
+            sort_order: $('.sort_order').val(),
+            from_date: $('#from_date').val(),
+            to_date: $('#to_date').val()
         }
     }
     

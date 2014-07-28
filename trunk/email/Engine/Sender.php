@@ -17,6 +17,8 @@ class Engine_Sender
     protected $textBody;
     protected $subId;
     protected $channelId;
+    protected $delayUtil;
+    protected $delaySeconds;
 
     public function __construct() {
     }
@@ -53,8 +55,12 @@ class Engine_Sender
                 $this->textBody    = $sendRecord->getTextBody();
                 $this->subId       = $sendRecord->getSubId();
                 $this->channelId   = $sendRecord->getChannelId();
+                $this->delayUtil   = $sendRecord->getDelayUntil();
+                $this->delaySeconds = $sendRecord->getDelaySeconds();
                 
-                if ($this->send($this->email, $this->campaignId, $this->creativeId, $this->categoryId, $this->fromName, $this->senderEmail, $this->subject, $this->htmlBody, $this->textBody, $this->subId, $this->channelId)) {
+                if ($this->send($this->email, $this->campaignId, $this->creativeId, $this->categoryId, 
+                                $this->fromName, $this->senderEmail, $this->subject, $this->htmlBody, 
+                                $this->textBody, $this->subId, $this->channelId, $this->delaySeconds)) {
                     $sendRecord->removeRecord();
                 }
             }
@@ -86,8 +92,13 @@ class Engine_Sender
         $this->textBody    = $sendRecord->getTextBody();
         $this->subId       = $sendRecord->getSubId();
         $this->channelId   = $sendRecord->getChannelId();
+        $this->delayUtil   = $sendRecord->getDelayUntil();
+        $this->delaySeconds = $sendRecord->getDelaySeconds();
+                
 
-        if ($this->send($this->email, $this->campaignId, $this->creativeId, $this->categoryId, $this->fromName, $this->senderEmail, $this->subject, $this->htmlBody, $this->textBody, $this->subId, $this->channelId)) {
+        if ($this->send($this->email, $this->campaignId, $this->creativeId, $this->categoryId, 
+                        $this->fromName, $this->senderEmail, $this->subject, $this->htmlBody, 
+                        $this->textBody, $this->subId, $this->channelId, $this->delaySeconds)) {
             $sendRecord->removeRecord();
         }
 
@@ -95,7 +106,7 @@ class Engine_Sender
     //--------------------------------------------------------------------------
 
 
-    private function send($email, $campaignId, $creativeId, $categoryId, $fromName, $senderEmail, $subject, $htmlBody, $textBody, $subId, $channelId)
+    private function send($email, $campaignId, $creativeId, $categoryId, $fromName, $senderEmail, $subject, $htmlBody, $textBody, $subId, $channelId, $delaySeconds)
     {
         $this->pushUpdatesToActivityTable($subId, $channelId, $creativeId, $categoryId, $senderEmail);
 
@@ -109,7 +120,7 @@ class Engine_Sender
             $senderDomain = explode('@', $senderEmail);
             $unsubUrl = HTML::getUnsub(Config::$subdomains['clicks'], $senderDomain[1], $email, $subId);
 
-            $channelObject->sendEmail($email, $fromName, $senderEmail, $subject, $htmlBody, $textBody, $subId, $unsubUrl, true);
+            $channelObject->sendEmail($email, $fromName, $senderEmail, $subject, $htmlBody, $textBody, $subId, $unsubUrl,$delaySeconds, true);
 
             if ($channelObject->getLastStatus() == 'sent') {
                 Lead::scoreSend($email);

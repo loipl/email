@@ -117,9 +117,24 @@ class LogScheduler extends Database
     }  
     //--------------------------------------------------------------------------
     
-    public static function getAll($page = '1', $sortBy = null, $sortOrder = null) {
+    public static function getAll($start = null, $end = null, $page = '1', $sortBy = null, $sortOrder = null) {
             
         $sql = "SELECT * FROM `". self::tableName ."`";
+        
+        $wheres = array();
+        if (!empty($start)) {
+            $start = mysql_escape_string($start . ' 00:00:00');
+            $wheres[] = " `create_time` >= '$start' ";
+        }
+        
+        if (!empty($end)) {
+            $end = mysql_escape_string($end . ' 23:59:59');
+            $wheres[] = " `create_time` <= '$end' ";
+        }
+        
+        if (!empty($wheres)) {
+            $sql .= " WHERE" . implode('AND', $wheres);
+        }
         
         if (!empty($sortBy)) {
             $sortBy = mysql_escape_string($sortBy);
@@ -135,9 +150,24 @@ class LogScheduler extends Database
         return $db->getArray($sql); 
     }
     
-    public static function countAll() {
+    public static function countAll($start = null, $end = null) {
             
-        $sql = "SELECT count(*) as count FROM `". self::tableName ."`";      
+        $sql = "SELECT count(*) as count FROM `". self::tableName ."`";    
+        
+        $wheres = array();
+        if (!empty($start)) {
+            $start = mysql_escape_string($start . ' 00:00:00');
+            $wheres[] = " `create_time` >= '$start' ";
+        }
+        
+        if (!empty($end)) {
+            $end = mysql_escape_string($end . ' 23:59:59');
+            $wheres[] = " `create_time` <= '$end' ";
+        }
+        
+        if (!empty($wheres)) {
+            $sql .= " WHERE" . implode('AND', $wheres);
+        }
         
         $db = new Database;   
         $dbData = $db->getArray($sql); 
