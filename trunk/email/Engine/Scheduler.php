@@ -112,7 +112,9 @@ class Engine_Scheduler
         } else {
             $this->leads[] = array('email'  => $email);
         }
-
+        
+        $this->removeLeadsThatExceedingThrottleThreshold($this->leads);
+        
         if (empty($this->leads)) {
             Probability::addRecord('1', $this->campaignId, '2', '100', NULL, NULL, 1800);
 
@@ -130,7 +132,25 @@ class Engine_Scheduler
         return true;
     }
     //--------------------------------------------------------------------------
-
+    
+    
+    private function removeLeadsThatExceedingThrottleThreshold(&$leads)
+    {
+        if (!empty($leads)) {
+            foreach ($leads as $id => $lead) {
+                $delayInfo = $this->getDelayInfo($lead['email']);
+                $delaySeconds = $delayInfo['delay_seconds'];
+                
+                if (!empty($delaySeconds) && $delaySeconds > Config::THRESHOLD_DELAY_SECONDS) {
+                    unset($leads[$id]);
+                }
+            }
+        }
+        
+        return true;
+    }
+    //--------------------------------------------------------------------------
+    
 
     private function setupCreatives()
     {
@@ -232,35 +252,31 @@ class Engine_Scheduler
             
             $delayInfo = Engine_Scheduler::getDelayInfo($record->getEmail(), $record->getChannel());
             
-            // if delay time > threshold, ignore the lead, will be removed belows
-            if ($delayInfo !== false) {
-                
-                // if the lead have assigned creative, and delay_time < threshold, send it to queue_send
-                if ($record->getHtmlBody() != '' || $record->getTextBody() != '') {
-                    
-                    if (!Queue_Send::checkQueueSendExist($record->getEmail(), $record->getCreativeId())) {
-                        
-                        $delayUntil = $delayInfo['delay_until'];
-                        $delaySeconds = $delayInfo['delay_seconds'];
+            // if the lead have assigned creative, and delay_time < threshold, send it to queue_send
+            if ($record->getHtmlBody() != '' || $record->getTextBody() != '') {
 
-                        Queue_Send::addRecord(
-                            $record->getEmail(),
-                            $record->getFrom(),
-                            $record->getCampaignId(),
-                            $record->getCreativeId(),
-                            $record->getCategoryId(),
-                            $record->getSenderEmail(),
-                            $record->getSubject(),
-                            $record->getHtmlBody(),
-                            $record->getTextBody(),
-                            $record->getSubId(),
-                            $record->getChannel(),
-                            $delayUntil,
-                            $delaySeconds
-                        );
-                    }
-                    $sendQueueCount ++;
+                if (!Queue_Send::checkQueueSendExist($record->getEmail(), $record->getCreativeId())) {
+
+                    $delayUntil = $delayInfo['delay_until'];
+                    $delaySeconds = $delayInfo['delay_seconds'];
+
+                    Queue_Send::addRecord(
+                        $record->getEmail(),
+                        $record->getFrom(),
+                        $record->getCampaignId(),
+                        $record->getCreativeId(),
+                        $record->getCategoryId(),
+                        $record->getSenderEmail(),
+                        $record->getSubject(),
+                        $record->getHtmlBody(),
+                        $record->getTextBody(),
+                        $record->getSubId(),
+                        $record->getChannel(),
+                        $delayUntil,
+                        $delaySeconds
+                    );
                 }
+                $sendQueueCount ++;
             }
 
             $record->removeRecord();
@@ -273,7 +289,7 @@ class Engine_Scheduler
     //--------------------------------------------------------------------------
     
     
-    public static function getDelayInfo($email, $channel) {
+    public static function getDelayInfo($email, $channel = null) {
         $emailDomain = explode('@', $email);
 
         if (isset($emailDomain[1])) {
@@ -323,15 +339,10 @@ class Engine_Scheduler
         }
         
         if ($delaySecond !== 0) {
-            if ($delaySecond > Config::THRESHOLD_DELAY_SECONDS) {
-                // abandom the lead
-                return false;
-            } else {
-                return array(
-                    'delay_seconds' => $delaySecond,
-                    'delay_until' => date('Y-m-d H:i:s', (time() + $delaySecond))
-                );
-            }
+            return array(
+                'delay_seconds' => $delaySecond,
+                'delay_until' => date('Y-m-d H:i:s', (time() + $delaySecond))
+            );
         }
         
         return array(

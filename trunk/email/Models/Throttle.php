@@ -60,7 +60,10 @@ class Throttle extends Database
 
         $sql  = "SELECT `type` FROM `" . self::tableName . "`";
         $sql .= " WHERE `domain`            = '" . mysql_real_escape_string($domain). "'";
-        $sql .= " AND   `channel`           = '" . mysql_real_escape_string($channel). "'";
+        
+        if (!empty($channel)) {
+            $sql .= " AND   `channel`       = '" . mysql_real_escape_string($channel). "'";
+        }
         $sql .= " ;";
 
         $result = $db->getArray($sql);
@@ -76,7 +79,10 @@ class Throttle extends Database
 
         $sql  = "SELECT `tld_group` FROM `" . self::tableName . "`";
         $sql .= " WHERE `tld_group`            = '" . mysql_real_escape_string($tldGroup). "'";
-        $sql .= " AND   `channel`           = '" . mysql_real_escape_string($channel). "'";
+        
+        if (!empty($channel)) {
+            $sql .= " AND   `channel`          = '" . mysql_real_escape_string($channel). "'";
+        }
         $sql .= " ;";
 
         $result = $db->getArray($sql);
@@ -92,7 +98,10 @@ class Throttle extends Database
 
         $sql  = "SELECT `type` FROM `" . self::tableName . "`";
         $sql .= " WHERE `source_campaign`   = '" . mysql_real_escape_string($sourceCampaign). "'";
-        $sql .= " AND   `channel`           = '" . mysql_real_escape_string($channel). "'";
+        
+        if (!empty($channel)) {
+            $sql .= " AND   `channel`       = '" . mysql_real_escape_string($channel). "'";
+        }
         $sql .= " ;";
 
         $result = $db->getArray($sql);
