@@ -20,6 +20,43 @@ $(document).ready(function(){
         )
 
     })
+    $('.copy_button').click(function(){
+        var id = $(this).closest('tr.campaign_row').attr('abbr');
+        $.post(
+                'campaigns.php', 
+                {
+                    action: 'copyCampaign',
+                    id: id
+                },
+                function (response) {
+                    alert(response);
+                    if ($.trim(response) === 'Success') {
+                        window.location.reload();
+                    }
+                }
+        )
+
+    });
+    $('.delete_button').click(function(){
+        var id = $(this).closest('tr.campaign_row').attr('abbr');
+        var confirmMessage = "Are you sure want to delete?";
+        if (confirm(confirmMessage)) {
+            $.post(
+                'campaigns.php', 
+                {
+                    action: 'deleteCampaign',
+                    id: id
+                },
+                function (response) {
+                    alert(response);
+                    if ($.trim(response) === 'Success') {
+                        window.location.reload();
+                    }
+                }
+        )
+        }  
+
+    });
     
     $('input[type=number]').on('keyup', function(){
         var text = $(this).val();
@@ -60,7 +97,9 @@ $(document).ready(function(){
                 attrValue = {};
                 $(this).find('.attrData input').each(function(){
                     var itemName = $(this).attr('name');
-                    attrValue[itemName] = $(this).is(':checked');
+                    if ($(this).is(':checked')) {
+                        attrValue[itemName] = true;
+                    }
                 });
             } else if ($(this).find('.attrData input').length > 0) {
                 var $input = $(this).find('.attrData input');

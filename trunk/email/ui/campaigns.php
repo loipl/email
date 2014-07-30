@@ -4,7 +4,7 @@ require_once dirname(__FILE__) . '/../email.php';
 $campaigns = Campaign::getAllCampaign();
 ?>
 
-<?php if( !(isset($_POST['action']) && $_POST['action'] === 'editAttributes') ): ?>
+<?php if( !isset($_POST['action']) ): ?>
 <html>
     <head>
         <title>Campaigns List</title>
@@ -36,6 +36,9 @@ $campaigns = Campaign::getAllCampaign();
                     <th>
                         End Date
                     </th>
+                    <th>
+                        Action
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -66,6 +69,10 @@ $campaigns = Campaign::getAllCampaign();
                         <td>
                             <input class="end_date" value="<?php echo $campaign['end_date']; ?>">
                         </td>
+                        <td>
+                            <button class="copy_button">Copy</button>
+                            <button class="delete_button">Delete</button>
+                        </td>
                     </tr>
                 <?php endforeach;?>
             </tbody>
@@ -74,7 +81,7 @@ $campaigns = Campaign::getAllCampaign();
     </body>
 </html>
 
-<?php else: ?>
+<?php elseif ($_POST['action'] === 'editAttributes') : ?>
 <?php 
     $data = json_decode($_POST['data'], true);
     if (!empty($data)) {
@@ -92,6 +99,28 @@ $campaigns = Campaign::getAllCampaign();
         
     } else {
         echo "Empty data";
+    }
+    
+?>
+<?php elseif ($_POST['action'] === 'copyCampaign'): ?>
+<?php 
+    $id = $_POST['id'];
+    if (!empty($id) && is_numeric($id)) {
+        Campaign::copyCampaign($id);
+        echo "Success";
+    } else {
+        echo "Invalid Campaign Id";
+    }
+    
+?>
+<?php elseif ($_POST['action'] === 'deleteCampaign'): ?>
+<?php 
+    $id = $_POST['id'];
+    if (!empty($id) && is_numeric($id)) {
+        Campaign::deleteCampaign($id);
+        echo "Success";
+    } else {
+        echo "Invalid Campaign Id";
     }
     
 ?>

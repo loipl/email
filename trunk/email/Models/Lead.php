@@ -202,7 +202,7 @@ class Lead extends Database
             $sql  = "UPDATE `" . $this->tableName . "` SET `lock_id` = '" . mysql_real_escape_string($lockId) . "',";
             $sql .= " `lock_datetime` = NOW()";
             $sql .= " WHERE `email` =";
-            $sql .= " '" . $lead . "' LIMIT 1; ";
+            $sql .= " '" . mysql_real_escape_string($lead) . "' LIMIT 1; ";
 
             $db->query($sql);
         }
@@ -216,7 +216,7 @@ class Lead extends Database
             $sql  = "UPDATE `" . $this->tableName . "` SET `lock_id` = NULL,";
             $sql .= " `lock_datetime` = NULL";
             $sql .= " WHERE `email` =";
-            $sql .= " '" . $lead . "' LIMIT 1;";
+            $sql .= " '" . mysql_real_escape_string($lead) . "' LIMIT 1;";
 
             $db->query($sql);
         }
@@ -313,7 +313,7 @@ class Lead extends Database
     public function processSuppressionEmailCheck(Database $db, &$leadGroup)
     {
         foreach ($leadGroup AS $int => $lead) {
-            $sql = "SELECT COUNT(*) FROM `suppression_email` WHERE `email` = '" . $lead['email'] . "'";
+            $sql = "SELECT COUNT(*) FROM `suppression_email` WHERE `email` = '" . mysql_real_escape_string($lead['email']) . "'";
             $suppressionCount = $db->getUpperLeft($sql);
 
             if ($suppressionCount > 0) {
@@ -327,7 +327,7 @@ class Lead extends Database
     public function processSuppressionDomainCheck(Database $db, &$leadGroup)
     {
         foreach ($leadGroup AS $int => $lead) {
-            $sql = "SELECT COUNT(*) FROM `suppression_domain` WHERE `domain` = '" . $lead['domain'] . "'";
+            $sql = "SELECT COUNT(*) FROM `suppression_domain` WHERE `domain` = '" . mysql_real_escape_string($lead['domain']) . "'";
             $suppressionCount = $db->getUpperLeft($sql);
 
             if ($suppressionCount > 0) {
@@ -369,7 +369,7 @@ class Lead extends Database
     public function processBuildQueueCheck(Database $db, &$leadGroup)
     {
         foreach ($leadGroup AS $int => $lead) {
-            $sql = "SELECT COUNT(*) FROM `queue_build` WHERE `email` = '" . $lead['email'] . "'";
+            $sql = "SELECT COUNT(*) FROM `queue_build` WHERE `email` = '" . mysql_real_escape_string($lead['email']) . "'";
             $queueCount = $db->getUpperLeft($sql);
 
             if ($queueCount > 0) {
@@ -383,7 +383,7 @@ class Lead extends Database
     public function processSendQueueCheck(Database $db, &$leadGroup)
     {
         foreach ($leadGroup AS $int => $lead) {
-            $sql = "SELECT COUNT(*) FROM `queue_send` WHERE `email` = '" . $lead['email'] . "'";
+            $sql = "SELECT COUNT(*) FROM `queue_send` WHERE `email` = '" . mysql_real_escape_string($lead['email']) . "'";
             $queueCount = $db->getUpperLeft($sql);
 
             if ($queueCount > 0) {

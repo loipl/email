@@ -252,7 +252,8 @@ class HTML
             }
         }
         
-        $html = "<button class=\"page_number\" value=\"1\">First</button>";
+        $html = '<div>';
+        $html .= "<button class=\"page_number\" value=\"1\">First</button>";
         foreach ($displayPages as $page) {
             if ($page === $pageNumber) {
                 $html .= "<button class=\"page_number current\" value=\"$page\">$page</button>";
@@ -261,6 +262,8 @@ class HTML
             }
         }
         $html .= "<button class=\"page_number\" value=\"$numberOfPage\">Last</button>";
+        $html .= "</div>";
+        $html .= "<div>Showing page $pageNumber of $numberOfPage total</div>";
         return $html;
     }
 

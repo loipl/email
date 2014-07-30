@@ -33,6 +33,10 @@ class Logging
     {
         $db = new Database;
 
+        if (strpos($error, '1062: Duplicate')) {
+            return false;
+        }
+
         $sql  = "INSERT INTO `error_log_mysql` (id, datetime, query, error) VALUES (";
         $sql .= "NULL, NOW(),";
         $sql .= " '" . mysql_real_escape_string($query) . "',";

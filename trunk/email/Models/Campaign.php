@@ -269,7 +269,7 @@ class Campaign extends Database
     {
         $db = new Database;
 
-        $sql  = "SELECT * FROM `" . self::tableName . "` LIMIT 20";
+        $sql  = "SELECT * FROM `" . self::tableName . "` ORDER BY `id` DESC LIMIT 20";
 
         $result = $db->getArray($sql);
 
@@ -312,6 +312,38 @@ class Campaign extends Database
         $db->query($sql);
         
         return mysql_insert_id();
+
+    }
+    //--------------------------------------------------------------------------
+    
+    public static function copyCampaign($campaignId)
+    {
+        $db = new Database;
+
+        $sql  = "INSERT INTO `" . self::tableName . "` " .
+                "(name, attributes, send_limit, sent_count, creative_ids, end_date)" .
+                " SELECT CONCAT(name, ' - Copy') as name," .
+                        " attributes, send_limit, sent_count, creative_ids, end_date" .
+                " FROM `" . self::tableName . "` " .
+                " WHERE id= '" . mysql_real_escape_string($campaignId) . "'";
+
+        $db->query($sql);
+        
+        return mysql_insert_id();
+
+    }
+    //--------------------------------------------------------------------------
+    
+     public static function deleteCampaign($campaignId)
+    {
+        $db = new Database;
+
+        $sql  = "DELETE FROM `" . self::tableName . "` " .
+                " WHERE id= '" . mysql_real_escape_string($campaignId) . "'";
+
+        $db->query($sql);
+        
+        return true;
 
     }
     //--------------------------------------------------------------------------

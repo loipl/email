@@ -148,8 +148,8 @@ if ($xmlData) {
         }
 
         $sql .= ") VALUES ";
-        $sql .= "('" . $email . "',";
-        $sql .= " '" . $domain . "',";
+        $sql .= "('" . mysql_real_escape_string($email) . "',";
+        $sql .= " '" . mysql_real_escape_string($domain) . "',";
         $sql .= " '" . $score . "',";
         $sql .= " '" . $md5_email . "',";
         $sql .= " '" . $md5_domain . "'";
