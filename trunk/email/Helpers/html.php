@@ -183,7 +183,7 @@ class HTML
             $html .= '<td class="attrData">';
             switch ($description['type']){
                 case 'number':
-                    $html .= '<input value="' . $attrValue . '" type="number">' ;
+                    $html .= '<input value="' . $attrValue . '" type="number" min = 1>' ;
                     break;
                 case 'bool':
                     $checkedStr = $attrValue ? 'checked' : '';

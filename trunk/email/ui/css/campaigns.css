@@ -21,14 +21,41 @@ table.no-border td {
 
 input.send_limit, input.sent_count, input.creative_ids{
     width: 50px;
+    text-align: center;
+}
+
+input.end_date {
+    text-align: center;
 }
 
 table.dTable td textarea {
-    width: 80px;
-    height: 30px;
+    display: block;
+    resize:none;
+    width: 120px;
+    height: 80px;
+    margin-top: 10px;
 }
 
 .update_button, .copy_button, .delete_button {
     margin-bottom: 10px;
     margin-top: 10px;
 }
+
+td.attrData input{
+    width: 150px !important;
+}
+
+td.attrData .selector, td.attrData .selector span{
+    width: 144px !important;
+}
+
+td.attrData .selector select {
+    width: 154px !important;
+}
+
+.attrData .checker {
+    position: relative;
+    margin-right: 5px;
+}
+
+ 
