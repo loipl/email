@@ -51,7 +51,7 @@ class Engine_Sender
                 $this->fromName    = $sendRecord->getFromName();
                 $this->senderEmail = $sendRecord->getSenderEmail();
                 $this->subject     = $sendRecord->getSubject();
-                $this->htmlBody    = $sendRecord->getHtmlBody();
+                $this->htmlBody    = $sendRecord->getStrippedHtmlBody();
                 $this->textBody    = $sendRecord->getTextBody();
                 $this->subId       = $sendRecord->getSubId();
                 $this->channelId   = $sendRecord->getChannelId();
@@ -88,7 +88,7 @@ class Engine_Sender
         $this->fromName    = $sendRecord->getFromName();
         $this->senderEmail = $sendRecord->getSenderEmail();
         $this->subject     = $sendRecord->getSubject();
-        $this->htmlBody    = $sendRecord->getHtmlBody();
+        $this->htmlBody    = $sendRecord->getStrippedHtmlBody();
         $this->textBody    = $sendRecord->getTextBody();
         $this->subId       = $sendRecord->getSubId();
         $this->channelId   = $sendRecord->getChannelId();

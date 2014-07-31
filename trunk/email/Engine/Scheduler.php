@@ -113,7 +113,7 @@ class Engine_Scheduler
             $this->leads[] = array('email'  => $email);
         }
         
-        $this->removeLeadsThatExceedingThrottleThreshold($this->leads);
+        $this->removeExceedingThrottleThresholdLeads($this->leads);
         
         if (empty($this->leads)) {
             Probability::addRecord('1', $this->campaignId, '2', '100', NULL, NULL, 1800);
@@ -123,7 +123,7 @@ class Engine_Scheduler
         
         LogScheduler::addAttributes(array(
             'lead_count' => count($this->leads),
-            'leads'      => serialize($this->leads)
+            'leads'      => serialize(LogScheduler::getLeadsToLog($this->leads))
         ));
 
         Engine_Scheduler_Leads::lockLeads($this->leads);
@@ -134,7 +134,7 @@ class Engine_Scheduler
     //--------------------------------------------------------------------------
     
     
-    private function removeLeadsThatExceedingThrottleThreshold(&$leads)
+    private function removeExceedingThrottleThresholdLeads(&$leads)
     {
         if (!empty($leads)) {
             foreach ($leads as $id => $lead) {

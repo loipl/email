@@ -11,6 +11,7 @@ class LogScheduler extends Database
     
     const tableName = 'log_scheduler';
     const pageSize = 20;
+    const leadLogLimit = 1000;
     protected static $tableFields = array (
                                         'id', 
                                         'scheduler_name', 
@@ -114,6 +115,22 @@ class LogScheduler extends Database
     
     public static function getId () {     
         return self::$id;   
+    }  
+    //--------------------------------------------------------------------------
+    
+    public static function getLeadsToLog ($leads, $limit = self::leadLogLimit) {     
+        $result = array();
+        $count = 0;
+        foreach ($leads as $lead) {
+            $count ++;
+            if ($count > $limit) {
+                break;
+            }
+            if (isset($lead['email'])) {
+                $result[] = array('email' => $lead['email']);
+            }
+        }
+        return $result;
     }  
     //--------------------------------------------------------------------------
     

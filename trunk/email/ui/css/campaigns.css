@@ -12,10 +12,23 @@ table.campaigns_table th, table.campaigns_table td {
     border-bottom: 1px solid black;
     border-left: none;
     border-right: none;
+    text-align: center;
+    vertical-align: middle;
 }
 table.no-border td {
      border: none;
 }
-.campaign_name {
-    height: 100px;
+
+input.send_limit, input.sent_count, input.creative_ids{
+    width: 50px;
+}
+
+table.dTable td textarea {
+    width: 80px;
+    height: 30px;
+}
+
+.update_button, .copy_button, .delete_button {
+    margin-bottom: 10px;
+    margin-top: 10px;
 }

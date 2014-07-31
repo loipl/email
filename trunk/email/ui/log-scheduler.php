@@ -145,16 +145,20 @@ $numOfPage = ceil($countLog/$pageSize);
                             </td>
                             <td class="leads">
                                 <?php 
-                                    if (!empty($log['leads'])) {
-                                        $leads = unserialize($log['leads']);
-
+                                    if (!empty($log['leads'])) {                 
                                         $html = '<button class="show">Show</button>';
                                         $html .= '<button class="hide">Hide</button>';
 
                                         $html .= '<div class="show_hide">';
-                                        foreach ($leads as $lead) {
-                                            $html .= "<div>" . json_encode($lead) . '</div>';
+                                        $leads = @ unserialize($log['leads']);
+                                        if ($leads !== false){
+                                            foreach ($leads as $lead) {
+                                                $html .= "<div>" . json_encode($lead) . '</div>';
+                                            }
+                                        } else {
+                                            $html .= "<div>Broken serialized string</div>";
                                         }
+                                        
                                         $html .= '</div>';
                                         echo $html;
                                     }

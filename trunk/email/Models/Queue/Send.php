@@ -146,6 +146,12 @@ class Queue_Send extends Database
         return $this->htmlBody;
     }
     //--------------------------------------------------------------------------
+    
+    public function getStrippedHtmlBody()
+    {
+        return $this->stripHtmlTags($this->htmlBody);
+    }
+    //--------------------------------------------------------------------------
 
 
     public function getTextBody()
@@ -391,7 +397,15 @@ class Queue_Send extends Database
         return true;
     }
     //--------------------------------------------------------------------------
-
+    
+    public function stripHtmlTags($str) {
+        $tags = array('</html>','</body>');
+        foreach ($tags as $tag) {
+            $str = str_replace($tag, '', $str);
+        }
+        return $str;
+    }
+    //--------------------------------------------------------------------------
 
     public static function setLockById($id)
     {

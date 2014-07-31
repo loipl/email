@@ -347,4 +347,12 @@ class Campaign extends Database
 
     }
     //--------------------------------------------------------------------------
+    
+    public static function formatCampaign($campaigns) {
+        foreach ($campaigns as $index => $campaign) {
+            $campaigns[$index]['attributes'] = unserialize($campaign['attributes']);
+            $campaigns[$index]['creative_ids'] = unserialize($campaign['creative_ids']);
+        }
+        return $campaigns;
+    }
 }

@@ -6,7 +6,7 @@
 
 
 $(document).ready(function(){
-    $('.edit_attr_button').click(function(){
+    $('.update_button').click(function(){
         var campaignInfo = getCampaignInfo($(this).closest('tr.campaign_row'));
         $.post(
                 'campaigns.php', 
@@ -20,6 +20,7 @@ $(document).ready(function(){
         )
 
     })
+    
     $('.copy_button').click(function(){
         var id = $(this).closest('tr.campaign_row').attr('abbr');
         $.post(
@@ -37,6 +38,7 @@ $(document).ready(function(){
         )
 
     });
+    
     $('.delete_button').click(function(){
         var id = $(this).closest('tr.campaign_row').attr('abbr');
         var confirmMessage = "Are you sure want to delete?";

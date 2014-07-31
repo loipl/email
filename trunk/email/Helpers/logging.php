@@ -33,7 +33,7 @@ class Logging
     {
         $db = new Database;
 
-        if (strpos($error, '1062: Duplicate')) {
+        if (strpos($error, '1062: Duplicate') !== false) {
             return false;
         }
 

@@ -222,7 +222,6 @@ class HTML
             }
             $html .= '</tr>';
         }
-        $html .= '<tr><td></td><td></td><td><input class="edit_attr_button" type="button" value="Set"></td></tr>';
         $html .= '</tbody></table>';
         return $html;
     }

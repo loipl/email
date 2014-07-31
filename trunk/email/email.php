@@ -41,6 +41,10 @@ require_once dirname(__FILE__) . '/Helpers/dates.php';
 require_once dirname(__FILE__) . '/Helpers/html.php';
 require_once dirname(__FILE__) . '/Helpers/logging.php';
 require_once dirname(__FILE__) . '/Helpers/random.php';
+require_once dirname(__FILE__) . '/Helpers/curl-helper.php';
+
+require_once dirname(__FILE__) . '/Handler/request-handler.php';
+require_once dirname(__FILE__) . '/Handler/response-handler.php';
 
 require_once dirname(__FILE__) . '/Config.php';
 
