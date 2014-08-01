@@ -298,7 +298,9 @@ class Engine_Scheduler
         
         if (!empty($domain)) {
             $throttlesByDomain = Throttle::getThrottlesByDomain($domain, $channel);
-            $stackingDelayLeads = Queue_Send::getStackingDelayByTLD($domain);
+            if (!empty ($throttlesByDomain)) {
+                $stackingDelayLeads = Queue_Send::getStackingDelayByTLD($domain);
+            }
             
             $tldGroup = TldList::getTldGroupByDomain($domain);
 
@@ -321,7 +323,7 @@ class Engine_Scheduler
             self::addDelaySecondByThrottles($throttlesByDomain, $delaySecond);
         }
         
-        // get delay seconds by domain throttles
+        // get delay seconds by source campaign
         if (!empty($throttlesBySourceCampaign)) {
             self::addDelaySecondByThrottles($throttlesBySourceCampaign, $delaySecond);
         }

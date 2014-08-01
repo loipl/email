@@ -1,15 +1,24 @@
 <?php
 
 class RequestHandler {
-    private $name;
+    private $_name;
+    
+    private $_params;
     
     public function __construct($name) {
-        $this->name = $name;
+        $this->_name = $name;
+        $this->_params = array();
+    }
+    // -------------------------------------------------------------------------
+    
+    public function addParams($key, $value) {
+
+        $this->_params[$key] = $value;
     }
     // -------------------------------------------------------------------------
     
     public function getRequestParams() {
-        $result = array();
+        $result = $this->_params;
         $result += $_GET;
         $result += $_POST;
         return $result;

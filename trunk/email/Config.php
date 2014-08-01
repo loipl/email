@@ -46,7 +46,7 @@ class Config
     const SOFT_BOUNCE_DELAY_SECONDS     = 10;
     const THRESHOLD_DELAY_SECONDS       = 1200;   // ignore leads which delay time > 20 minutes
     
-    const PURGE_THROTTLE_THRESHOLD      = 20;    // purge throttle which older than this threshold (in minutes)
+    const PURGE_THROTTLE_THRESHOLD      = 60;    // purge throttle which older than this threshold (in minutes)
     
     const AOL_TLD_LIST                  = 'aol';
     const MICROSOFT_TLD_LIST            = 'microsoft';
@@ -93,7 +93,7 @@ class Config
 
     public static $emailTests      = "dom@leadwrench.com";
 
-    public static $debugLevel      = 2;
+    public static $debugLevel      = 0;
 
     public static $subdomains      = array(
         'images' => 'i',

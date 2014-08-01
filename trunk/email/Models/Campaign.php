@@ -277,20 +277,29 @@ class Campaign extends Database
     }
     //--------------------------------------------------------------------------
     
-    public static function updateCampaignById($id, $name, $attributes, $sendLimit, $sentCount, $creativeIds, $endDate)
+    public static function updateCampaignById($id, $updateData)
     {
         $db = new Database;
-
-        $sql  = "UPDATE `" . self::tableName . "` " .
-                "SET name = '" . mysql_real_escape_string($name) . "'" .
-                ", attributes = '" . mysql_real_escape_string($attributes) . "'" .
-                ", send_limit = '" . mysql_real_escape_string($sendLimit) . "'" .
-                ", sent_count = '" . mysql_real_escape_string($sentCount) . "'" .
-                ", creative_ids = '" . mysql_real_escape_string($creativeIds) . "'" .
-                ", end_date = '" . mysql_real_escape_string($endDate) . "'";
-        $sql .= " WHERE id= '" . mysql_real_escape_string($id) . "'";
         
+        $fields = array('name', 'attributes', 'send_limit', 'sent_count', 'creative_ids', 'end_date');
+        foreach ($updateData as $key => $value) {
+            if (!in_array($key, $fields)) {
+                unset($updateData[$key]);
+            }
+        }
 
+        $sql  = "UPDATE `" . self::tableName . "` SET";
+        
+        foreach ($updateData as $field => $data) {
+            if (!empty($data)) {
+                $sql .= " `$field` = '" . mysql_real_escape_string($data) . "',";
+            } else {
+                $sql .= " `$field` = null,";
+            }
+        }
+        $sql = rtrim($sql, ',');
+
+        $sql .= " WHERE `id` = '" . mysql_real_escape_string($id) . "'";
         $db->query($sql);
 
         return true;

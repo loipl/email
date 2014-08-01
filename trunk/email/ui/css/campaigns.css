@@ -8,13 +8,6 @@ and open the template in the editor.
     Author     : DiepBuiHuu
 */
 
-table.campaigns_table th, table.campaigns_table td {
-    border-bottom: 1px solid black;
-    border-left: none;
-    border-right: none;
-    text-align: center;
-    vertical-align: middle;
-}
 table.no-border td {
      border: none;
 }
@@ -34,6 +27,10 @@ table.dTable td textarea {
     width: 120px;
     height: 80px;
     margin-top: 10px;
+}
+
+table.dTable td {
+    vertical-align: middle;
 }
 
 .update_button, .copy_button, .delete_button {

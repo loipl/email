@@ -1,10 +1,29 @@
 <?php
 
-require_once dirname(__FILE__) . '/../email.php';
-$campaigns = Campaign::getAllCampaign();
+    require_once dirname(__FILE__) . '/../email.php';
+    $params = array (
+        'apikey' => Config::$apiKey
+    );
+
+    $requestUrl = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+    $apiBase = preg_replace('/\/ui\/.*$/', '/api/campaign', $requestUrl);
+    
+
 ?>
 
 <?php if( !isset($_POST['action']) ): ?>
+
+<?php
+    $apiUrl = $apiBase . '?' . http_build_query($params);
+    $apiResponse = CurlHelper::request($apiUrl);
+    
+    if ($apiResponse['httpCode'] === 200) {
+        $content = json_decode($apiResponse['content'], true);
+        $campaigns = $content['data']; 
+    } else {
+        $campaigns = array();
+    }
+?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -340,7 +359,7 @@ $campaigns = Campaign::getAllCampaign();
                         </td>
                         <td class="attributes">
                             <?php 
-                                $attributes = unserialize($campaign['attributes']);
+                                $attributes = $campaign['attributes'];
                                 $html = HTML::getHtmlForCampaignAttributes($attributes);
                                 echo $html;
                             ?>
@@ -351,7 +370,7 @@ $campaigns = Campaign::getAllCampaign();
                         </td>
                         <td>
                             <?php 
-                                $creativeIds = unserialize($campaign['creative_ids']);
+                                $creativeIds = $campaign['creative_ids'];
                                 $creativeStr = is_array($creativeIds) ? implode(',', $creativeIds) : "";   
                             ?>
                             <input class="creative_ids" value="<?php echo $creativeStr; ?>"/>
@@ -390,12 +409,24 @@ $campaigns = Campaign::getAllCampaign();
     if (!empty($data)) {
         $id = $data['id'];
         if (!empty($data['attributes'])) {
-            $attributes = serialize($data['attributes']);
-            $creativeIds = serialize($data['creative_ids']);
-            Campaign::updateCampaignById($id, $data['campaign_name'], $attributes, 
-                                            $data['send_limit'], $data['sent_count'],
-                                            $creativeIds, $data['end_date']);
-            echo "Complete successfully";
+            $data['attributes'] = serialize($data['attributes']);
+            $data['creative_ids'] = serialize($data['creative_ids']);
+            $data['name'] = $data['campaign_name'];
+            $data['action'] = 'update';
+            $apiUrl = $apiBase . '/' . $id . '?' . http_build_query($params);
+            $apiResponse = CurlHelper::request($apiUrl, 'POST', $data);
+
+            if ($apiResponse['httpCode'] === 200) {
+                $response = json_decode($apiResponse['content'],true);
+                if ($response['status'] === '1') {
+                    echo "Complete successfully";
+                } else {
+                    echo $response['message'];
+                } 
+            } else {
+                echo $apiResponse['httpErr'];
+            }
+            
         } else {
             echo "Empty attributes";
         }
@@ -409,8 +440,20 @@ $campaigns = Campaign::getAllCampaign();
 <?php 
     $id = $_POST['id'];
     if (!empty($id) && is_numeric($id)) {
-        Campaign::copyCampaign($id);
-        echo "Success";
+        $data['action'] = 'copy';
+        $apiUrl = $apiBase . '/' . $id . '?' . http_build_query($params);
+        $apiResponse = CurlHelper::request($apiUrl, 'POST', $data);
+
+        if ($apiResponse['httpCode'] === 200) {
+            $response = json_decode($apiResponse['content'],true);
+            if ($response['status'] === '1') {
+                echo "Success";
+            } else {
+                echo $response['message'];
+            } 
+        } else {
+            echo $apiResponse['httpErr'];
+        }
     } else {
         echo "Invalid Campaign Id";
     }
@@ -420,8 +463,19 @@ $campaigns = Campaign::getAllCampaign();
 <?php 
     $id = $_POST['id'];
     if (!empty($id) && is_numeric($id)) {
-        Campaign::deleteCampaign($id);
-        echo "Success";
+        $apiUrl = $apiBase . '/' . $id . '?' . http_build_query($params);
+        $apiResponse = CurlHelper::request($apiUrl, 'DELETE');
+
+        if ($apiResponse['httpCode'] === 200) {
+            $response = json_decode($apiResponse['content'],true);
+            if ($response['status'] === '1') {
+                echo "Success";
+            } else {
+                echo $response['message'];
+            } 
+        } else {
+            echo $apiResponse['httpErr'];
+        }
     } else {
         echo "Invalid Campaign Id";
     }
