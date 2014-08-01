@@ -6,7 +6,7 @@
     );
 
     $requestUrl = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-    $apiBase = preg_replace('/\/ui\/.*$/', '/api/campaign', $requestUrl);
+    $apiBase = preg_replace('/\/ui\/.*$/', '/api/campaign.php', $requestUrl);
     
     $pageTitle = 'Campaigns List';
     $pageName = 'Campaigns';
@@ -122,12 +122,14 @@
     $data = json_decode($_POST['data'], true);
     if (!empty($data)) {
         $id = $data['id'];
+        $params['id'] = $id;
         if (!empty($data['attributes'])) {
             $data['attributes'] = serialize($data['attributes']);
             $data['creative_ids'] = serialize($data['creative_ids']);
             $data['name'] = $data['campaign_name'];
             $data['action'] = 'update';
-            $apiUrl = $apiBase . '/' . $id . '?' . http_build_query($params);
+//            $apiUrl = $apiBase . '/' . $id . '?' . http_build_query($params);
+            $apiUrl = $apiBase . '?' . http_build_query($params);
             $apiResponse = CurlHelper::request($apiUrl, 'POST', $data);
 
             if ($apiResponse['httpCode'] === 200) {
@@ -153,9 +155,10 @@
 <?php elseif ($_POST['action'] === 'copyCampaign'): ?>
 <?php 
     $id = $_POST['id'];
+    $params['id'] = $id;
     if (!empty($id) && is_numeric($id)) {
         $data['action'] = 'copy';
-        $apiUrl = $apiBase . '/' . $id . '?' . http_build_query($params);
+        $apiUrl = $apiBase . '?' . http_build_query($params);
         $apiResponse = CurlHelper::request($apiUrl, 'POST', $data);
 
         if ($apiResponse['httpCode'] === 200) {
@@ -176,8 +179,9 @@
 <?php elseif ($_POST['action'] === 'deleteCampaign'): ?>
 <?php 
     $id = $_POST['id'];
+    $params['id'] = $id;
     if (!empty($id) && is_numeric($id)) {
-        $apiUrl = $apiBase . '/' . $id . '?' . http_build_query($params);
+        $apiUrl = $apiBase . '?' . http_build_query($params);
         $apiResponse = CurlHelper::request($apiUrl, 'DELETE');
 
         if ($apiResponse['httpCode'] === 200) {
