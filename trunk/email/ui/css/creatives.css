@@ -23,9 +23,21 @@ and open the template in the editor.
 }
 .html_body, .text_body {
     height: 100px;
-    width: 500px;
+    width: 100px;
     display: none;
 }
 .hide {
     display: none;
+}
+.creative_row td {
+    vertical-align: middle;
+    text-align: center;
+}
+
+.creative_row td input, .creative_row td input{
+    text-align: center;
+}
+
+.creative_row textarea {
+    resize:none;
 }

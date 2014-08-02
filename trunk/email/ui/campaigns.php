@@ -8,6 +8,7 @@
     $requestUrl = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     $apiBase = preg_replace('/\/ui\/.*$/', '/api/campaign.php', $requestUrl);
     
+    $page = 'campaign';
     $pageTitle = 'Campaigns List';
     $pageName = 'Campaigns';
     $pageDescription = 'Campaigns list, edit-copy-delete action';
@@ -46,7 +47,7 @@
             <table cellpadding="0" cellspacing="0" border="0" class="display dTable">
             <thead>
             <tr>
-                <th>
+                <th id="sort_id">
                     Id
                 </th>
                 <th>

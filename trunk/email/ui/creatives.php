@@ -2,54 +2,69 @@
 
 require_once dirname(__FILE__) . '/../email.php';
 $creatives = Creative::getAllCreatives();
+
+$page = 'creative';
+$pageTitle = 'Creatives List';
+$pageName = 'Creatives';
+$pageDescription = 'Creative list';
 ?>
 
 <?php if( !(isset($_POST['action']) && $_POST['action'] === 'editCreative') ): ?>
-<html>
-    <head>
-        <title>Creatives List</title>
-        <link rel="stylesheet" type="text/css" href="css/creatives.css">
-        <script type="text/javascript" src="js/jquery-1.7.3.js"></script>
-    </head>
-    <body>
-        <table class="campaigns_table">
+
+<?php include('layout/header.php');?>
+
+<?php include('layout/sidebar.php');?>
+
+
+<!-- Right side -->
+<div id="rightSide">
+
+    <?php include('layout/top-navigation.php');?>
+    
+    <!-- Main content wrapper -->
+    <div class="wrapper">
+    
+        <!-- Dynamic table -->
+        <div class="widget">
+            <div class="title"><img src="images/icons/dark/full2.png" alt="" class="titleIcon" /><h6><?php echo $pageName?></h6></div>                          
+            <table cellpadding="0" cellspacing="0" border="0" class="display dTable">
             <thead>
-                <tr>
-                    <th>
-                        Id
-                    </th>
-                    <th>
-                        Class
-                    </th>
-                    <th>
-                        Category Id
-                    </th>
-                    <th>
-                        Sender Id
-                    </th>
-                    <th>
-                        Name
-                    </th>
-                    <th>
-                        From
-                    </th>
-                    <th>
-                        Subject
-                    </th>
-                    <th>
-                        Html Body
-                    </th>
-                    <th>
-                        Text Body
-                    </th>
-                    <th>
-                        Action
-                    </th>
-                </tr>
+            <tr>
+                <th>
+                    Id
+                </th>
+                <th>
+                    Class
+                </th>
+                <th>
+                    Category Id
+                </th>
+                <th>
+                    Sender Id
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    From
+                </th>
+                <th>
+                    Subject
+                </th>
+                <th>
+                    Html Body
+                </th>
+                <th>
+                    Text Body
+                </th>
+                <th>
+                    Action
+                </th>
+            </tr>
             </thead>
             <tbody>
                 <?php foreach ($creatives as $creative): ?>
-                <tr abbr="<?php echo $creative['id']; ?>" class="creative_row">
+                <tr abbr="<?php echo $creative['id']; ?>" class="creative_row gradeA">
                         <td><?php echo $creative['id']; ?></td>
                         <td>
                             <input class="class" value="<?php echo $creative['class']; ?>">
@@ -84,15 +99,19 @@ $creatives = Creative::getAllCreatives();
                             </div>
                         </td>
                         <td>
-                            <button class="update">Set</button>
+                            <button class="update">Update</button>
                         </td>
                     </tr>
                 <?php endforeach;?>
             </tbody>
-        </table>
-        <script type="text/javascript" src="js/creatives.js"></script>
-    </body>
-</html>
+            </table>  
+        </div>
+    
+    </div>
+    
+</div>
+
+<?php include('layout/footer.php');?>
 
 <?php else: ?>
 <?php 

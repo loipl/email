@@ -5,8 +5,13 @@
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
 <title><?php echo $pageTitle;?></title>
 <link href="css/main.css" rel="stylesheet" type="text/css" />
+<?php if ($page === 'campaign') {?>
 <link href="css/campaigns.css" rel="stylesheet" type="text/css" />
-
+<?php } elseif ($page === 'creative') {?>
+<link href="css/creatives.css" rel="stylesheet" type="text/css" />
+<?php } elseif ($page === 'log_scheduler') {?>
+<link href="css/log_scheduler.css" rel="stylesheet" type="text/css" />
+<?php } ?>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
 
 <script type="text/javascript" src="js/plugins/spinner/ui.spinner.js"></script>
@@ -55,7 +60,13 @@
 <script type="text/javascript" src="js/plugins/elfinder.min.js"></script>
 
 <script type="text/javascript" src="js/custom.js"></script>
+<?php if ($page === 'campaign') {?>
 <script type="text/javascript" src="js/campaigns.js"></script>
+<?php } elseif ($page === 'creative') {?>
+<script type="text/javascript" src="js/creatives.js"></script>
+<?php } elseif ($page === 'log_scheduler') {?>
+<script type="text/javascript" src="js/log_scheduler.js"></script>
+<?php } ?>
 
 </head>
 <body>

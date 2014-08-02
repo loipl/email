@@ -6,6 +6,7 @@
 
 
 $(document).ready(function(){
+    $('#sort_id').click();
     $('.update_button').click(function(){
         var campaignInfo = getCampaignInfo($(this).closest('tr.campaign_row'));
         $.post(
