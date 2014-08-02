@@ -28,47 +28,51 @@ $pageSize = LogScheduler::pageSize;
 
 $numOfPage = ceil($countLog/$pageSize);
 
+$page = 'log_scheduler';
+$pageTitle = 'Log Scheduler';
+$pageName = 'Log Scheduler';
+$pageDescription = 'List of Log Scheduler';
 ?>
 
+<?php include('layout/header.php');?>
+
+<?php include('layout/sidebar.php');?>
 
 
-<html>
-    <head>
-        <title>Log Scheduler</title>
-        <link rel="stylesheet" type="text/css" href="css/log_scheduler.css">
-        <link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css">
-        <script type="text/javascript" src="js/jquery.js"></script>
-        <script type="text/javascript" src="js/jquery-ui.min.js"></script>
-    </head>
-    <body>
+<!-- Right side -->
+<div id="rightSide">
+
+    <?php include('layout/top-navigation.php');?>
+    
+    <!-- Main content wrapper -->
+    <div class="wrapper">
+        
+        <!-- Filter bar -->
         <div class="filter_bar">  
-            <div class="float_left">
-                Sort By:
-                <?php echo Html::getHtmlForSelect($sortItems, $sortBy, 'sort_by')?>
+            <div class="filter_bar_element" >
+                Sort By: <?php echo Html::getHtmlForSelect($sortItems, $sortBy, 'sort_by')?>
             </div>
-            <div class="float_left">
-                Sort Order:
-                <?php echo Html::getHtmlForSelect($sortOrders, $sortOrder, 'sort_order')?>
+            <div class="filter_bar_element">
+                Sort Order: <?php echo Html::getHtmlForSelect($sortOrders, $sortOrder, 'sort_order')?>
             </div>
-            <div class="float_left">
+            <div class="filter_bar_element from_date">
                 From:
                 <input id="from_date" value="<?php echo $fromDate;?>">
             </div>
-            <div class="float_left">
+            <div class="filter_bar_element to_date">
                 To:
                 <input id="to_date" value="<?php echo $toDate;?>">
             </div>
-            <div class="float_left">
+            <div class="filter_bar_element">
                 <button class="update_table">Update</button>
             </div>
-            <div style="clear: both;">
         </div>
-
-        <div class="paging_bar">
-            <?php echo Html::getHtmlForPaging($numOfPage,intval($currentPage));?>
-        </div>
-        <?php if (!empty($allLogs)): ?>
-            <table class="campaigns_table">
+        
+        <!-- Dynamic table -->
+        <div class="widget">
+            <div class="title"><img src="images/icons/dark/full2.png" alt="" class="titleIcon" /><h6><?php echo $pageName?></h6></div>                          
+            <?php if (!empty($allLogs)): ?>
+            <table cellpadding="0" cellspacing="0" border="0" class="display dTable log_table">
                 <thead>
                     <tr>
                         <th>
@@ -109,7 +113,7 @@ $numOfPage = ceil($countLog/$pageSize);
 
                 <tbody>
                     <?php foreach ($allLogs as $log): ?>
-                    <tr abbr="<?php echo $log['id']; ?>" class="campaign_row">
+                    <tr abbr="<?php echo $log['id']; ?>" class="log_row gradeA">
                             <td><?php echo $log['id']; ?></td>
                             <td>
                                 <?php echo trim($log['scheduler_name']); ?>
@@ -178,12 +182,20 @@ $numOfPage = ceil($countLog/$pageSize);
                     <?php endforeach;?>
                 </tbody>
             </table>
+            <div class="paging_bar">
+                <?php echo Html::getHtmlForPaging($numOfPage,intval($currentPage));?>
+            </div>
         <?php else: ?>
             <div style="margin-top: 20px; font-size: 20px;">
                 No log in this period. Please choose another time range!
             </div>
             
-        <?php endif; ?>
-        <script type="text/javascript" src="js/log_scheduler.js"></script>
-    </body>
-</html>
+        <?php endif; ?>  
+           
+        </div>
+  
+    </div>
+    
+</div>
+
+<?php include('layout/footer.php');?>

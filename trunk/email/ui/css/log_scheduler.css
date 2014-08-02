@@ -8,19 +8,17 @@ and open the template in the editor.
     Author     : DiepBuiHuu
 */
 
-table.campaigns_table th, table.campaigns_table td {
-    border-bottom: 1px solid black;
-    border-left: none;
-    border-right: none;
+table.log_table th, table.log_table td, table.log_table button {
     text-align: center;
+    vertical-align: middle;
 }
 table.no-border td {
      border: none;
      text-align: left;
 }
 
-table.campaigns_table td.leads {
-    text-align: left;
+table.log_table td.leads {
+    text-align: center;
 }
 
 .hide {
@@ -29,12 +27,10 @@ table.campaigns_table td.leads {
 .attributes table, .show_hide {
     display: none;
 }
-.edit_attr_button {
-    display: none;
-}
-.float_left {
+
+.filter_bar_element {
     float: left;
-    margin-left: 20px;
+    vertical-align: middle;
 }
 .filter_bar {
     margin-top: 20px;
@@ -44,4 +40,31 @@ table.campaigns_table td.leads {
 }
 button {
     cursor: pointer;
+}
+.filter_bar {
+    display: inline-block;
+}
+.filter_bar .from_date, .filter_bar .to_date, .filter_bar .update_table {
+    margin-top:18px;
+    margin-left:30px;
+}
+
+.filter_bar #from_date, .filter_bar #to_date{
+    height:24px;
+}
+
+.paging_bar {
+    float: right;
+    margin-top: 2px;
+}
+td.attrData input{
+    width: 150px !important;
+}
+
+td.attrData .selector, td.attrData .selector span{
+    width: 144px !important;
+}
+
+td.attrData .selector select {
+    width: 154px !important;
 }
