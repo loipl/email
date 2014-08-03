@@ -2,11 +2,15 @@
 
 require_once dirname(__FILE__) . '/../email.php';
 
-$sortBy = !empty($_GET['sort_by']) ? $_GET['sort_by'] : 'id';
-$sortOrder = !empty($_GET['sort_order']) ? $_GET['sort_order'] : 'DESC';
-$currentPage = !empty($_GET['page']) ? $_GET['page'] : '1';
-$fromDate = !empty($_GET['from_date']) ? $_GET['from_date'] : date('Y-m-d', time() - 86400);
-$toDate = !empty($_GET['to_date']) ? $_GET['to_date'] : date('Y-m-d');
+$params = array (
+    'apikey' => Config::$apiKey
+);
+
+$params += $_GET;
+
+$requestUrl = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+$apiBase = preg_replace('/\/ui\/.*$/', '/api/log-scheduler.php', $requestUrl);
+
 
 $sortItems = array(
     'id' => 'Id',
@@ -21,10 +25,34 @@ $sortOrders = array (
     'asc' => 'Asc'
 );
 
-$allLogs = LogScheduler::getAll($fromDate, $toDate, $currentPage, $sortBy, $sortOrder);
-$countLog = LogScheduler::countAll($fromDate, $toDate);
+$allLogs = getAllLog($apiBase, $params);
+$countLog = LogScheduler::countAll($apiBase, $params);
 $pageSize = LogScheduler::pageSize;
 
+function getAllLog($apiBase, $params) {
+    $apiUrl = $apiBase . '?' . http_build_query($params);
+    $apiResponse = CurlHelper::request($apiUrl);
+    
+    if ($apiResponse['httpCode'] === 200) {
+        $content = json_decode($apiResponse['content'], true);
+        return $content['data']; 
+    } else {
+        return array();
+    }
+}
+
+function countAllLog($apiBase, $params) {
+    $params['action'] = 'count';
+    $apiUrl = $apiBase . '?' . http_build_query($params);
+    $apiResponse = CurlHelper::request($apiUrl);
+    
+    if ($apiResponse['httpCode'] === 200) {
+        $content = json_decode($apiResponse['content'], true);
+        return $content['data']; 
+    } else {
+        return 0;
+    }
+}
 
 $numOfPage = ceil($countLog/$pageSize);
 

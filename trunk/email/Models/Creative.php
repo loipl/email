@@ -238,21 +238,18 @@ class Creative extends Database
     }
     //--------------------------------------------------------------------------
     
-    public static function updateCreativeById($id, $class, $categoryId, $senderId, $name, $from, $subject, $htlmBody, $textBody)
+    public static function updateCreativeById($id, $updateData)
     {
         $db = new Database;
+        
+        $fields = array ('class', 'category_id', 'sender_id', 'name', 'from', 'subject', 'html_body', 'text_body');
+        foreach ($updateData as $key => $value) {
+            if (!in_array($key, $fields)) {
+                unset($updateData[$key]);
+            }
+        }
 
         $sql  = "UPDATE `" . self::tableName . "` SET";
-        $updateData = array(
-            'class' => $class,
-            'category_id' => $categoryId,
-            'sender_id' => $senderId,
-            'name' => $name,
-            'from' => $from,
-            'subject' => $subject,
-            'html_body' => $htlmBody,
-            'text_body' => $textBody
-        );
         
         foreach ($updateData as $field => $data) {
             if (!empty($data)) {

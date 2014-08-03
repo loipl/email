@@ -1,8 +1,13 @@
 <?php
 
 require_once dirname(__FILE__) . '/../email.php';
-$creatives = Creative::getAllCreatives();
+$params = array (
+    'apikey' => Config::$apiKey
+);
 
+$requestUrl = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+$apiBase = preg_replace('/\/ui\/.*$/', '/api/creative.php', $requestUrl);
+    
 $page = 'creative';
 $pageTitle = 'Creatives List';
 $pageName = 'Creatives';
@@ -10,6 +15,19 @@ $pageDescription = 'Creative list';
 ?>
 
 <?php if( !(isset($_POST['action']) && $_POST['action'] === 'editCreative') ): ?>
+
+<?php
+    $apiUrl = $apiBase . '?' . http_build_query($params);
+    $apiResponse = CurlHelper::request($apiUrl);
+    
+    if ($apiResponse['httpCode'] === 200) {
+        $content = json_decode($apiResponse['content'], true);
+        $creatives = $content['data']; 
+    } else {
+        $creatives = array();
+    }
+?>
+
 
 <?php include('layout/header.php');?>
 
@@ -118,11 +136,22 @@ $pageDescription = 'Creative list';
     $data = json_decode($_POST['data'], true);
     if (!empty($data)) {
         $id = $data['id'];
+        $params['id'] = $id;
+        $data['action'] = 'update';
+//            $apiUrl = $apiBase . '/' . $id . '?' . http_build_query($params);
+        $apiUrl = $apiBase . '?' . http_build_query($params);
+        $apiResponse = CurlHelper::request($apiUrl, 'POST', $data);
 
-        Creative::updateCreativeById($id, $data['class'], $data['category_id'], $data['sender_id'],
-                                        $data['name'], $data['from'], $data['subject'],
-                                        $data['html_body'], $data['text_body']);
-        echo "Complete successfully";
+        if ($apiResponse['httpCode'] === 200) {
+            $response = json_decode($apiResponse['content'],true);
+            if ($response['status'] === '1') {
+                echo "Complete successfully";
+            } else {
+                echo $response['message'];
+            } 
+        } else {
+            echo $apiResponse['httpErr'];
+        }
         
     } else {
         echo "Empty data";

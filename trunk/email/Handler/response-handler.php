@@ -21,6 +21,15 @@ class ResponseHandler {
     }
     // -------------------------------------------------------------------------
     
+    public function responseData($data) {
+        $result = array(
+            'status' => self::STATUS_SUCCESS,
+            'data'   => $data
+        );
+
+        return json_encode($result);
+    }
+    // -------------------------------------------------------------------------
     public function responseError($message) {
         $result = array(
             'status' => self::STATUS_FAILURE,
