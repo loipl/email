@@ -86,7 +86,7 @@
                 <h5><?php echo $pageName;?></h5>
                 <span><?php echo $pageDescription;?></span>
             </div>
-            <div class="middleNav">
+<!--            <div class="middleNav">
                 <ul>
                     <li class="mUser"><a href="#" title=""><span class="users"></span></a>
                         <ul class="mSub1">
@@ -112,7 +112,7 @@
                     </li>
                 </ul>
                 <div class="clear"></div>
-            </div>
+            </div>-->
             <div class="clear"></div>
         </div>
     </div>

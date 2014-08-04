@@ -13,7 +13,7 @@
     <div class="sidebarSep"></div>
 
     <!-- General balance widget -->
-    <div class="genBalance">
+<!--    <div class="genBalance">
         <a href="#" title="" class="amount">
             <span>General balance:</span>
             <span class="balanceAmount">$10,900.36</span>
@@ -23,7 +23,7 @@
         </a>
     </div>
     
-    <!-- Next update progress widget -->
+     Next update progress widget 
     <div class="nextUpdate">
         <ul>
             <li>Next update in:</li>
@@ -32,7 +32,7 @@
         <div class="pWrapper"><div class="progressG" title="78%"></div></div>
     </div>
     
-    <div class="sidebarSep"></div>
+    <div class="sidebarSep"></div>-->
     
     <!-- Left navigation -->
     <ul id="menu" class="nav">
@@ -47,11 +47,11 @@
             </ul>
         </li>
         <li class="ui"><a href="ui_elements.html" title=""><span>Interface elements</span></a></li>
-        <li class="tables"><a href="tables.html" title="" class="active exp" id="current"><span>Tables</span><strong>3</strong></a>
+        <li class="tables"><a title="" class="active exp" id="current"><span>Reporting</span><strong>3</strong></a>
             <ul class="sub">
-                <li><a href="table_static.html" title="">Static tables</a></li>
-                <li class="this"><a href="table_dynamic.html" title="">Campaigns</a></li>
-                <li class="last"><a href="table_sortable_resizable.html" title="">Sortable &amp; resizable tables</a></li>
+                <li <?php if ($page === 'campaign'){echo 'class = "this"';}?>><a href="/ui/campaigns.php" title="">Campaigns</a></li>
+                <li <?php if ($page === 'creative'){echo 'class = "this"';}?>><a href="/ui/creatives.php" title="">Creatives</a></li>
+                <li class="last <?php if ($page === 'log_scheduler'){echo 'this';}?>"><a href="/ui/log-scheduler.php" title="">Log Scheduler</a></li>
             </ul>
         </li>
         <li class="widgets"><a href="#" title="" class="exp"><span>Widgets and grid</span><strong>2</strong></a>
