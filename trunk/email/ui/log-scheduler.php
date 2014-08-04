@@ -11,6 +11,11 @@ $params += $_GET;
 $requestUrl = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 $apiBase = preg_replace('/\/ui\/.*$/', '/api/log-scheduler.php', $requestUrl);
 
+$sortBy = !empty($params['sort_by']) ? $params['sort_by'] : 'id';
+$sortOrder = !empty($params['sort_order']) ? $params['sort_order'] : 'DESC';
+$currentPage = !empty($params['page']) ? $params['page'] : '1';
+$fromDate = !empty($params['from_date']) ? $params['from_date'] : date('Y-m-d', time() - 86400);
+$toDate = !empty($params['to_date']) ? $params['to_date'] : date('Y-m-d');
 
 $sortItems = array(
     'id' => 'Id',
@@ -26,7 +31,8 @@ $sortOrders = array (
 );
 
 $allLogs = getAllLog($apiBase, $params);
-$countLog = LogScheduler::countAll($apiBase, $params);
+
+$countLog = countAllLog($apiBase, $params);
 $pageSize = LogScheduler::pageSize;
 
 function getAllLog($apiBase, $params) {

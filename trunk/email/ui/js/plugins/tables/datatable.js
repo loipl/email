@@ -4706,25 +4706,25 @@
 				 * positions in the original data array to provide a stable sort.
 				 */
 				var iSortLen = aaSort.length;
-				oSettings.aiDisplayMaster.sort( function ( a, b ) {
-					var iTest, iDataSort, sDataType;
-					for ( i=0 ; i<iSortLen ; i++ )
-					{
-						iDataSort = aoColumns[ aaSort[i][0] ].iDataSort;
-						sDataType = aoColumns[ iDataSort ].sType;
-						iTest = oSort[ (sDataType?sDataType:'string')+"-"+aaSort[i][1] ](
-							_fnGetCellData( oSettings, a, iDataSort, 'sort' ),
-							_fnGetCellData( oSettings, b, iDataSort, 'sort' )
-						);
-						
-						if ( iTest !== 0 )
-						{
-							return iTest;
-						}
-					}
-					
-					return oSort['numeric-asc']( aiOrig[a], aiOrig[b] );
-				} );
+//				oSettings.aiDisplayMaster.sort( function ( a, b ) {
+//					var iTest, iDataSort, sDataType;
+//					for ( i=0 ; i<iSortLen ; i++ )
+//					{
+//						iDataSort = aoColumns[ aaSort[i][0] ].iDataSort;
+//						sDataType = aoColumns[ iDataSort ].sType;
+//						iTest = oSort[ (sDataType?sDataType:'string')+"-"+aaSort[i][1] ](
+//							_fnGetCellData( oSettings, a, iDataSort, 'sort' ),
+//							_fnGetCellData( oSettings, b, iDataSort, 'sort' )
+//						);
+//						
+//						if ( iTest !== 0 )
+//						{
+//							return iTest;
+//						}
+//					}
+//					
+//					return oSort['numeric-asc']( aiOrig[a], aiOrig[b] );
+//				} );
 			}
 			
 			/* Alter the sorting classes to take account of the changes */
