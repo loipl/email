@@ -106,7 +106,7 @@ $pageDescription = 'List of Log Scheduler';
         <div class="widget">
             <div class="title"><img src="images/icons/dark/full2.png" alt="" class="titleIcon" /><h6><?php echo $pageName?></h6></div>                          
             <?php if (!empty($allLogs)): ?>
-            <table cellpadding="0" cellspacing="0" border="0" class="display dTable log_table">
+            <table cellpadding="0" cellspacing="0" border="0" class="display sTable log_table">
                 <thead>
                     <tr>
                         <th>
