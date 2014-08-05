@@ -12,6 +12,7 @@
 <?php } elseif ($page === 'log_scheduler') {?>
 <link href="css/log_scheduler.css" rel="stylesheet" type="text/css" />
 <?php } ?>
+<link href="css/colorbox.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
 
 <script type="text/javascript" src="js/plugins/spinner/ui.spinner.js"></script>
@@ -55,6 +56,7 @@
 <script type="text/javascript" src="js/plugins/ui/jquery.jgrowl.js"></script>
 <script type="text/javascript" src="js/plugins/ui/jquery.breadcrumbs.js"></script>
 <script type="text/javascript" src="js/plugins/ui/jquery.sourcerer.js"></script>
+<script type="text/javascript" src="js/plugins/ui/jquery.colorbox.js"></script>
 
 <script type="text/javascript" src="js/plugins/calendar.min.js"></script>
 <script type="text/javascript" src="js/plugins/elfinder.min.js"></script>

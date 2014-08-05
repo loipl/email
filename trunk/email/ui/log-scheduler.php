@@ -158,7 +158,7 @@ $pageDescription = 'List of Log Scheduler';
                             <td>
                                 <?php 
                                     if (!empty($log['eligible_campaign_ids'])) {
-                                        $campaignIds = unserialize($log['eligible_campaign_ids']);
+                                        $campaignIds = $log['eligible_campaign_ids'];
                                         $campaignIdsStr = implode(',', $campaignIds);
                                         echo $campaignIdsStr;
                                     }
@@ -170,7 +170,7 @@ $pageDescription = 'List of Log Scheduler';
                             <td class="attributes">
                                 <?php 
                                     if (!empty($log['chosen_campaign_attribute'])) {
-                                        $attributes = unserialize($log['chosen_campaign_attribute']);
+                                        $attributes = $log['chosen_campaign_attribute'];
                                         $html = HTML::getHtmlForCampaignAttributes($attributes);
                                         echo '<button class="show">Show</button>';
                                         echo '<button class="hide">Hide</button>';
@@ -188,7 +188,7 @@ $pageDescription = 'List of Log Scheduler';
                                         $html .= '<button class="hide">Hide</button>';
 
                                         $html .= '<div class="show_hide">';
-                                        $leads = @ unserialize($log['leads']);
+                                        $leads = $log['leads'];
                                         if ($leads !== false){
                                             foreach ($leads as $lead) {
                                                 $html .= "<div>" . json_encode($lead) . '</div>';

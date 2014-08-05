@@ -166,6 +166,7 @@ class LogScheduler extends Database
         $db = new Database;   
         return $db->getArray($sql); 
     }
+    // -------------------------------------------------------------------------
     
     public static function countAll($start = null, $end = null) {
             
@@ -193,5 +194,14 @@ class LogScheduler extends Database
         } else {
             return intval($dbData[0]['count']);
         }
+    }
+    // -------------------------------------------------------------------------
+    public static function formatLog($logs) {
+        foreach ($logs as $index => $log) {
+            $logs[$index]['eligible_campaign_ids'] = unserialize($log['eligible_campaign_ids']);
+            $logs[$index]['chosen_campaign_attribute'] = unserialize($log['chosen_campaign_attribute']);
+            $logs[$index]['leads'] = unserialize($log['leads']);
+        }
+        return $logs;
     }
 }

@@ -14,7 +14,7 @@ $pageName = 'Creatives';
 $pageDescription = 'Creative list';
 ?>
 
-<?php if( !(isset($_POST['action']) && $_POST['action'] === 'editCreative') ): ?>
+<?php if( !(isset($_POST['action']) ) ): ?>
 
 <?php
     $apiUrl = $apiBase . '?' . http_build_query($params);
@@ -41,7 +41,46 @@ $pageDescription = 'Creative list';
     
     <!-- Main content wrapper -->
     <div class="wrapper">
-    
+        <input type="button" class="add" href="#add_creative" value ="Add"/>
+        <div style="display:none">
+            <div id='add_creative' style='padding:10px; background:#fff;'>
+                <div> 
+                    Class: 
+                    <input class="class" value="">
+                </div>
+
+                <div> Category Id:
+                    <input class="category_id" value="" type="number">
+                </div>
+
+                <div> Sender_id:
+                    <input class="sender_id" value="" type="number">
+                </div>
+
+                <div> Name:
+                    <textarea class="name"></textarea>
+                </div>
+
+                <div> From:
+                    <textarea class="from"></textarea>
+                </div>
+
+                <div> Subject:
+                    <textarea class="subject"></textarea>
+                </div>
+
+                <div> Html_body:
+                    <textarea class="add_html_body"></textarea>
+                </div>
+
+                <div> Text_body:
+                    <textarea class="add_text_body"></textarea>
+                </div>
+                <input type="button" class="create" value="Create">
+                <input type="button" class="cancel" value="Cancel">
+            </div>
+        </div>
+        
         <!-- Dynamic table -->
         <div class="widget">
             <div class="title"><img src="images/icons/dark/full2.png" alt="" class="titleIcon" /><h6><?php echo $pageName?></h6></div>                          
@@ -130,32 +169,51 @@ $pageDescription = 'Creative list';
 </div>
 
 <?php include('layout/footer.php');?>
-
-<?php else: ?>
 <?php 
-    $data = json_decode($_POST['data'], true);
-    if (!empty($data)) {
-        $id = $data['id'];
-        $params['id'] = $id;
-        $data['action'] = 'update';
-//            $apiUrl = $apiBase . '/' . $id . '?' . http_build_query($params);
+    // add creative
+    elseif ((isset($_POST['action']) && $_POST['action'] === 'addCreative')) : 
+        $data = json_decode($_POST['data'], true);
+        $data['action'] = 'add';
         $apiUrl = $apiBase . '?' . http_build_query($params);
+
         $apiResponse = CurlHelper::request($apiUrl, 'POST', $data);
 
         if ($apiResponse['httpCode'] === 200) {
             $response = json_decode($apiResponse['content'],true);
             if ($response['status'] === '1') {
-                echo "Complete successfully";
+                echo "Success";
             } else {
                 echo $response['message'];
             } 
         } else {
             echo $apiResponse['httpErr'];
         }
-        
-    } else {
-        echo "Empty data";
-    }
+
     
-?>
-<?php endif; ?>
+    // update creative
+    else: 
+        $data = json_decode($_POST['data'], true);
+        if (!empty($data)) {
+            $id = $data['id'];
+            $params['id'] = $id;
+            $data['action'] = 'update';
+//            $apiUrl = $apiBase . '/' . $id . '?' . http_build_query($params);
+            $apiUrl = $apiBase . '?' . http_build_query($params);
+            $apiResponse = CurlHelper::request($apiUrl, 'POST', $data);
+
+            if ($apiResponse['httpCode'] === 200) {
+                $response = json_decode($apiResponse['content'],true);
+                if ($response['status'] === '1') {
+                    echo "Complete successfully";
+                } else {
+                    echo $response['message'];
+                } 
+            } else {
+                echo $apiResponse['httpErr'];
+            }
+
+        } else {
+            echo "Empty data";
+        }
+    
+    endif; ?>

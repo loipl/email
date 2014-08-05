@@ -26,6 +26,7 @@
                 echo $responseHandler->responseData($countLog);
             } else {
                 $allLogs = LogScheduler::getAll($fromDate, $toDate, $currentPage, $sortBy, $sortOrder);
+                $allLogs = LogScheduler::formatLog($allLogs);
                 echo $responseHandler->responseArray($allLogs);
             }
             break;

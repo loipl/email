@@ -266,4 +266,27 @@ class Creative extends Database
         return true;
     }
     //--------------------------------------------------------------------------
+    
+    
+    public static function addCreative($data)
+    {
+        $db = new Database;
+
+        $sql  = 'INSERT INTO `' . self::tableName . '` (`class`, `category_id`, `sender_id`, `name`, `from`, `subject`, `html_body`, `text_body`)';
+        $sql .= ' VALUES (';
+        $sql .= ' \'' . mysql_real_escape_string($data['class']) . '\',';
+        $sql .= ' \'' . mysql_real_escape_string($data['category_id']) . '\',';
+        $sql .= ' \'' . mysql_real_escape_string($data['sender_id']) . '\',';
+        $sql .= ' \'' . mysql_real_escape_string($data['name']) . '\',';
+        $sql .= ' \'' . mysql_real_escape_string($data['from']) . '\',';
+        $sql .= ' \'' . mysql_real_escape_string($data['subject']) . '\',';
+        $sql .= ' \'' . mysql_real_escape_string($data['html_body']) . '\',';
+        $sql .= ' \'' . mysql_real_escape_string($data['text_body']) . '\'';
+        $sql .= ');';
+        
+        $db->query($sql);
+
+        return true;
+    }
+    //--------------------------------------------------------------------------
 }

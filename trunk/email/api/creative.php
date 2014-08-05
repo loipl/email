@@ -19,14 +19,16 @@
             echo $responseHandler->responseArray($result);
             break;
         case 'POST':
-            $id = $params['id'];
-            if (empty($id) || !is_numeric($id)) {
-                echo $responseHandler->responseError('Invalid campaign id');
-                return;
-            }
-            
             if ($params['action'] === 'update') {
+                $id = $params['id'];
+                if (empty($id) || !is_numeric($id)) {
+                    echo $responseHandler->responseError('Invalid creative id');
+                    return;
+                }
                 Creative::updateCreativeById($id, $params);
+                echo $responseHandler->responseSuccess("Success");
+            } elseif ($params['action'] === 'add') {
+                Creative::addCreative($params);
                 echo $responseHandler->responseSuccess("Success");
             } else {
                 echo $responseHandler->responseError('Unknown action');
