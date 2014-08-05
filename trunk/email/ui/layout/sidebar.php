@@ -51,7 +51,8 @@
             <ul class="sub">
                 <li <?php if ($page === 'campaign'){echo 'class = "this"';}?>><a href="campaigns.php" title="">Campaigns</a></li>
                 <li <?php if ($page === 'creative'){echo 'class = "this"';}?>><a href="creatives.php" title="">Creatives</a></li>
-                <li class="last <?php if ($page === 'log_scheduler'){echo 'this';}?>"><a href="log-scheduler.php" title="">Log Scheduler</a></li>
+                <li <?php if ($page === 'log_scheduler'){echo 'class = "this"';}?>><a href="log-scheduler.php" title="">Log Scheduler</a></li>
+                <li class="last <?php if ($page === 'reporting'){echo 'this';}?>"><a href="reports.php" title="">Reporting</a></li>
             </ul>
         </li>
         <li class="widgets"><a href="#" title="" class="exp"><span>Widgets and grid</span><strong>2</strong></a>

@@ -1,0 +1,111 @@
+
+* { margin: 0; padding: 0; outline: 0; }
+body{
+padding:0px;
+margin:0px; background:#fff; font-family:Arial, Helvetica, sans-serif;
+}
+a{ text-decoration:none;}
+
+.rc {
+-moz-border-radius: 5px;
+-webkit-border-radius: 5px;
+-khtml-border-radius: 5px;
+border-radius:5px;
+}
+
+.rc1 {
+-moz-border-radius: 2px;
+-webkit-border-radius: 2px;
+-khtml-border-radius: 2px;
+border-radius:2px;
+}
+.clear{clear:both;}
+.l{ float:left!important;}
+.r{ float:right!important;}
+.body_div{ width:100%; margin:auto;}
+.body_left_upper{ overflow:hidden; width:23%; position:absolute; top:0px; left:0px; height:600px;}
+.body_left{ position:absolute; top:0px; left:0px; width:90%; padding:20px 20px 20px 10px; }
+.body_left li{}
+.body_right{ float:right; width:75%; min-height:200px; margin-left:20px; /*margin-bottom: 70px;*/}
+.tab_upper{ width:1000px; margin:auto; margin-top:50px; margin-bottom:50px;}
+.sel1{ width:100%!important;}
+.sel2{ width:70%!important;}
+.sel3{ width:100px!important;}
+#testing_radio label{ margin-right:12px; margin-left:2px; line-height:24px; font-size:16px; font-weight:bold;}
+.date_sel{ width:25%; height:16px; float:left; outline:none;}
+.test{ display:none; position:absolute; border-left: 1px solid #DDD; border-right: 1px solid #DDD; z-index:10; width:100%;}
+
+.select_with_input{ float:left;  position:relative; 
+margin-bottom:10px; width:98%;}
+.select_with_input li{ list-style:none;white-space: nowrap;
+overflow: hidden; padding: 6px 3%; width:94%;
+font-size: 12px;
+line-height: 1.5;
+color: #111;
+font-weight: bold;
+border: 1px solid #DDD;
+background: #F8F8F8;
+cursor:pointer;}
+.select_with_input li.active{background: #F0F0F0; border: 1px solid #ccc;}
+.select_with_input li:hover{ 
+border: 1px solid #ccc;
+}
+.select_with_input .test li{
+border-bottom: 1px solid #EEE; padding: 6px 3%; width:94%; 
+color: #666; font-weight:normal;
+border-top: 1px solid #FFF; border-left:none; border-right:none;}
+.select_with_input .test li:hover{background: #F0F0F0;}
+.select_with_input li:hover .li_button{ color:#888;} 
+.li_button{ float:right; margin:-6px; margin-right:0px !important; /*margin-left:10px;*/ height:30px; width:20% !important; overflow:hidden; color:#000; text-align:right; cursor:pointer; font-size:9px; line-height:30px;}
+.li_button:hover{ color:#888;}
+
+.tab_upper .ui-corner-all{ border:none;}
+.tab_upper .ui-corner-bottom{ background:#fafafa !important; border-top:1px solid #ddd !important;}
+.tab_upper .ui-widget-content{ color:#444 !important; font-size:14px !important; text-align:center !important;}
+.tab_upper .head .ui-widget-content{ font-weight:bold !important;}
+#loading{display:none; position:absolute; top:0px; left:0px; height:100%; width:100%; margin:auto; text-align:center; background:#FFFFFF center no-repeat; z-index:100;}
+
+
+
+
+
+/*=============================================*/
+
+
+
+
+
+.test1{ display:none; position:absolute; border-left: 1px solid #DDD; border-right: 1px solid #DDD; z-index:10; width:100%;}
+
+.select_with_input1{ float:left;  position:relative; 
+margin-bottom:10px; width:70%;}
+.select_with_input1 li{ list-style:none;white-space: nowrap;
+overflow: hidden; padding: 6px 3%; width:94%;  
+font-size:12px;
+line-height:1.5;
+color:#111;
+font-weight: bold;
+border: 1px solid #DDD;
+background: #F8F8F8;
+cursor:pointer;}
+.select_with_input1 li.active{background:#F0F0F0;  border:1px solid #ccc;}
+.select_with_input1 li:hover{ 
+border: 1px solid #ccc;
+}
+.select_with_input1 .test1 li{
+border-bottom: 1px solid #EEE; padding: 6px 3%; width:94%;
+color: #666; font-weight:normal;
+border-top: 1px solid #FFF; border-left:none; border-right:none;}
+.select_with_input1 .test1 li:hover{background: #F0F0F0;}
+.select_with_input1 li:hover .li_button{ color:#888;}
+.tooltip{ min-width:90px;  text-align:center; padding:5px;}
+
+
+/*=============================10-1-2014==========================*/
+/*
+.body_left_upper .selectric .label{ padding:0 6px!important;}
+.body_left_upper .selectric .button{ padding:0 6px!important;}
+.body_left_upper .selectricItems li{padding:0 5px!important;}*/
+
+/*.select_with_input li div{width:80%; overflow:hidden;}
+.select_with_input1 li div{ width:80%; overflow:hidden;}*/

@@ -40,7 +40,34 @@
     
     <!-- Main content wrapper -->
     <div class="wrapper">
-    
+        <input type="button" class="add" href="#add_campaign" value ="Add"/>
+        <div style="display:none">
+            <div id="add_campaign" style="padding:10px; background:#fff;">
+                <div>
+                    <textarea class="campaign_name"></textarea>
+                </div>
+                <div class="attributes">
+                    <?php 
+                        $attributes = $campaign['attributes'];
+                        $html = HTML::getHtmlForCampaignAttributes($attributes);
+                        echo $html;
+                    ?>
+                </div>
+                <div><input class="send_limit" type="number"/></div>
+                <div>
+                    <input class="sent_count" type="number"/>
+                </div>
+                <div>
+                    <input class="creative_ids"/>
+                </div>
+                <div>
+                    <input class="end_date"/>
+                </div>
+                <input type="button" class="create" value="Create">
+                <input type="button" class="cancel" value="Cancel">
+            </div>
+        </div>
+        
         <!-- Dynamic table -->
         <div class="widget">
             <div class="title"><img src="images/icons/dark/full2.png" alt="" class="titleIcon" /><h6><?php echo $pageName?></h6></div>                          

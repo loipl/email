@@ -68,6 +68,16 @@
 <script type="text/javascript" src="js/creatives.js"></script>
 <?php } elseif ($page === 'log_scheduler') {?>
 <script type="text/javascript" src="js/log_scheduler.js"></script>
+<?php } elseif ($page === 'reporting') {?>
+<!--<link rel="stylesheet" type="text/css" href="css/style.css" />-->
+<!--<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css" />-->
+<link rel="stylesheet" href="css/selectric.css">
+
+<script type="text/javascript" src="//www.google.com/jsapi"></script>
+<!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
+<!--<script type="text/javascript"  src="js/colResizable-1.3.min.js"></script>-->
+<!--<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>-->
+<script src="js/jquery.selectric.js"></script>
 <?php } ?>
 
 </head>

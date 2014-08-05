@@ -21,6 +21,54 @@ $(document).ready(function(){
 
     })
     
+    $(".add").colorbox({inline:true, width:"50%"});
+    
+    $('.create').click(function(){
+        var creativeInfo = getAddCreativeInfo($('#add_creative'));
+        if (creativeInfo['sender_id'] == '') {
+            alert('Please enter sender_id');
+            $('#add_creative .sender_id').focus();
+            return;
+        }
+        
+        if (creativeInfo['name'] == '') {
+            alert('Please enter name');
+            $('#add_creative .name').focus();
+            return;
+        }
+        
+        if (creativeInfo['from'] == '') {
+            alert('Please enter From');
+            $('#add_creative .from').focus();
+            return;
+        }
+        
+        if (creativeInfo['subject'] == '') {
+            alert('Please enter Subject');
+            $('#add_creative .subject').focus();
+            return;
+        }
+        
+        $.post(
+            'creatives.php', 
+            {
+                action: 'addCreative',
+                data: JSON.stringify(creativeInfo)
+            },
+            function (response) {
+                if ($.trim(response) === 'Success') {
+                    window.location.reload();
+                } else {
+                    alert(response);
+                }
+            }
+        )
+    });
+    
+    $('.cancel').click(function(){
+        $.colorbox.close();
+    });
+    
     $('.copy_button').click(function(){
         var id = $(this).closest('tr.campaign_row').attr('abbr');
         $.post(
