@@ -1,4 +1,7 @@
 <?php
+    require_once dirname(__FILE__) . '/../email.php';
+    authenticateUser();
+    
     $page = 'reporting';
     $pageTitle = 'Project Chart';
     $pageName = 'Project Chart';

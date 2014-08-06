@@ -56,3 +56,17 @@ ALTER TABLE `throttles` ADD `tld_group` VARCHAR(32) DEFAULT NULL AFTER `source_c
 
 #add "delay_seconds" for queue_send table - 2014/07/23
 ALTER TABLE `error_log_esp` ADD `delay_seconds` int(7) DEFAULT NULL;
+
+# new user table - 2014/08/06
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(7) NOT NULL,
+  `username` varchar(60) NOT NULL,
+  `password` varchar(64) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `displayed_name` varchar(250) DEFAULT NULL,
+  `status` int(1) DEFAULT NULL,
+  `registered` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `email`.`users` (`id`, `username`, `password`, `email`, `displayed_name`, `status`, `registered`) VALUES ('1', 'loiphamle', '173c3fa9ec058c16ba234590c9af2538', 'loiphamle@gmail.com', 'Loi Dep Trai', '1', '2014-08-06 16:13:47');

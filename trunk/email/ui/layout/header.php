@@ -81,4 +81,4 @@
 <?php } ?>
 
 </head>
-<body>
+<body <?php if ($page === 'login'){?>class="nobg loginPage"<?php } ?>>

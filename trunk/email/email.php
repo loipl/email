@@ -85,6 +85,7 @@ require_once dirname(__FILE__) . '/Models/TldList.php';
 require_once dirname(__FILE__) . '/Models/Transaction.php';
 require_once dirname(__FILE__) . '/Models/Throttle.php';
 require_once dirname(__FILE__) . '/Models/LogScheduler.php';
+require_once dirname(__FILE__) . '/Models/User.php';
 
 require_once dirname(__FILE__) . '/Models/Suppression/Email.php';
 require_once dirname(__FILE__) . '/Models/Suppression/Domain.php';
@@ -124,3 +125,26 @@ function coreErrorHandler($errno, $errstr, $errfile, $errline)
 //--------------------------------------------------------------------------
 
 set_error_handler("coreErrorHandler");
+
+function authenticateUser() 
+{
+    session_start();
+    
+    //first check whether session is set or not
+    if (!isset($_SESSION['user_login'])) {
+        //check the cookie
+        if (isset($_COOKIE['username']) && isset($_COOKIE['password'])) {
+            //cookie found
+            if (User::checkUserExists($_COOKIE['username'], $_COOKIE['password'])) {
+                $_SESSION['user_login'] = $_COOKIE['username'];
+            } else {
+                header("location: login.php");
+                die();
+            }
+        } else {
+            header("location: login.php");
+            die();
+        }
+    }
+}
+//--------------------------------------------------------------------------

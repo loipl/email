@@ -1,6 +1,8 @@
 <?php
 
 require_once dirname(__FILE__) . '/../email.php';
+authenticateUser();
+
 $params = array (
     'apikey' => Config::$apiKey
 );

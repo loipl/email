@@ -62,12 +62,14 @@ class Config
     const CABLE_TLD_LIST_DELAY_SECONDS          = 5;
     const YAHOO_TLD_LIST_DELAY_SECONDS          = 6;
     
+    const SECRET_CODE             = 'Email-will-become-superstar';
+    
     const SEPARATOR_EMAIL         = 'dRm415';
     const SEPARATOR_CAMPAIGN      = 'bMm207';
     const SEPARATOR_OFFER         = 'hRp113';
     const SEPARATOR_LINK          = 'dRp511';
     const SEPARATOR_SUBID         = 'fLp293';
-
+    
     const DEFAULT_SENDER          =     1;
     const DEFAULT_CHANNEL         =     1;
 
