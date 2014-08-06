@@ -22,7 +22,7 @@ $(document).ready(function(){
 
     })
     
-    $(".add").colorbox({inline:true, width:"50%"});
+    $(".add").colorbox({inline:true, width:"70%"});
     
     $('.create').click(function(){
         var creativeInfo = getAddCreativeInfo($('#add_creative'));

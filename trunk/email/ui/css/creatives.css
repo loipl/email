@@ -18,13 +18,25 @@ and open the template in the editor.
     width: 50px;
 }
 .name, .from, .subject {
-    height: 100px;
+    height: 50px;
     width: 100px;
 }
 .html_body, .text_body {
-    height: 100px;
-    width: 100px;
+    height: 500px;
+    width: 800px;
+    margin-left: -700px;
     display: none;
+}
+.add_html_body {
+    width: 48%;
+    margin-right: 2%;
+    height: 300px;
+    float: left;
+}
+.add_text_body {
+    width: 48%;
+    height: 250px;
+    float: left;
 }
 .hide {
     display: none;

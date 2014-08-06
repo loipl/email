@@ -46,40 +46,48 @@ $pageDescription = 'Creative list';
         <input type="button" class="add" href="#add_creative" value ="Add"/>
         <div style="display:none">
             <div id='add_creative' style='padding:10px; background:#fff;'>
-                <div> 
-                    Class: 
-                    <input class="class" value="">
+                <div>
+                    <div style="float: left;"> 
+                        Class: 
+                        <input class="class" value="">
+                    </div> 
+
+                    <div style="float: left; margin-left: 20px;"> Category Id:
+                        <input class="category_id" value="" type="number">
+                    </div>
+
+                    <div style="float: left;margin-left: 70px;"> Sender_id:
+                        <input class="sender_id" value="" type="number">
+                    </div>
+                    <div style="clear: both;"></div>
                 </div>
 
-                <div> Category Id:
-                    <input class="category_id" value="" type="number">
+                <div>
+                    <div style="float: left;">Name:
+                        <textarea class="name"></textarea>
+                    </div>
+
+                    <div style="float: left; margin-left: 20px;"> From:
+                        <textarea class="from"></textarea>
+                    </div>
+
+                    <div style="float: left; margin-left: 20px;"> Subject:
+                        <textarea class="subject"></textarea>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+                
+
+                <div>
+                    <textarea class="add_html_body" placeholder="Html Body"></textarea>
                 </div>
 
-                <div> Sender_id:
-                    <input class="sender_id" value="" type="number">
-                </div>
-
-                <div> Name:
-                    <textarea class="name"></textarea>
-                </div>
-
-                <div> From:
-                    <textarea class="from"></textarea>
-                </div>
-
-                <div> Subject:
-                    <textarea class="subject"></textarea>
-                </div>
-
-                <div> Html_body:
-                    <textarea class="add_html_body"></textarea>
-                </div>
-
-                <div> Text_body:
-                    <textarea class="add_text_body"></textarea>
+                <div>
+                    <textarea class="add_text_body" placeholder="Text Body"></textarea>
                 </div>
                 <input type="button" class="create" value="Create">
                 <input type="button" class="cancel" value="Cancel">
+                <div style="clear: both;"></div>
             </div>
         </div>
         
