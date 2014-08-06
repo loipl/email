@@ -875,7 +875,7 @@ $(function() {
 
 	//===== Form elements styling =====//
 	
-	$("select, input:checkbox, input:radio, input:file").uniform();
+	$("input:checkbox, input:radio, input:file").uniform();
 
 	
 });

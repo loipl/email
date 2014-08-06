@@ -418,6 +418,7 @@ $("#datepicker1").datepicker({
     </script>
 
   <div class="body_div" id="rightSide" style="font-family: Arial;border: 0 none;">
+      <?php include('layout/top-navigation.php');?>
       <div class="wrapper">
 <div class="body_left_upper">  
 <div class="body_left">

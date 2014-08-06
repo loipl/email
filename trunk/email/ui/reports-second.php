@@ -1,17 +1,12 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>HOME_PAGE</title>
-<link rel="stylesheet" type="text/css" href="css/style.css" />
-<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css" />
-<link rel="stylesheet" href="css/selectric.css">
+<?php
+    $page = 'reporting_second';
+    $pageTitle = 'Project Chart';
+    $pageName = 'Project Chart';
+    $pageDescription = 'Project Chart';
+?>
+<?php include('layout/header.php');?>
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-<!--<script type="text/javascript"  src="js/colResizable-1.3.min.js"></script>-->
-<script src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-<script type="text/javascript" src="js/jquery.selectric.js"></script>
-<script type="text/javascript" src="//www.google.com/jsapi"></script>
+<?php include('layout/sidebar.php');?>
     <script type="text/javascript">
       google.load("visualization", "1", {packages:["corechart"]});
       google.setOnLoadCallback(drawChart);
@@ -95,11 +90,10 @@ function change_s(val)
   
   </script>
   
-</head>
-
-<body>
+<div class="body_div" id="rightSide" style="font-family: Arial;border: 0 none;">
+    <?php include('layout/top-navigation.php');?>
 <div class="body_div"> 
-<div class="body_left">
+<div class="body_left" style="float: left;">
 <select class="sel1">
 <option>Last 30 days: Nov5 2013 - Dec4 2013</option>
 <option>Last 30 days: Nov5 2013 - Dec4 2013</option>
@@ -147,13 +141,13 @@ function change_s(val)
 
 <div class="date"><input type="text" id="datepicker"></div>
 </div>
-<div class="body_right">
+<div class="body_right" style="float: left;width: 100%">
 <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 </div>
 
 <div class="clear"></div>
 <div class="tab_upper">
-<table id="testing" width="100%" border="0" cellpadding="0" cellspacing="0">
+<table id="testing"  border="0" cellpadding="0" cellspacing="0">
 			<thead>
 				<th>header</th><th>header</th><th>header</th>
 			</thead>
@@ -208,7 +202,8 @@ function change_s(val)
 
 
 </div>
-</body>
+</div>
+<?php include('layout/footer.php');?>
 
 		
 	<link rel="stylesheet" type="text/css" href="js/jquery-ui/css/redmond/jquery-ui-1.8.4.custom.css"/>

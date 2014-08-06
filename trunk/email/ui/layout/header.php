@@ -68,9 +68,9 @@
 <script type="text/javascript" src="js/creatives.js"></script>
 <?php } elseif ($page === 'log_scheduler') {?>
 <script type="text/javascript" src="js/log_scheduler.js"></script>
-<?php } elseif ($page === 'reporting') {?>
-<!--<link rel="stylesheet" type="text/css" href="css/style.css" />-->
-<!--<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css" />-->
+<?php } elseif ($page === 'reporting' || $page === 'reporting_second') {?>
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css" />
 <link rel="stylesheet" href="css/selectric.css">
 
 <script type="text/javascript" src="//www.google.com/jsapi"></script>
