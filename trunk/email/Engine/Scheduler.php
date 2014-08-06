@@ -259,22 +259,24 @@ class Engine_Scheduler
 
                     $delayUntil = $delayInfo['delay_until'];
                     $delaySeconds = $delayInfo['delay_seconds'];
-
-                    Queue_Send::addRecord(
-                        $record->getEmail(),
-                        $record->getFrom(),
-                        $record->getCampaignId(),
-                        $record->getCreativeId(),
-                        $record->getCategoryId(),
-                        $record->getSenderEmail(),
-                        $record->getSubject(),
-                        $record->getHtmlBody(),
-                        $record->getTextBody(),
-                        $record->getSubId(),
-                        $record->getChannel(),
-                        $delayUntil,
-                        $delaySeconds
-                    );
+                    
+                    if ($delaySeconds < Config::THRESHOLD_DELAY_SECONDS) {
+                        Queue_Send::addRecord(
+                            $record->getEmail(),
+                            $record->getFrom(),
+                            $record->getCampaignId(),
+                            $record->getCreativeId(),
+                            $record->getCategoryId(),
+                            $record->getSenderEmail(),
+                            $record->getSubject(),
+                            $record->getHtmlBody(),
+                            $record->getTextBody(),
+                            $record->getSubId(),
+                            $record->getChannel(),
+                            $delayUntil,
+                            $delaySeconds
+                        );
+                    }
                 }
                 $sendQueueCount ++;
             }
