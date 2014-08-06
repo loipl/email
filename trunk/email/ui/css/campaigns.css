@@ -58,3 +58,13 @@ td.attrData .selector select {
 .add {
     margin-top:20px;
 }
+
+#add_campaign .attributes {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: block;
+}
+
+#add_campaign div {
+    margin-top: 5px;
+}

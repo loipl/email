@@ -9,57 +9,51 @@ $(document).ready(function(){
     $('.update_button').click(function(){
         var campaignInfo = getCampaignInfo($(this).closest('tr.campaign_row'));
         $.post(
-                'campaigns.php', 
-                {
-                    action: 'editAttributes',
-                    data: JSON.stringify(campaignInfo)
-                },
-                function (response) {
-                    alert(response);
-                }
+            'campaigns.php', 
+            {
+                action: 'editAttributes',
+                data: JSON.stringify(campaignInfo)
+            },
+            function (response) {
+                alert(response);
+            }
         )
 
     })
     
-    $(".add").colorbox({inline:true, width:"50%"});
+    $('.add').colorbox({inline:true, width:"50%"});
+    
+    $('.end_date').datepicker({ dateFormat: 'yy-mm-dd 00:00:00' });
     
     $('.create').click(function(){
-        var creativeInfo = getAddCreativeInfo($('#add_creative'));
-        if (creativeInfo['sender_id'] == '') {
-            alert('Please enter sender_id');
-            $('#add_creative .sender_id').focus();
+        var campaignInfo = getAddCampaignInfo($('#add_campaign'));
+
+        if (campaignInfo['campaign_name'] == '') {
+            alert('Please enter campaign_name');
+            $('#add_campaign .campaign_name').focus();
             return;
         }
         
-        if (creativeInfo['name'] == '') {
-            alert('Please enter name');
-            $('#add_creative .name').focus();
+        if (campaignInfo['creative_ids'] == null) {
+            alert('Please enter creative Ids');
+            $('#add_campaign .creative_ids').focus();
             return;
         }
         
-        if (creativeInfo['from'] == '') {
-            alert('Please enter From');
-            $('#add_creative .from').focus();
-            return;
-        }
-        
-        if (creativeInfo['subject'] == '') {
-            alert('Please enter Subject');
-            $('#add_creative .subject').focus();
-            return;
-        }
+        $('.create').attr('disabled', 'disabled');
         
         $.post(
-            'creatives.php', 
+            'campaigns.php', 
             {
-                action: 'addCreative',
-                data: JSON.stringify(creativeInfo)
+                action: 'addCampaign',
+                data: JSON.stringify(campaignInfo)
             },
             function (response) {
                 if ($.trim(response) === 'Success') {
                     window.location.reload();
                 } else {
                     alert(response);
+                    $('.create').removeAttr('disabled');
                 }
             }
         )
@@ -112,6 +106,24 @@ $(document).ready(function(){
         var text = $(this).val();
         $(this).val(text.replace(/[^\d]+/g, ''))
     });
+    
+    function getAddCampaignInfo($campRow) {
+        // get attributes
+        var attributes = getAttributes($campRow);
+        
+        // get creatives id
+        var creativeStr = $campRow.find('.creative_ids').val();
+        var creativeIds = creativeStr !== "" ? creativeStr.split(',') : null;
+        
+        return {
+            attributes: attributes,
+            campaign_name: $.trim($campRow.find('.campaign_name').val()),
+            creative_ids: creativeIds,
+            send_limit: $campRow.find('.send_limit').val(),
+            sent_count: $campRow.find('.sent_count').val(),
+            end_date: $campRow.find('.end_date').val()
+        }; 
+    }
     
     function getCampaignInfo($campRow) {
         

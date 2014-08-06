@@ -20,14 +20,19 @@
             echo $responseHandler->responseArray($result);
             break;
         case 'POST':
-            $id = $params['id'];
-            if (empty($id) || !is_numeric($id)) {
-                echo $responseHandler->responseError('Invalid campaign id');
-                return;
+            if ($params['action'] !== 'add') {
+                $id = $params['id'];
+                if (empty($id) || !is_numeric($id)) {
+                    echo $responseHandler->responseError('Invalid campaign id');
+                    return;
+                }
             }
             
             if ($params['action'] === 'update') {
                 Campaign::updateCampaignById($id, $params);
+                echo $responseHandler->responseSuccess("Success");
+            } else if ($params['action'] === 'add') {
+                Campaign::insertCampaign($params['name'], $params['attributes'], $params['send_limit'], $params['send_count'], $params['creative_ids'], $params['end_date']);
                 echo $responseHandler->responseSuccess("Success");
             } else if ($params['action'] === 'copy') {
                 Campaign::copyCampaign($id);

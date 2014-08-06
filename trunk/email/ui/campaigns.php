@@ -43,24 +43,30 @@
         <input type="button" class="add" href="#add_campaign" value ="Add"/>
         <div style="display:none">
             <div id="add_campaign" style="padding:10px; background:#fff;">
-                <div>
+                <div> Campaign name:
                     <textarea class="campaign_name"></textarea>
                 </div>
+                <span style="margin-top: 10px;font-weight: bold;">Attributes:</span>
                 <div class="attributes">
                     <?php 
-                        $attributes = $campaign['attributes'];
-                        $html = HTML::getHtmlForCampaignAttributes($attributes);
+                        $html = HTML::getHtmlForCampaignAttributes(array());
                         echo $html;
                     ?>
                 </div>
-                <div><input class="send_limit" type="number"/></div>
                 <div>
+                    Send limit:
+                    <input class="send_limit" type="number"/>
+                </div>
+                <div>
+                    Send count:
                     <input class="sent_count" type="number"/>
                 </div>
                 <div>
+                    Creative Ids
                     <input class="creative_ids"/>
                 </div>
                 <div>
+                    End_date
                     <input class="end_date"/>
                 </div>
                 <input type="button" class="create" value="Create">
@@ -156,7 +162,7 @@
             $data['creative_ids'] = serialize($data['creative_ids']);
             $data['name'] = $data['campaign_name'];
             $data['action'] = 'update';
-//            $apiUrl = $apiBase . '/' . $id . '?' . http_build_query($params);
+
             $apiUrl = $apiBase . '?' . http_build_query($params);
             $apiResponse = CurlHelper::request($apiUrl, 'POST', $data);
 
@@ -164,6 +170,39 @@
                 $response = json_decode($apiResponse['content'],true);
                 if ($response['status'] === '1') {
                     echo "Complete successfully";
+                } else {
+                    echo $response['message'];
+                } 
+            } else {
+                echo $apiResponse['httpErr'];
+            }
+            
+        } else {
+            echo "Empty attributes";
+        }
+        
+    } else {
+        echo "Empty data";
+    }
+    
+?>
+<?php elseif ($_POST['action'] === 'addCampaign') : ?>
+<?php 
+    $data = json_decode($_POST['data'], true);
+    if (!empty($data)) {
+        if (!empty($data['attributes'])) {
+            $data['attributes'] = serialize($data['attributes']);
+            $data['creative_ids'] = serialize($data['creative_ids']);
+            $data['name'] = $data['campaign_name'];
+            $data['action'] = 'add';
+
+            $apiUrl = $apiBase . '?' . http_build_query($params);
+            $apiResponse = CurlHelper::request($apiUrl, 'POST', $data);
+
+            if ($apiResponse['httpCode'] === 200) {
+                $response = json_decode($apiResponse['content'],true);
+                if ($response['status'] === '1') {
+                    echo "Success";
                 } else {
                     echo $response['message'];
                 } 

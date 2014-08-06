@@ -50,6 +50,7 @@ $(document).ready(function(){
             return;
         }
         
+        $('.create').attr('disabled', 'disabled');
         $.post(
             'creatives.php', 
             {
@@ -61,6 +62,7 @@ $(document).ready(function(){
                     window.location.reload();
                 } else {
                     alert(response);
+                    $('.create').removeAttr('disabled');
                 }
             }
         )
