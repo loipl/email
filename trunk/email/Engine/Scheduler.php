@@ -141,7 +141,7 @@ class Engine_Scheduler
                 $delayInfo = $this->getDelayInfo($lead['email']);
                 $delaySeconds = $delayInfo['delay_seconds'];
                 
-                if (!empty($delaySeconds) && $delaySeconds > Config::THRESHOLD_DELAY_SECONDS) {
+                if (!empty($delaySeconds) && $delaySeconds >= Config::THRESHOLD_DELAY_SECONDS) {
                     unset($leads[$id]);
                 }
             }

@@ -44,13 +44,9 @@ button {
 .filter_bar {
     display: inline-block;
 }
-.filter_bar .from_date, .filter_bar .to_date, .filter_bar .update_table {
-    margin-top:18px;
-    margin-left:30px;
-}
 
-.filter_bar #from_date, .filter_bar #to_date{
-    height:24px;
+.filter_bar div, .filter_bar button  {
+    margin-left:30px;
 }
 
 .paging_bar {

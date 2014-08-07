@@ -54,7 +54,7 @@ class Throttle extends Database
     //--------------------------------------------------------------------------
     
     
-    public static function getThrottlesByDomain($domain, $channel)
+    public static function getThrottlesByDomain($domain, $channel = null)
     {
         $db = new Database;
 
@@ -73,7 +73,7 @@ class Throttle extends Database
     //--------------------------------------------------------------------------
     
     
-    public static function getThrottlesByTldGroup($tldGroup, $channel)
+    public static function getThrottlesByTldGroup($tldGroup, $channel = null)
     {
         $db = new Database;
 
@@ -92,7 +92,7 @@ class Throttle extends Database
     //--------------------------------------------------------------------------
     
     
-    public static function getThrottlesBySourceCampaign($sourceCampaign, $channel)
+    public static function getThrottlesBySourceCampaign($sourceCampaign, $channel = null)
     {
         $db = new Database;
 
