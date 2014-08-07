@@ -45,34 +45,46 @@
         <input type="button" class="add" href="#add_campaign" value ="Add"/>
         <div style="display:none">
             <div id="add_campaign" style="padding:10px; background:#fff;">
-                <div> Campaign name:
-                    <textarea class="campaign_name"></textarea>
+                <div style="float: left; width: 49%">
+                    <table id="add_campaign_table">
+                        <tbody> 
+                            <tr>
+                                <td><b>Campaign name</b></td>
+                                <td><textarea class="campaign_name"></textarea></td>
+                            </tr>
+                            <tr>
+                                <td><b>Send limit</b></td>
+                                <td><input class="send_limit" type="number"/></td>
+                            </tr>
+                            <tr>
+                                <td><b>Send count</b></td>
+                                <td><b><input class="sent_count" type="number"/></td>       
+                            </tr>
+                            <tr>
+                                <td><b>Creative Ids</b></td>
+                                <td><input class="creative_ids"/></td>                                
+                            </tr>
+                            <tr>
+                                <td><b>End_date</b></td>
+                                <td><input class="end_date"/></td>     
+                            </tr>
+                        </tbody>
+                    </table>
+                    <input type="button" class="create" value="Create">
+                    <input type="button" class="cancel" value="Cancel">
                 </div>
-                <span style="margin-top: 10px;font-weight: bold;">Attributes:</span>
-                <div class="attributes">
-                    <?php 
-                        $html = HTML::getHtmlForCampaignAttributes(array());
-                        echo $html;
-                    ?>
+                <div style="float: left; width: 49%">
+                    <span style="margin-top: 10px;font-weight: bold;">Attributes:</span>
+                    <div class="attributes">
+                        <?php 
+                            $html = HTML::getHtmlForCampaignAttributes(array());
+                            echo $html;
+                        ?>
+                    </div>
                 </div>
-                <div>
-                    Send limit:
-                    <input class="send_limit" type="number"/>
-                </div>
-                <div>
-                    Send count:
-                    <input class="sent_count" type="number"/>
-                </div>
-                <div>
-                    Creative Ids
-                    <input class="creative_ids"/>
-                </div>
-                <div>
-                    End_date
-                    <input class="end_date"/>
-                </div>
-                <input type="button" class="create" value="Create">
-                <input type="button" class="cancel" value="Cancel">
+                <div style="clear: both;"></div>
+
+                
             </div>
         </div>
         

@@ -68,3 +68,11 @@ td.attrData .selector select {
 #add_campaign div {
     margin-top: 5px;
 }
+#add_campaign_table td {
+    vertical-align: middle;
+    padding: 5px;
+}
+#add_campaign_table {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
