@@ -131,19 +131,19 @@ function authenticateUser()
     session_start();
     
     //first check whether session is set or not
-    if (!isset($_SESSION['user_login'])) {
+    if (!isset($_SESSION['email_user_login'])) {
         //check the cookie
         if (isset($_COOKIE['username']) && isset($_COOKIE['password'])) {
             //cookie found
             if (User::checkUserExists($_COOKIE['username'], $_COOKIE['password'])) {
-                $_SESSION['user_login'] = $_COOKIE['username'];
+                $_SESSION['email_user_login'] = $_COOKIE['username'];
             } else {
                 header("location: login.php");
-                die();
+                exit();
             }
         } else {
             header("location: login.php");
-            die();
+            exit();
         }
     }
 }

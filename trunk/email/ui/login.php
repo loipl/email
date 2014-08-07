@@ -48,6 +48,11 @@
                 </div>
             </fieldset>
         </form>
+        <?php if (isset($_GET['retry']) && $_GET['retry'] === '1') {?>
+            <div class="nNote nFailure hideit">
+                <p><strong>FAILURE: </strong>Invalid username or password.</p>
+            </div>
+        <?php } ?>
     </div>
 </div>
 <?php include('layout/footer.php');?>
@@ -64,7 +69,7 @@
     
     if (!empty($username) && !empty($hashPassword)) {
         if (User::checkUserExists($username, $hashPassword)) {
-            $_SESSION['user_login'] = $username;
+            $_SESSION['email_user_login'] = $username;
 
             if(isset($_POST['remMe'])) {
                 setcookie('username', $username, time() + 1*24*60*60);
@@ -75,11 +80,12 @@
                 setcookie('password', '', time() - 1*24*60*60);
             }
             
+            session_write_close();
             header("Location: campaigns.php");
-            die();
+            exit();
         } else {
-            header("Location: login.php");
-            die();
+            header("Location: login.php?retry=1");
+            exit();
         }
     }
 ?>
