@@ -1,6 +1,5 @@
 <?php
     require_once dirname(__FILE__) . '/../email.php';
-    session_start();
     
     $page = 'login';
     $pageTitle = 'Login';
@@ -42,7 +41,7 @@
                     <div class="clear"></div>
                 </div>
                 <div class="loginControl">
-                    <div class="rememberMe"><input type="checkbox" id="remMe" name="remMe" /><label for="remMe">Remember me</label></div>
+<!--                    <div class="rememberMe"><input type="checkbox" id="remMe" name="remMe" /><label for="remMe">Remember me</label></div>-->
                     <input type="submit" value="Log me in" class="dredB logMeIn" />
                     <div class="clear"></div>
                 </div>
@@ -69,18 +68,9 @@
     
     if (!empty($username) && !empty($hashPassword)) {
         if (User::checkUserExists($username, $hashPassword)) {
-            $_SESSION['email_user_login'] = $username;
-
-            if(isset($_POST['remMe'])) {
-                setcookie('username', $username, time() + 1*24*60*60);
-                setcookie('password', $hashPassword, time() + 1*24*60*60);
-            } else {
-                //destroy any previously set cookie
-                setcookie('username', '', time() - 1*24*60*60);
-                setcookie('password', '', time() - 1*24*60*60);
-            }
+            setcookie('username', $username, time() + 1*24*60*60);
+            setcookie('password', $hashPassword, time() + 1*24*60*60);
             
-            session_write_close();
             header("Location: campaigns.php");
             exit();
         } else {

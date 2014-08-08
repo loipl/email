@@ -1,7 +1,7 @@
 <!-- Top fixed navigation -->
     <div class="topNav">
         <div class="wrapper">
-            <div class="welcome"><a href="#" title=""><img src="images/userPic.png" alt="" /></a><span>Howdy, <?php echo $_SESSION['email_user_login'];?>!</span></div>
+            <div class="welcome"><a href="#" title=""><img src="images/userPic.png" alt="" /></a><span>Howdy, <?php echo $_COOKIE['username'];?>!</span></div>
             <div class="userNav">
                 <ul>
                     <li><a href="#" title=""><img src="images/icons/topnav/profile.png" alt="" /><span>Profile</span></a></li>

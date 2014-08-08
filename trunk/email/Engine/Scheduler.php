@@ -136,13 +136,38 @@ class Engine_Scheduler
     
     private function removeExceedingThrottleThresholdLeads(&$leads)
     {
+        $stackingDelay = array();
+        
         if (!empty($leads)) {
             foreach ($leads as $id => $lead) {
-                $delayInfo = $this->getDelayInfo($lead['email']);
-                $delaySeconds = $delayInfo['delay_seconds'];
+                $emailDomain = explode('@', $lead['email']);
+
+                if (isset($emailDomain[1])) {
+                    $domain = $emailDomain[1];
+                }
                 
-                if (!empty($delaySeconds) && $delaySeconds >= Config::THRESHOLD_DELAY_SECONDS) {
-                    unset($leads[$id]);
+                if (!empty($domain)) {
+                    $delayInfo = $this->getDelayInfo($lead['email']);
+                    $delaySeconds = $delayInfo['delay_seconds'];
+                    
+                    // add stacking delay if exist
+                    if (isset($stackingDelay[$domain])) {
+                        $delaySeconds += $stackingDelay[$domain];
+                    }
+                    
+                    // unset lead that exceed threshold
+                    if (!empty($delaySeconds) && $delaySeconds >= Config::THRESHOLD_DELAY_SECONDS) {
+                        unset($leads[$id]);
+                    }
+                    
+                    // add stacking delay data
+                    if (!empty($delaySeconds)) {
+                        if (isset($stackingDelay[$domain])) {
+                            $stackingDelay[$domain] += $delaySeconds;
+                        } else {
+                            $stackingDelay[$domain] = $delaySeconds;
+                        }
+                    }
                 }
             }
         }
@@ -260,23 +285,21 @@ class Engine_Scheduler
                     $delayUntil = $delayInfo['delay_until'];
                     $delaySeconds = $delayInfo['delay_seconds'];
                     
-                    if ($delaySeconds < Config::THRESHOLD_DELAY_SECONDS) {
-                        Queue_Send::addRecord(
-                            $record->getEmail(),
-                            $record->getFrom(),
-                            $record->getCampaignId(),
-                            $record->getCreativeId(),
-                            $record->getCategoryId(),
-                            $record->getSenderEmail(),
-                            $record->getSubject(),
-                            $record->getHtmlBody(),
-                            $record->getTextBody(),
-                            $record->getSubId(),
-                            $record->getChannel(),
-                            $delayUntil,
-                            $delaySeconds
-                        );
-                    }
+                    Queue_Send::addRecord(
+                        $record->getEmail(),
+                        $record->getFrom(),
+                        $record->getCampaignId(),
+                        $record->getCreativeId(),
+                        $record->getCategoryId(),
+                        $record->getSenderEmail(),
+                        $record->getSubject(),
+                        $record->getHtmlBody(),
+                        $record->getTextBody(),
+                        $record->getSubId(),
+                        $record->getChannel(),
+                        $delayUntil,
+                        $delaySeconds
+                    );
                 }
                 $sendQueueCount ++;
             }

@@ -128,23 +128,16 @@ set_error_handler("coreErrorHandler");
 
 function authenticateUser() 
 {
-    session_start();
-    
-    //first check whether session is set or not
-    if (!isset($_SESSION['email_user_login'])) {
-        //check the cookie
-        if (isset($_COOKIE['username']) && isset($_COOKIE['password'])) {
-            //cookie found
-            if (User::checkUserExists($_COOKIE['username'], $_COOKIE['password'])) {
-                $_SESSION['email_user_login'] = $_COOKIE['username'];
-            } else {
-                header("location: login.php");
-                exit();
-            }
-        } else {
+    //check the cookie
+    if (isset($_COOKIE['username']) && isset($_COOKIE['password'])) {
+        //cookie found
+        if (!User::checkUserExists($_COOKIE['username'], $_COOKIE['password'])) {
             header("location: login.php");
             exit();
         }
+    } else {
+        header("location: login.php");
+        exit();
     }
 }
 //--------------------------------------------------------------------------
