@@ -1198,27 +1198,171 @@ class Lead extends Database
     public static function addRecord($data)
     {
         $db = new Database;
+        
+        if (empty($data['email'])) {
+            return false;
+        }
+        // ticket #89: Set subscription date to today if not explicitly set on lead import
+        if (empty($data['subscribe_datetime'])) {
+            $data['subscribe_datetime'] = date('Y-m-d H:i:s');
+        }
+        
+        $fields = array('email','domain','score','md5_email','md5_domain','address','first_name','last_name',
+                        'country','phone','os','language','state','city','postal_code',
+                        'source_url','source_domain','source_campaign','source_username',
+                        'ip','birth_day','birth_month','birth_year','gender','seeking','lock_id',
+                        'lock_datetime','subscribe_datetime','verification_datetime','hygiene_datetime'
+                  );
+        
+        $insertSql = "INSERT INTO `" . self::tableName . "` (";
+        
+        $valueSql = " VALUES (";
+        
+        foreach($fields as $field) {
+            if (!empty($data[$field])) {
+                $insertSql .= $field . ",";
+                $valueSql  .= "'" . mysql_real_escape_string($data[$field]). "',";
+            }
+        }
+        
+        $insertSql = rtrim($insertSql, ',') . ')';
+        $valueSql = rtrim($valueSql, ',') . ')';
+        
+        $sql = $insertSql . $valueSql . ';';
 
-        $sql  = "INSERT INTO `" . self::tableName . "` (email, domain, score, md5_email, md5_domain, country, source_campaign,";
-        $sql .= " birth_day, birth_month, birth_year, gender, seeking) VALUES (";
-        $sql .= " '" . mysql_real_escape_string($data['email']). "',";
-        $sql .= " '" . mysql_real_escape_string($data['domain']). "',";
-        $sql .= " '" . mysql_real_escape_string($data['score']). "',";
-        $sql .= " '" . mysql_real_escape_string($data['md5_email']). "',";
-        $sql .= " '" . mysql_real_escape_string($data['md5_domain']). "',";
-        $sql .= " '" . mysql_real_escape_string($data['country']). "',";
-        $sql .= " '" . mysql_real_escape_string($data['source_campaign']). "',";
-        $sql .= " '" . mysql_real_escape_string($data['birth_day']). "',";
-        $sql .= " '" . mysql_real_escape_string($data['birth_month']). "',";
-        $sql .= " '" . mysql_real_escape_string($data['birth_year']). "',";
-        $sql .= " '" . mysql_real_escape_string($data['gender']). "',";
-        $sql .= " '" . mysql_real_escape_string($data['seeking']). "'";
+        return $db->query($sql);
 
-        $sql .= ");";
+    }
+    //--------------------------------------------------------------------------
+    
+    public static function updateRecord($data)
+    {
+        $db = new Database;
+        
+        if (empty($data['email'])) {
+            return false;
+        }
+        
+        $fields = array('score','address','first_name','last_name',
+                        'country','phone','os','language','state','city','postal_code',
+                        'source_url','source_domain','source_campaign','source_username',
+                        'ip','birth_day','birth_month','birth_year','gender','seeking','lock_id',
+                        'lock_datetime','subscribe_datetime','verification_datetime','hygiene_datetime'
+                  );
+        
+        $sql = "UPDATE `" . self::tableName . "` SET";
+        
+        $emptyData = true;
+        
+        foreach($fields as $field) {
+            if (!empty($data[$field])) { 
+                $sql  .= " `$field` = " . "'" . mysql_real_escape_string($data[$field]). "',";
+                $emptyData = false;
+            }
+        }
+        
+        $sql = rtrim($sql, ',');
+        
+        $sql .= " WHERE `email` = '" . mysql_real_escape_string($data['email']) . "';";
 
-        $db->query($sql);
+        if (!$emptyData) {
+            return $db->query($sql);
+        } else {
+            return false;
+        }  
+    }
+    //--------------------------------------------------------------------------
+    
+    public static function deleteRecord($id) {
+        $db = new Database;
+        $sql = "DELETE FROM `" . self::tableName . "` WHERE `email` = '" . mysql_real_escape_string($id) . "';";
+        return $db->query($sql);   
+    }
+    //--------------------------------------------------------------------------
+    
+    public static function getLeadDataFromXml($xml) {
+        $parts = explode('@', $xml->lead->email[0]);
 
-        return true;
+        $email = (string)$xml->lead->email[0];
+        $domain = $parts[1];
+        $md5_email = md5($email);
+        $md5_domain = md5($domain);
+        
+        $data = array(
+            'email' => $email
+            ,'domain' => $domain
+            ,'md5_email' => $md5_email
+            ,'md5_domain' => $md5_domain
+        );
+        $data['address'] = (string)$xml->lead->address[0];
+        $data['first_name'] = (string)$xml->lead->firstname[0];
+        $data['last_name'] = (string)$xml->lead->lastname[0];
+        $data['country'] = (string)$xml->lead->country[0];
+        $data['phone'] = (string)$xml->lead->phone[0];
+        $data['os'] = (string)$xml->lead->os[0];
+        $data['language'] = (string)$xml->lead->language[0];
+        $data['state'] = (string)$xml->lead->state[0];
+        $data['city'] = (string)$xml->lead->city[0];
+        $data['postal_code'] = (string)$xml->lead->postalcode[0];
+        $data['source_domain'] = (string)$xml->lead->sourcedomain[0];
+        $data['source_url'] = (string)$xml->lead->sourceurl[0];
+        $data['source_campaign'] = (string)$xml->lead->sourcecampaign[0];
+        $data['source_username'] = (string)$xml->lead->sourceusername[0];
+        $data['ip'] = (string)$xml->lead->ip[0];
+        $data['subscribe_datetime'] = (string)$xml->lead->subscribedate[0];
+        $data['birth_day'] = (string)$xml->lead->birthday[0];
+        $data['birth_month'] = (string)$xml->lead->birthmonth[0];
+        $data['birth_year'] = (string)$xml->lead->birthyear[0];
+        $data['gender'] = (string)$xml->lead->gender[0];
+        $data['seeking'] = (string)$xml->lead->seeking[0];
+        $data['hygiene_datetime'] = (string)$xml->lead->hygienedatetime[0];
+
+        if (!empty($xml->lead->score[0])) {
+            $feedScore = (int)$xml->lead->score[0];
+
+            if (($feedScore <= 100) && ($feedScore >= 0)) {
+                $data['score'] = $feedScore;
+            } else {
+                $data['score'] = Config::SCOREMOD_NEW;
+            }
+        } else {
+            $data['score'] = Config::SCOREMOD_NEW;
+        }
+        return $data;
+    }
+    //--------------------------------------------------------------------------
+    
+    public static function formatLead($lead, $format = 'xml') {
+        if ($format === 'xml') {
+            $result = "";
+            $result .= "<lead>\n";
+            $result .= "\t<email>" . $lead->getEmail() . "</email>\n";
+            $result .= "\t<address>" . $lead->getAddress() . "</address>\n";
+            $result .= "\t<first_name>" . $lead->getFirstName() . "</first_name>\n";
+            $result .= "\t<last_name>" . $lead->getLastName() . "</last_name>\n";
+            $result .= "\t<country>" . $lead->getCountry() . "</country>\n";
+            $result .= "\t<phone>" . $lead->getPhone() . "</phone>\n";
+            $result .= "\t<os>" . $lead->getOS() . "</os>\n";
+            $result .= "\t<language>" . $lead->getLanguage() . "</language>\n";
+            $result .= "\t<state>" . $lead->getState() . "</state>\n";
+            $result .= "\t<city>" . $lead->getCity() . "</city>\n";
+            $result .= "\t<postal_code>" . $lead->getPostalCode() . "</postal_code>\n";
+            $result .= "\t<sourcedomain>" . $lead->getDomainName() . "</sourcedomain>\n";
+            $result .= "\t<sourceurl>" . $lead->getSourceUrl() . "</sourceurl>\n";
+            $result .= "\t<sourcecampaign>" . $lead->getCampaign() . "</sourcecampaign>\n";
+            $result .= "\t<sourceusername>" . $lead->getUsername() . "</sourceusername>\n";
+            $result .= "\t<ip>" . $lead->getIP() . "</ip>\n";
+            $result .= "\t<subscribedate>" . $lead->getSubscribeDate() . "</subscribedate>\n";
+            $result .= "\t<birthday>" . $lead->getBirthDay() . "</birthday>\n";
+            $result .= "\t<birthmonth>" . $lead->getBirthMonth() . "</birthmonth>\n";
+            $result .= "\t<birthyear>" . $lead->getBirthYear() . "</birthyear>\n";
+            $result .= "\t<gender>" . $lead->getGender() . "</gender>\n";
+            $result .= "\t<seeking>" . $lead->getSeeking() . "</seeking>\n";
+            $result .= "</lead>\n";
+            return $result;
+        } else {
+            return "Unsupported format";
+        }
     }
     //--------------------------------------------------------------------------
 }

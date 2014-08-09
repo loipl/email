@@ -136,8 +136,8 @@ class Engine_Scheduler
     
     private function removeExceedingThrottleThresholdLeads(&$leads)
     {
-        $stackingDelay = array();
-        
+        $stackingDelay = Queue_Send::getExistStackingDelayByTLD();
+
         if (!empty($leads)) {
             foreach ($leads as $id => $lead) {
                 $emailDomain = explode('@', $lead['email']);
@@ -148,7 +148,7 @@ class Engine_Scheduler
                 
                 if (!empty($domain)) {
                     $delayInfo = $this->getDelayInfo($lead['email']);
-                    $delaySeconds = $delayInfo['delay_seconds'];
+                    $delaySeconds = (int) $delayInfo['delay_seconds'];
                     
                     // add stacking delay if exist
                     if (isset($stackingDelay[$domain])) {
@@ -158,15 +158,25 @@ class Engine_Scheduler
                     // unset lead that exceed threshold
                     if (!empty($delaySeconds) && $delaySeconds >= Config::THRESHOLD_DELAY_SECONDS) {
                         unset($leads[$id]);
+                        Logging::logDebugging('[Scheduler: removeExceedingThrottleThresholdLeads] Removed in first check', $lead['email'].' - '.$delaySeconds);
+                    } else {
+                        Logging::logDebugging('[Scheduler: removeExceedingThrottleThresholdLeads] Accepted in first check', $lead['email'].' - '.$delaySeconds);
                     }
                     
                     // add stacking delay data
                     if (!empty($delaySeconds)) {
                         if (isset($stackingDelay[$domain])) {
-                            $stackingDelay[$domain] += $delaySeconds;
+                            if ($delaySeconds > $stackingDelay[$domain]) {
+                                $stackingDelay[$domain] = $delaySeconds;
+                            }
                         } else {
                             $stackingDelay[$domain] = $delaySeconds;
                         }
+                    }
+                    
+                    // re-init stacking delay when exceeding threshold
+                    if (isset($stackingDelay[$domain]) && ($stackingDelay[$domain] > Config::THRESHOLD_DELAY_SECONDS)) {
+                        $stackingDelay[$domain] = Config::THRESHOLD_DELAY_SECONDS;
                     }
                 }
             }
@@ -284,6 +294,7 @@ class Engine_Scheduler
 
                     $delayUntil = $delayInfo['delay_until'];
                     $delaySeconds = $delayInfo['delay_seconds'];
+                    Logging::logDebugging('[Scheduler: moveRecordsFromBuildQueueToSendQueue] Accepted in later check', $record->getEmail().' - '.$delaySeconds);
                     
                     Queue_Send::addRecord(
                         $record->getEmail(),
@@ -323,8 +334,8 @@ class Engine_Scheduler
         
         if (!empty($domain)) {
             $throttlesByDomain = Throttle::getThrottlesByDomain($domain, $channel);
-            if (!empty ($throttlesByDomain)) {
-                $stackingDelayLeads = Queue_Send::getStackingDelayByTLD($domain);
+            if (!empty ($throttlesByDomain) && !empty ($channel)) {
+                $stackingDelay = Queue_Send::getStackingDelayByTLD($domain);
             }
             
             $tldGroup = TldList::getTldGroupByDomain($domain);
@@ -353,11 +364,9 @@ class Engine_Scheduler
             self::addDelaySecondByThrottles($throttlesBySourceCampaign, $delaySecond);
         }
 
-        // get delay seconds by stacking delays
-        if (!empty($stackingDelayLeads)) {
-            foreach ($stackingDelayLeads as $record) {
-                $delaySecond += (int) $record['delay_seconds'];
-            }
+        // get delay seconds by stacking delay
+        if (!empty($stackingDelay)) {
+            $delaySecond += $stackingDelay[0]['delay_seconds'];
         }
         
         // get delay seconds by tld group throttles
@@ -365,7 +374,12 @@ class Engine_Scheduler
             self::addDelaySecondByTldGroupThrottles($throttlesByTldGroup, $delaySecond);
         }
         
-        if ($delaySecond !== 0) {
+        if ($delaySecond > 0) {
+            
+            if ($delaySecond > Config::THRESHOLD_DELAY_SECONDS) {
+                $delaySecond = Config::THRESHOLD_DELAY_SECONDS;
+            }
+            
             return array(
                 'delay_seconds' => $delaySecond,
                 'delay_until' => date('Y-m-d H:i:s', (time() + $delaySecond))

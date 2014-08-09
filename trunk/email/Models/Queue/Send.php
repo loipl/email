@@ -468,10 +468,41 @@ class Queue_Send extends Database
         $sql  = "SELECT `delay_seconds` FROM `" . self::tableName . "`";
         $sql .= " WHERE `email` LIKE '%$domain'";
         $sql .= " AND   `delay_seconds` != '0'";
+        $sql .= " ORDER BY `delay_seconds` DESC";
+        $sql .= " LIMIT 1";
         $sql .= ";";
         
         $result = $db->getArray($sql);
 
+        return $result;
+    }
+    //--------------------------------------------------------------------------
+    
+    
+    public static function getExistStackingDelayByTLD()
+    {
+        $db = new Database;
+
+        $sql = "select `domain`, `delay_seconds`
+                from 
+                (
+                    select `delay_seconds`, SUBSTR(`email`, INSTR(`email`, '@') + 1) as `domain`
+                    from ".self::tableName."
+                    where `delay_seconds` != '0'
+                    ORDER BY `delay_seconds` DESC
+                ) data
+                group by `domain`;";
+        
+        $queryResult = $db->getArray($sql);
+        
+        $result = array();
+        
+        if (!empty($queryResult)) {
+            foreach ($queryResult as $row) {
+                $result[$row['domain']] = $row['delay_seconds'];
+            }
+        }
+        
         return $result;
     }
     //--------------------------------------------------------------------------
