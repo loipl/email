@@ -89,7 +89,7 @@ class TestThrottle extends UnitTestCase
         );
         
         $startTime = $startTime = time();
-        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads);
+        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads, array());
         $send = new Queue_Send(1);
         $delayUntil = $send->getDelayUntil();
         
@@ -187,7 +187,7 @@ class TestThrottle extends UnitTestCase
         );
         
         $startTime = time();
-        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads);
+        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads, array());
         $send = new Queue_Send(1);
         $delayUntil = $send->getDelayUntil();
         
@@ -286,7 +286,7 @@ class TestThrottle extends UnitTestCase
         );
         
         $startTime = date('Y-m-d H:i:s');
-        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads);
+        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads, array());
         
         $queueSends = Queue_Send::getUnlockedRowIds(1000);
         
@@ -403,7 +403,7 @@ class TestThrottle extends UnitTestCase
         );
         
         $startTime = $startTime = time();
-        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads);
+        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads, array());
         $send = new Queue_Send(1);
         $delayUntil = $send->getDelayUntil();
         
@@ -533,7 +533,10 @@ class TestThrottle extends UnitTestCase
                 'category_id'   => '8'
             )
         ));
-
+        
+        // calculate stacking delay
+        $stackingDelay = Queue_Send::getExistStackingDelayByTLD();
+        
         // execute function
         $leads = array(
             0 => array('build_queue_id' => '1'),
@@ -542,7 +545,7 @@ class TestThrottle extends UnitTestCase
         );
         
         $startTime = $startTime = time();
-        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads);
+        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads, $stackingDelay);
         $send = new Queue_Send(2);
         $delayUntil = $send->getDelayUntil();
         
@@ -794,7 +797,7 @@ class TestThrottle extends UnitTestCase
         );
         
         $startTime = $startTime = time();
-        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads);
+        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads, array());
         $send = new Queue_Send(1);
         $delayUntil = $send->getDelayUntil();
         
@@ -912,13 +915,13 @@ class TestThrottle extends UnitTestCase
         );
         
         $startTime = $startTime = time();
-        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads);
+        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads, array());
         $send = new Queue_Send(1);
         $delayUntil = $send->getDelayUntil();
         
         // compare results
         if (! is_null($delayUntil) && intval($delayUntil) > 0) {
-            $this->assertEqual(Config::HARD_BOUNCE_DELAY_SECONDS + Config::GMAIL_TLD_LIST_DELAY_SECONDS, strtotime($delayUntil) - $startTime);
+            $this->assertEqual(Config::HARD_BOUNCE_DELAY_SECONDS + Config::TLD_LIST_DELAY_SECONDS_GMAIL, strtotime($delayUntil) - $startTime);
         } else {
             $this->assertEqual(1, 2);
         }

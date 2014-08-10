@@ -10,7 +10,8 @@ class Engine_Scheduler
     protected $creativeIds;
     protected $cronIdentifier;
     protected $suppressionList;
-
+    protected $stackingDelay;
+    
     public function __construct($email = NULL, $campaignId = NULL, $cronIdentifier = NULL)
     {
         if (!empty($cronIdentifier)) {
@@ -21,6 +22,8 @@ class Engine_Scheduler
 
         LogScheduler::init();
         LogScheduler::addAttributes(array('scheduler_name' => $this->cronIdentifier));
+        
+        $this->stackingDelay = Queue_Send::getExistStackingDelayByTLD();
 
         if (empty($email) && empty($campaignId)) {
             $this->setupCampaign();
@@ -43,7 +46,7 @@ class Engine_Scheduler
         Engine_Scheduler_Channels::pushChannelsToBuildQueue($this->leads);
 
         $this->removeBlankRecordsFromBuildQueue($this->leads);
-        $this->moveRecordsFromBuildQueueToSendQueue($this->leads);
+        $this->moveRecordsFromBuildQueueToSendQueue($this->leads, $this->stackingDelay);
         
         LogScheduler::save();
         LogScheduler::reset();
@@ -136,7 +139,7 @@ class Engine_Scheduler
     
     private function removeExceedingThrottleThresholdLeads(&$leads)
     {
-        $stackingDelay = Queue_Send::getExistStackingDelayByTLD();
+        $stackingDelay = $this->stackingDelay;
 
         if (!empty($leads)) {
             foreach ($leads as $id => $lead) {
@@ -147,20 +150,17 @@ class Engine_Scheduler
                 }
                 
                 if (!empty($domain)) {
-                    $delayInfo = $this->getDelayInfo($lead['email']);
-                    $delaySeconds = (int) $delayInfo['delay_seconds'];
+                    $delaySeconds = $this->getDelaySeconds($lead['email'], $domain);
                     
                     // add stacking delay if exist
-                    if (isset($stackingDelay[$domain])) {
+                    if (!empty($stackingDelay[$domain])) {
                         $delaySeconds += $stackingDelay[$domain];
                     }
                     
                     // unset lead that exceed threshold
                     if (!empty($delaySeconds) && $delaySeconds >= Config::THRESHOLD_DELAY_SECONDS) {
                         unset($leads[$id]);
-                        Logging::logDebugging('[Scheduler: removeExceedingThrottleThresholdLeads] Removed in first check', $lead['email'].' - '.$delaySeconds);
-                    } else {
-                        Logging::logDebugging('[Scheduler: removeExceedingThrottleThresholdLeads] Accepted in first check', $lead['email'].' - '.$delaySeconds);
+                        continue;
                     }
                     
                     // add stacking delay data
@@ -172,11 +172,6 @@ class Engine_Scheduler
                         } else {
                             $stackingDelay[$domain] = $delaySeconds;
                         }
-                    }
-                    
-                    // re-init stacking delay when exceeding threshold
-                    if (isset($stackingDelay[$domain]) && ($stackingDelay[$domain] > Config::THRESHOLD_DELAY_SECONDS)) {
-                        $stackingDelay[$domain] = Config::THRESHOLD_DELAY_SECONDS;
                     }
                 }
             }
@@ -274,7 +269,7 @@ class Engine_Scheduler
     //--------------------------------------------------------------------------
 
 
-    public static function moveRecordsFromBuildQueueToSendQueue($leads)
+    public static function moveRecordsFromBuildQueueToSendQueue($leads, $stackingDelay)
     {
         if (empty($leads) || !is_array($leads)) {
             return false;
@@ -285,17 +280,51 @@ class Engine_Scheduler
         foreach($leads AS $lead) {
             $record = new Queue_Build($lead['build_queue_id']);
             
-            $delayInfo = Engine_Scheduler::getDelayInfo($record->getEmail(), $record->getChannel());
+            $emailDomain = explode('@', $record->getEmail());
+
+            if (isset($emailDomain[1])) {
+                $domain = $emailDomain[1];
+            }
             
-            // if the lead have assigned creative, and delay_time < threshold, send it to queue_send
+            // sanity check
+            if (empty($domain)) {
+                $record->removeRecord();
+                continue;
+            }
+            
+            $delaySeconds = Engine_Scheduler::getDelaySeconds($record->getEmail(), $domain, $record->getChannel());
+
+            // add stacking delay if exist
+            if (!empty($stackingDelay[$domain])) {
+                $delaySeconds += $stackingDelay[$domain];
+            }
+            
+            // calculate delay until
+            $delayUntil = null;
+            if (!empty($delaySeconds)) {
+                $delayUntil = date('Y-m-d H:i:s', (time() + $delaySeconds));
+            }
+            
+            // add stacking delay data
+            if (!empty($delaySeconds)) {
+                if (isset($stackingDelay[$domain])) {
+                    if ($delaySeconds > $stackingDelay[$domain]) {
+                        $stackingDelay[$domain] = $delaySeconds;
+                    }
+                } else {
+                    $stackingDelay[$domain] = $delaySeconds;
+                }
+            }
+            
+            if ($delaySeconds >= Config::THRESHOLD_DELAY_SECONDS) {
+                Logging::logDebugging('FAILED in later check', $record->getEmail() . ' - ' . $delaySeconds);
+            }
+            
+            // if the lead have assigned creative, send it to queue_send
             if ($record->getHtmlBody() != '' || $record->getTextBody() != '') {
 
                 if (!Queue_Send::checkQueueSendExist($record->getEmail(), $record->getCreativeId())) {
 
-                    $delayUntil = $delayInfo['delay_until'];
-                    $delaySeconds = $delayInfo['delay_seconds'];
-                    Logging::logDebugging('[Scheduler: moveRecordsFromBuildQueueToSendQueue] Accepted in later check', $record->getEmail().' - '.$delaySeconds);
-                    
                     Queue_Send::addRecord(
                         $record->getEmail(),
                         $record->getFrom(),
@@ -325,18 +354,10 @@ class Engine_Scheduler
     //--------------------------------------------------------------------------
     
     
-    public static function getDelayInfo($email, $channel = null) {
-        $emailDomain = explode('@', $email);
-
-        if (isset($emailDomain[1])) {
-            $domain = $emailDomain[1];
-        }
+    public static function getDelaySeconds($email, $domain, $channel = null) {
         
         if (!empty($domain)) {
             $throttlesByDomain = Throttle::getThrottlesByDomain($domain, $channel);
-            if (!empty ($throttlesByDomain) && !empty ($channel)) {
-                $stackingDelay = Queue_Send::getStackingDelayByTLD($domain);
-            }
             
             $tldGroup = TldList::getTldGroupByDomain($domain);
 
@@ -352,44 +373,24 @@ class Engine_Scheduler
             $throttlesBySourceCampaign = Throttle::getThrottlesBySourceCampaign($sourceCampaign, $channel);
         }
         
-        $delaySecond = 0;
+        $delaySeconds = 0;
         
         // get delay seconds by domain throttles
         if (!empty($throttlesByDomain)) {
-            self::addDelaySecondByThrottles($throttlesByDomain, $delaySecond);
+            self::addDelaySecondByThrottles($throttlesByDomain, $delaySeconds);
         }
         
         // get delay seconds by source campaign
         if (!empty($throttlesBySourceCampaign)) {
-            self::addDelaySecondByThrottles($throttlesBySourceCampaign, $delaySecond);
+            self::addDelaySecondByThrottles($throttlesBySourceCampaign, $delaySeconds);
         }
 
-        // get delay seconds by stacking delay
-        if (!empty($stackingDelay)) {
-            $delaySecond += $stackingDelay[0]['delay_seconds'];
-        }
-        
         // get delay seconds by tld group throttles
         if (!empty($throttlesByTldGroup)) {
-            self::addDelaySecondByTldGroupThrottles($throttlesByTldGroup, $delaySecond);
+            self::addDelaySecondByTldGroupThrottles($throttlesByTldGroup, $delaySeconds);
         }
         
-        if ($delaySecond > 0) {
-            
-            if ($delaySecond > Config::THRESHOLD_DELAY_SECONDS) {
-                $delaySecond = Config::THRESHOLD_DELAY_SECONDS;
-            }
-            
-            return array(
-                'delay_seconds' => $delaySecond,
-                'delay_until' => date('Y-m-d H:i:s', (time() + $delaySecond))
-            );
-        }
-        
-        return array(
-            'delay_until' => null,
-            'delay_seconds' => null
-        );
+        return $delaySeconds;
     }
     //--------------------------------------------------------------------------
     
@@ -428,28 +429,28 @@ class Engine_Scheduler
             $tldGroup = $record['tld_group'];
             
             switch ($tldGroup) {
-                case Config::AOL_TLD_LIST:
-                    $delaySecond += Config::AOL_TLD_LIST_DELAY_SECONDS;
+                case Config::TLD_LIST_AOL:
+                    $delaySecond += Config::TLD_LIST_DELAY_SECONDS_AOL;
                     break;
                 
-                case Config::MICROSOFT_TLD_LIST:
-                    $delaySecond += Config::MICROSOFT_TLD_LIST_DELAY_SECONDS;
+                case Config::TLD_LIST_MICROSOFT:
+                    $delaySecond += Config::TLD_LIST_DELAY_SECONDS_MICROSOFT;
                     break;
                 
-                case Config::GMAIL_TLD_LIST:
-                    $delaySecond += Config::GMAIL_TLD_LIST_DELAY_SECONDS;
+                case Config::TLD_LIST_GMAIL:
+                    $delaySecond += Config::TLD_LIST_DELAY_SECONDS_GMAIL;
                     break;
                 
-                case Config::UNITED_ONLINE_TLD_LIST:
-                    $delaySecond += Config::UNITED_ONLINE_TLD_LIST_DELAY_SECONDS;
+                case Config::TLD_LIST_UNITED_ONLINE:
+                    $delaySecond += Config::TLD_LIST_DELAY_SECONDS_UNITED_ONLINE;
                     break;
                 
-                case Config::CABLE_TLD_LIST:
-                    $delaySecond += Config::CABLE_TLD_LIST_DELAY_SECONDS;
+                case Config::TLD_LIST_CABLE:
+                    $delaySecond += Config::TLD_LIST_DELAY_SECONDS_CABLE;
                     break;
                 
-                case Config::YAHOO_TLD_LIST:
-                    $delaySecond += Config::YAHOO_TLD_LIST_DELAY_SECONDS;
+                case Config::TLD_LIST_YAHOO:
+                    $delaySecond += Config::TLD_LIST_DELAY_SECONDS_YAHOO;
                     break;
                 
                 default:

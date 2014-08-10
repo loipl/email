@@ -48,19 +48,19 @@ class Config
     
     const PURGE_THROTTLE_THRESHOLD      = 60;    // purge throttle which older than this threshold (in minutes)
     
-    const AOL_TLD_LIST                  = 'aol';
-    const MICROSOFT_TLD_LIST            = 'microsoft';
-    const GMAIL_TLD_LIST                = 'gmail';
-    const UNITED_ONLINE_TLD_LIST        = 'united_online';
-    const CABLE_TLD_LIST                = 'cable';
-    const YAHOO_TLD_LIST                = 'yahoo';
+    const TLD_LIST_AOL                  = 'aol';
+    const TLD_LIST_MICROSOFT            = 'microsoft';
+    const TLD_LIST_GMAIL                = 'gmail';
+    const TLD_LIST_UNITED_ONLINE        = 'united_online';
+    const TLD_LIST_CABLE                = 'cable';
+    const TLD_LIST_YAHOO                = 'yahoo';
     
-    const AOL_TLD_LIST_DELAY_SECONDS            = 1;
-    const MICROSOFT_TLD_LIST_DELAY_SECONDS      = 2;
-    const GMAIL_TLD_LIST_DELAY_SECONDS          = 3;
-    const UNITED_ONLINE_TLD_LIST_DELAY_SECONDS  = 4;
-    const CABLE_TLD_LIST_DELAY_SECONDS          = 5;
-    const YAHOO_TLD_LIST_DELAY_SECONDS          = 6;
+    const TLD_LIST_DELAY_SECONDS_AOL            = 0;
+    const TLD_LIST_DELAY_SECONDS_MICROSOFT      = 0;
+    const TLD_LIST_DELAY_SECONDS_GMAIL          = 0;
+    const TLD_LIST_DELAY_SECONDS_UNITED_ONLINE  = 0;
+    const TLD_LIST_DELAY_SECONDS_CABLE          = 0;
+    const TLD_LIST_DELAY_SECONDS_YAHOO          = 0;
     
     const SECRET_CODE             = 'Email-will-become-superstar';
     
@@ -69,7 +69,7 @@ class Config
     const SEPARATOR_OFFER         = 'hRp113';
     const SEPARATOR_LINK          = 'dRp511';
     const SEPARATOR_SUBID         = 'fLp293';
-    
+
     const DEFAULT_SENDER          =     1;
     const DEFAULT_CHANNEL         =     1;
 

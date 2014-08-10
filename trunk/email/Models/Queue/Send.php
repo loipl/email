@@ -55,7 +55,7 @@ class Queue_Send extends Database
     {
         $db = new Database;
 
-        $sql  = "SELECT `id`, `delay_until` FROM `" . self::tableName . "`";
+        $sql  = "SELECT `id`, `delay_seconds`, `delay_until` FROM `" . self::tableName . "`";
         $sql .= " WHERE `locked` = '0'";
         $sql .= " ORDER BY RAND()";
         $sql .= " LIMIT " . mysql_real_escape_string($limit) . "";
@@ -65,9 +65,11 @@ class Queue_Send extends Database
         if (!empty($result)) {
             // remove throtted rows
             foreach ($result as $index => $row) {
-                if (! is_null($row['delay_until']) && intval($row['delay_until']) > 0) {
-                    if (time() < strtotime($row['delay_until'])) {
-                        unset($result[$index]);
+                if ((int) $row['delay_seconds'] !== 0) {
+                    if (! is_null($row['delay_until']) && intval($row['delay_until']) > 0) {
+                        if (time() < strtotime($row['delay_until'])) {
+                            unset($result[$index]);
+                        }
                     }
                 }
             }
@@ -457,24 +459,6 @@ class Queue_Send extends Database
         } else {
             return false;
         }
-    }
-    //--------------------------------------------------------------------------
-    
-    
-    public static function getStackingDelayByTLD($domain)
-    {
-        $db = new Database;
-
-        $sql  = "SELECT `delay_seconds` FROM `" . self::tableName . "`";
-        $sql .= " WHERE `email` LIKE '%$domain'";
-        $sql .= " AND   `delay_seconds` != '0'";
-        $sql .= " ORDER BY `delay_seconds` DESC";
-        $sql .= " LIMIT 1";
-        $sql .= ";";
-        
-        $result = $db->getArray($sql);
-
-        return $result;
     }
     //--------------------------------------------------------------------------
     
