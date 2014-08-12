@@ -544,7 +544,7 @@ class TestThrottle extends UnitTestCase
             2 => array('build_queue_id' => '3')
         );
         
-        $startTime = $startTime = time();
+        $startTime = time();
         Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads, $stackingDelay);
         $send = new Queue_Send(2);
         $delayUntil = $send->getDelayUntil();
@@ -921,7 +921,7 @@ class TestThrottle extends UnitTestCase
         
         // compare results
         if (! is_null($delayUntil) && intval($delayUntil) > 0) {
-            $this->assertEqual(Config::HARD_BOUNCE_DELAY_SECONDS + Config::TLD_LIST_DELAY_SECONDS_GMAIL, strtotime($delayUntil) - $startTime);
+            $this->assertEqual(Config::HARD_BOUNCE_DELAY_SECONDS * 2, strtotime($delayUntil) - $startTime);
         } else {
             $this->assertEqual(1, 2);
         }

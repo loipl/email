@@ -55,13 +55,6 @@ class Config
     const TLD_LIST_CABLE                = 'cable';
     const TLD_LIST_YAHOO                = 'yahoo';
     
-    const TLD_LIST_DELAY_SECONDS_AOL            = 0;
-    const TLD_LIST_DELAY_SECONDS_MICROSOFT      = 0;
-    const TLD_LIST_DELAY_SECONDS_GMAIL          = 0;
-    const TLD_LIST_DELAY_SECONDS_UNITED_ONLINE  = 0;
-    const TLD_LIST_DELAY_SECONDS_CABLE          = 0;
-    const TLD_LIST_DELAY_SECONDS_YAHOO          = 0;
-    
     const SECRET_CODE             = 'Email-will-become-superstar';
     
     const SEPARATOR_EMAIL         = 'dRm415';

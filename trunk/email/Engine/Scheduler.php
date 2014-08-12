@@ -394,7 +394,7 @@ class Engine_Scheduler
 
         // get delay seconds by tld group throttles
         if (!empty($throttlesByTldGroup)) {
-            self::addDelaySecondByTldGroupThrottles($throttlesByTldGroup, $delaySeconds);
+            self::addDelaySecondByThrottles($throttlesByTldGroup, $delaySeconds);
         }
         
         return $delaySeconds;
@@ -420,46 +420,6 @@ class Engine_Scheduler
                     $delaySecond += Config::SOFT_BOUNCE_DELAY_SECONDS;
                     break;
 
-                default:
-                    break;
-            }
-        }
-        
-        return true;
-    }
-    //--------------------------------------------------------------------------
-    
-    
-    public static function addDelaySecondByTldGroupThrottles($throttlesByTldGroup, &$delaySecond)
-    {
-        foreach ($throttlesByTldGroup as $record) {
-            $tldGroup = $record['tld_group'];
-            
-            switch ($tldGroup) {
-                case Config::TLD_LIST_AOL:
-                    $delaySecond += Config::TLD_LIST_DELAY_SECONDS_AOL;
-                    break;
-                
-                case Config::TLD_LIST_MICROSOFT:
-                    $delaySecond += Config::TLD_LIST_DELAY_SECONDS_MICROSOFT;
-                    break;
-                
-                case Config::TLD_LIST_GMAIL:
-                    $delaySecond += Config::TLD_LIST_DELAY_SECONDS_GMAIL;
-                    break;
-                
-                case Config::TLD_LIST_UNITED_ONLINE:
-                    $delaySecond += Config::TLD_LIST_DELAY_SECONDS_UNITED_ONLINE;
-                    break;
-                
-                case Config::TLD_LIST_CABLE:
-                    $delaySecond += Config::TLD_LIST_DELAY_SECONDS_CABLE;
-                    break;
-                
-                case Config::TLD_LIST_YAHOO:
-                    $delaySecond += Config::TLD_LIST_DELAY_SECONDS_YAHOO;
-                    break;
-                
                 default:
                     break;
             }

@@ -77,7 +77,7 @@ class Throttle extends Database
     {
         $db = new Database;
 
-        $sql  = "SELECT `tld_group` FROM `" . self::tableName . "`";
+        $sql  = "SELECT `type` FROM `" . self::tableName . "`";
         $sql .= " WHERE `tld_group`            = '" . mysql_real_escape_string($tldGroup). "'";
         
         if (!empty($channel)) {
