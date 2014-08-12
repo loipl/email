@@ -149,11 +149,17 @@ class Engine_Scheduler
                     $domain = $emailDomain[1];
                 }
                 
+                // sanity check
+                if (empty($lead['email']) || empty($domain)) {
+                    unset($leads[$id]);
+                    continue;
+                }
+                
                 if (!empty($domain)) {
                     $delaySeconds = $this->getDelaySeconds($lead['email'], $domain);
                     
                     // add stacking delay if exist
-                    if (!empty($stackingDelay[$domain])) {
+                    if (!empty($delaySeconds) && !empty($stackingDelay[$domain])) {
                         $delaySeconds += $stackingDelay[$domain];
                     }
                     
@@ -279,23 +285,24 @@ class Engine_Scheduler
 
         foreach($leads AS $lead) {
             $record = new Queue_Build($lead['build_queue_id']);
+            $email = $record->getEmail();
             
-            $emailDomain = explode('@', $record->getEmail());
+            $emailDomain = explode('@', $email);
 
             if (isset($emailDomain[1])) {
                 $domain = $emailDomain[1];
             }
             
             // sanity check
-            if (empty($domain)) {
+            if (empty($email) || empty($domain)) {
                 $record->removeRecord();
                 continue;
             }
             
-            $delaySeconds = Engine_Scheduler::getDelaySeconds($record->getEmail(), $domain, $record->getChannel());
+            $delaySeconds = Engine_Scheduler::getDelaySeconds($email, $domain, $record->getChannel());
 
             // add stacking delay if exist
-            if (!empty($stackingDelay[$domain])) {
+            if (!empty($delaySeconds) && !empty($stackingDelay[$domain])) {
                 $delaySeconds += $stackingDelay[$domain];
             }
             
@@ -317,16 +324,16 @@ class Engine_Scheduler
             }
             
             if ($delaySeconds >= Config::THRESHOLD_DELAY_SECONDS) {
-                Logging::logDebugging('FAILED in later check', $record->getEmail() . ' - ' . $delaySeconds);
+                Logging::logDebugging('FAILED in later check', $email . ' - ' . $delaySeconds);
             }
             
             // if the lead have assigned creative, send it to queue_send
             if ($record->getHtmlBody() != '' || $record->getTextBody() != '') {
 
-                if (!Queue_Send::checkQueueSendExist($record->getEmail(), $record->getCreativeId())) {
+                if (!Queue_Send::checkQueueSendExist($email, $record->getCreativeId())) {
 
                     Queue_Send::addRecord(
-                        $record->getEmail(),
+                        $email,
                         $record->getFrom(),
                         $record->getCampaignId(),
                         $record->getCreativeId(),

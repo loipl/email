@@ -483,7 +483,7 @@ class Queue_Send extends Database
         
         if (!empty($queryResult)) {
             foreach ($queryResult as $row) {
-                $result[$row['domain']] = $row['delay_seconds'];
+                $result[$row['domain']] = intval($row['delay_seconds']);
             }
         }
         

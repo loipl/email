@@ -1,0 +1,41 @@
+/* 
+    Document   : log_debug
+    Created on : Aug 11, 2014, 10:56:12 AM
+    Author     : diepbh
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+.debug_data textarea{
+     width: 300px;
+}
+
+table.log_table th, table.log_table td, table.log_table button {
+    vertical-align: middle;
+}
+
+.filter_bar_element {
+    float: left;
+    vertical-align: middle;
+}
+.filter_bar {
+    margin-top: 20px;
+}
+.page_number.current {
+    background-color: #2e6e9e;
+}
+button {
+    cursor: pointer;
+}
+.filter_bar {
+    display: inline-block;
+}
+
+.filter_bar div, .filter_bar button  {
+    margin-left:30px;
+}
+
+.paging_bar {
+    float: right;
+    margin-top: 2px;
+}

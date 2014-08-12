@@ -52,6 +52,7 @@
                 <li <?php if ($page === 'campaign'){echo 'class = "this"';}?>><a href="campaigns.php" title="">Campaigns</a></li>
                 <li <?php if ($page === 'creative'){echo 'class = "this"';}?>><a href="creatives.php" title="">Creatives</a></li>
                 <li <?php if ($page === 'log_scheduler'){echo 'class = "this"';}?>><a href="log-scheduler.php" title="">Log Scheduler</a></li>
+                <li <?php if ($page === 'log_debug'){echo 'class = "this"';}?>><a href="log_debug.php" title="">Log Debug</a></li>
                 <li <?php if ($page === 'reporting_second'){echo 'class = "this"';}?>><a href="reports-second.php" title="">Report Second</a></li>
                 <li class="last <?php if ($page === 'reporting'){echo 'this';}?>"><a href="reports.php" title="">Reporting</a></li>
             </ul>

@@ -11,6 +11,8 @@
 <link href="css/creatives.css" rel="stylesheet" type="text/css" />
 <?php } elseif ($page === 'log_scheduler') {?>
 <link href="css/log_scheduler.css" rel="stylesheet" type="text/css" />
+<?php } elseif ($page === 'log_debug') {?>
+<link href="css/log_debug.css" rel="stylesheet" type="text/css" />
 <?php } ?>
 <link href="css/colorbox.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>

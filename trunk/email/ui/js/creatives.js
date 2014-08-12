@@ -101,7 +101,7 @@ $(document).ready(function(){
             from: $.trim($creativeRow.find('.from').val()),
             subject: $.trim($creativeRow.find('.subject').val()),
             html_body: $.trim($creativeRow.find('.html_body').val()),
-            text_body: $.trim($creativeRow.find('.text_body').val()),
+            text_body: $.trim($creativeRow.find('.text_body').val())
         };       
     }
     
@@ -114,7 +114,7 @@ $(document).ready(function(){
             from: $.trim($creativeRow.find('.from').val()),
             subject: $.trim($creativeRow.find('.subject').val()),
             html_body: $.trim($creativeRow.find('.add_html_body').val()),
-            text_body: $.trim($creativeRow.find('.add_text_body').val()),
+            text_body: $.trim($creativeRow.find('.add_text_body').val())
         };       
     }
     
