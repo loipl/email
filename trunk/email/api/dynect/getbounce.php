@@ -23,6 +23,10 @@ class GetBounce extends PostBack {
             return array();
         }
         
+        if (isset($_GET['bouncetime'])) {
+            $request['datetime'] = $_GET['bouncetime'];
+        }
+        
         $request['bouncerule']      = (isset($_GET['bouncerule'])   ?   mysql_real_escape_string($_GET['bouncerule'])   : '');
         $request['bouncetype']      = (isset($_GET['bouncetype'])   ?   mysql_real_escape_string($_GET['bouncetype'])   : '');
         $request['bouncecode']      = (isset($_GET['bouncecode'])   ?   mysql_real_escape_string($_GET['bouncecode'])   : '');

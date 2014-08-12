@@ -20,6 +20,10 @@ class Unsubscribe extends PostBack {
             return array();
         }
         
+        if (isset($_GET['unsubscribetime'])) {
+            $request['datetime'] = $_GET['unsubscribetime'];
+        }
+        
         $request['X-Activity-ID'] = (isset($_GET['x1'])) ? mysql_real_escape_string($_GET['x1']) : '';
         
         return $request;

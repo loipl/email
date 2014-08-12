@@ -20,6 +20,10 @@ class Complaint extends PostBack {
             return array();
         }
         
+        if (isset($_GET['complainttime'])) {
+            $request['datetime'] = $_GET['complainttime'];
+        }
+        
         $request['X-Activity-ID']   = (isset($_GET['x1'])   ?   mysql_real_escape_string($_GET['x1'])   : '');
         
         return $request;

@@ -27,7 +27,18 @@ abstract class PostBack {
                 $sql .= ' \'' .mysql_real_escape_string($record['email']). '\',';
                 $sql .= ' NULL,';
                 $sql .= ' NULL,';
-                $sql .= ' NOW(), ';
+                
+                if (!empty($record['datetime'])) {
+                    $unixTime = strtotime($record['datetime']);
+                    
+                    if (!empty($unixTime)) {
+                        $sql .= '"'.date('Y-m-d H:i:s', $unixTime) .'", ';
+                    } else {
+                        $sql .= ' NOW(), ';
+                    }
+                } else {
+                    $sql .= ' NOW(), ';
+                }
                 $sql .= ' \'' . $activityId . '\' ';
                 $sql .= ')';
 

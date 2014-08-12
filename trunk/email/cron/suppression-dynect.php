@@ -24,7 +24,14 @@ foreach ($bounces AS $record) {
             $sql .= ' \'' .mysql_real_escape_string($record->{'emailaddress'}). '\',';
             $sql .= ' NULL,';
             $sql .= ' NULL,';
-            $sql .= ' NOW(), ';
+            
+            $bounceTime = $record->{'bouncetime'};
+
+            if (!empty($bounceTime)) {
+                $sql .= '"'.date('Y-m-d H:i:s', strtotime($bounceTime)) .'", ';
+            } else {
+                $sql .= ' NOW(), ';
+            }
             $sql .= ' \'' .mysql_real_escape_string($record->{'xheaders'}->{'X-Activity-ID'}). '\'';
             $sql .= ')';
 
@@ -54,7 +61,14 @@ foreach ($complaints AS $record) {
             $sql .= ' \'' .mysql_real_escape_string($record->{'emailaddress'}). '\',';
             $sql .= ' NULL,';
             $sql .= ' NULL,';
-            $sql .= ' NOW(), ';
+            
+            $complaintTime = $record->{'complainttime'};
+            
+            if (!empty($complaintTime)) {
+                $sql .= '"'.date('Y-m-d H:i:s', strtotime($complaintTime)) .'", ';
+            } else {
+                $sql .= ' NOW(), ';
+            }
             $sql .= ' \'' .mysql_real_escape_string($record->{'xheaders'}->{'X-Activity-ID'}). '\'';
             $sql .= ')';
 
@@ -81,7 +95,14 @@ foreach ($softBounces AS $record) {
             $sql .= ' \'' .mysql_real_escape_string($record->{'emailaddress'}). '\',';
             $sql .= ' NULL,';
             $sql .= ' NULL,';
-            $sql .= ' NOW(), ';
+            
+            $bounceTime = $record->{'bouncetime'};
+            
+            if (!empty($bounceTime)) {
+                $sql .= '"'.date('Y-m-d H:i:s', strtotime($bounceTime)) .'", ';
+            } else {
+                $sql .= ' NOW(), ';
+            }
             $sql .= ' \'' .mysql_real_escape_string($record->{'xheaders'}->{'X-Activity-ID'}). '\'';
             $sql .= ')';
 
