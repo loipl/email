@@ -70,3 +70,6 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO `email`.`users` (`id`, `username`, `password`, `email`, `displayed_name`, `status`, `registered`) VALUES ('1', 'loiphamle', '173c3fa9ec058c16ba234590c9af2538', 'loiphamle@gmail.com', 'Loi Dep Trai', '1', '2014-08-06 16:13:47');
+
+# add index for error_log_debug table - 2014/08/11
+ALTER TABLE error_log_debug ADD INDEX `key_datetime` (`datetime`);

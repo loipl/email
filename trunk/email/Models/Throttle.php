@@ -54,58 +54,88 @@ class Throttle extends Database
     //--------------------------------------------------------------------------
     
     
-    public static function getThrottlesByDomain($domain, $channel = null)
+    public static function getThrottlesByDomain($throttles, $domain, $channel = null)
     {
-        $db = new Database;
-
-        $sql  = "SELECT `type` FROM `" . self::tableName . "`";
-        $sql .= " WHERE `domain`            = '" . mysql_real_escape_string($domain). "'";
-        
-        if (!empty($channel)) {
-            $sql .= " AND   `channel`       = '" . mysql_real_escape_string($channel). "'";
+        if (empty($throttles)) {
+            return false;
         }
-        $sql .= " ;";
-
-        $result = $db->getArray($sql);
+        
+        $result = array();
+        
+        foreach ($throttles as $row) {
+            $matched = true;
+            
+            if (mysql_real_escape_string($domain) !== $row['domain']) {
+                $matched = false;
+            }
+            
+            if (!empty($channel) && (mysql_real_escape_string($channel) !== $row['channel'])) {
+                $matched = false;
+            }
+            
+            if ($matched) {
+                $result[] = $row['type'];
+            }
+        }
         
         return $result;
     }
     //--------------------------------------------------------------------------
     
     
-    public static function getThrottlesByTldGroup($tldGroup, $channel = null)
+    public static function getThrottlesByTldGroup($throttles, $tldGroup, $channel = null)
     {
-        $db = new Database;
-
-        $sql  = "SELECT `type` FROM `" . self::tableName . "`";
-        $sql .= " WHERE `tld_group`            = '" . mysql_real_escape_string($tldGroup). "'";
-        
-        if (!empty($channel)) {
-            $sql .= " AND   `channel`          = '" . mysql_real_escape_string($channel). "'";
+        if (empty($throttles)) {
+            return false;
         }
-        $sql .= " ;";
-
-        $result = $db->getArray($sql);
         
+        $result = array();
+        
+        foreach ($throttles as $row) {
+            $matched = true;
+            
+            if (mysql_real_escape_string($tldGroup) !== $row['tld_group']) {
+                $matched = false;
+            }
+            
+            if (!empty($channel) && (mysql_real_escape_string($channel) !== $row['channel'])) {
+                $matched = false;
+            }
+            
+            if ($matched) {
+                $result[] = $row['type'];
+            }
+        }
+
         return $result;
     }
     //--------------------------------------------------------------------------
     
     
-    public static function getThrottlesBySourceCampaign($sourceCampaign, $channel = null)
+    public static function getThrottlesBySourceCampaign($throttles, $sourceCampaign, $channel = null)
     {
-        $db = new Database;
-
-        $sql  = "SELECT `type` FROM `" . self::tableName . "`";
-        $sql .= " WHERE `source_campaign`   = '" . mysql_real_escape_string($sourceCampaign). "'";
-        
-        if (!empty($channel)) {
-            $sql .= " AND   `channel`       = '" . mysql_real_escape_string($channel). "'";
+        if (empty($throttles)) {
+            return false;
         }
-        $sql .= " ;";
-
-        $result = $db->getArray($sql);
         
+        $result = array();
+        
+        foreach ($throttles as $row) {
+            $matched = true;
+            
+            if (mysql_real_escape_string($sourceCampaign) !== $row['source_campaign']) {
+                $matched = false;
+            }
+            
+            if (!empty($channel) && (mysql_real_escape_string($channel) !== $row['channel'])) {
+                $matched = false;
+            }
+            
+            if ($matched) {
+                $result[] = $row['type'];
+            }
+        }
+
         return $result;
     }
     //--------------------------------------------------------------------------

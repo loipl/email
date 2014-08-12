@@ -35,12 +35,19 @@ $(document).ready(function(){
     })
     
     function getFilters() {
-        return {
+        var result = {
             sort_by: $('.sort_by').val(),
             sort_order: $('.sort_order').val(),
             from_date: $('#from_date').val(),
             to_date: $('#to_date').val()
         }
+        
+        var search_word = $.trim($('#search').val());
+        if (search_word !== "") {
+            result.search_word = encodeURIComponent(search_word);
+        }
+        
+        return result;
     }
     
     function refreshPage(filters) {

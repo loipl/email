@@ -134,7 +134,7 @@ class LogScheduler extends Database
     }  
     //--------------------------------------------------------------------------
     
-    public static function getAll($start = null, $end = null, $page = '1', $sortBy = null, $sortOrder = null) {
+    public static function getAll($start = null, $end = null, $keyword = null, $page = '1', $sortBy = null, $sortOrder = null) {
             
         $sql = "SELECT * FROM `". self::tableName ."`";
         
@@ -147,6 +147,10 @@ class LogScheduler extends Database
         if (!empty($end)) {
             $end = mysql_escape_string($end . ' 23:59:59');
             $wheres[] = " `create_time` <= '$end' ";
+        }
+        
+        if (!empty($keyword)) {
+            $wheres[] = " `leads` like '%$keyword%' ";
         }
         
         if (!empty($wheres)) {
@@ -168,7 +172,7 @@ class LogScheduler extends Database
     }
     // -------------------------------------------------------------------------
     
-    public static function countAll($start = null, $end = null) {
+    public static function countAll($start = null, $end = null, $keyword = null) {
             
         $sql = "SELECT count(*) as count FROM `". self::tableName ."`";    
         
@@ -181,6 +185,10 @@ class LogScheduler extends Database
         if (!empty($end)) {
             $end = mysql_escape_string($end . ' 23:59:59');
             $wheres[] = " `create_time` <= '$end' ";
+        }
+        
+        if (!empty($keyword)) {
+            $wheres[] = " `leads` like '%$keyword%' ";
         }
         
         if (!empty($wheres)) {

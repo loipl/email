@@ -11,6 +11,7 @@ class Engine_Scheduler
     protected $cronIdentifier;
     protected $suppressionList;
     protected $stackingDelay;
+    protected $throttles;
     
     public function __construct($email = NULL, $campaignId = NULL, $cronIdentifier = NULL)
     {
@@ -24,7 +25,8 @@ class Engine_Scheduler
         LogScheduler::addAttributes(array('scheduler_name' => $this->cronIdentifier));
         
         $this->stackingDelay = Queue_Send::getExistStackingDelayByTLD();
-
+        $this->throttles = Throttle::getAllThrottles();
+        
         if (empty($email) && empty($campaignId)) {
             $this->setupCampaign();
             $this->setupLeads();
@@ -46,7 +48,7 @@ class Engine_Scheduler
         Engine_Scheduler_Channels::pushChannelsToBuildQueue($this->leads);
 
         $this->removeBlankRecordsFromBuildQueue($this->leads);
-        $this->moveRecordsFromBuildQueueToSendQueue($this->leads, $this->stackingDelay);
+        $this->moveRecordsFromBuildQueueToSendQueue($this->leads, $this->stackingDelay, $this->throttles);
         
         LogScheduler::save();
         LogScheduler::reset();
@@ -156,7 +158,7 @@ class Engine_Scheduler
                 }
                 
                 if (!empty($domain)) {
-                    $delaySeconds = $this->getDelaySeconds($lead['email'], $domain);
+                    $delaySeconds = $this->getDelaySeconds($lead['email'], $domain, $this->throttles);
                     
                     // add stacking delay if exist
                     if (!empty($delaySeconds) && !empty($stackingDelay[$domain])) {
@@ -275,7 +277,7 @@ class Engine_Scheduler
     //--------------------------------------------------------------------------
 
 
-    public static function moveRecordsFromBuildQueueToSendQueue($leads, $stackingDelay)
+    public static function moveRecordsFromBuildQueueToSendQueue($leads, $stackingDelay, $throttles)
     {
         if (empty($leads) || !is_array($leads)) {
             return false;
@@ -299,7 +301,7 @@ class Engine_Scheduler
                 continue;
             }
             
-            $delaySeconds = Engine_Scheduler::getDelaySeconds($email, $domain, $record->getChannel());
+            $delaySeconds = Engine_Scheduler::getDelaySeconds($email, $domain, $throttles, $record->getChannel());
 
             // add stacking delay if exist
             if (!empty($delaySeconds) && !empty($stackingDelay[$domain])) {
@@ -361,15 +363,15 @@ class Engine_Scheduler
     //--------------------------------------------------------------------------
     
     
-    public static function getDelaySeconds($email, $domain, $channel = null) {
+    public static function getDelaySeconds($email, $domain, $throttles, $channel = null) {
         
         if (!empty($domain)) {
-            $throttlesByDomain = Throttle::getThrottlesByDomain($domain, $channel);
+            $throttlesByDomain = Throttle::getThrottlesByDomain($throttles, $domain, $channel);
             
             $tldGroup = TldList::getTldGroupByDomain($domain);
 
             if (!empty($tldGroup)) {
-                $throttlesByTldGroup = Throttle::getThrottlesByTldGroup($tldGroup, $channel);
+                $throttlesByTldGroup = Throttle::getThrottlesByTldGroup($throttles, $tldGroup, $channel);
             }
         }
         
@@ -377,7 +379,7 @@ class Engine_Scheduler
         $sourceCampaign = $lead->getCampaign();
         
         if (!empty($sourceCampaign)) {
-            $throttlesBySourceCampaign = Throttle::getThrottlesBySourceCampaign($sourceCampaign, $channel);
+            $throttlesBySourceCampaign = Throttle::getThrottlesBySourceCampaign($throttles, $sourceCampaign, $channel);
         }
         
         $delaySeconds = 0;
@@ -402,10 +404,10 @@ class Engine_Scheduler
     //--------------------------------------------------------------------------
     
     
-    public static function addDelaySecondByThrottles($throttles, &$delaySecond)
+    public static function addDelaySecondByThrottles($matchedThrottles, &$delaySecond)
     {
-        foreach ($throttles as $record) {
-            $throttleType = (int) $record['type'];
+        foreach ($matchedThrottles as $type) {
+            $throttleType = (int) $type;
 
             switch ($throttleType) {
                 case Config::TRANSACTION_TYPE_COMPLAINT:

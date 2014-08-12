@@ -88,8 +88,11 @@ class TestThrottle extends UnitTestCase
             2 => array('build_queue_id' => '3')
         );
         
+        // all throttles
+        $throttles = Throttle::getAllThrottles();
+        
         $startTime = $startTime = time();
-        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads, array());
+        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads, array(), $throttles);
         $send = new Queue_Send(1);
         $delayUntil = $send->getDelayUntil();
         
@@ -186,8 +189,11 @@ class TestThrottle extends UnitTestCase
             2 => array('build_queue_id' => '3')
         );
         
+        // all throttles
+        $throttles = Throttle::getAllThrottles();
+        
         $startTime = time();
-        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads, array());
+        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads, array(), $throttles);
         $send = new Queue_Send(1);
         $delayUntil = $send->getDelayUntil();
         
@@ -285,8 +291,11 @@ class TestThrottle extends UnitTestCase
             2 => array('build_queue_id' => '3')
         );
         
+        // all throttles
+        $throttles = Throttle::getAllThrottles();
+        
         $startTime = date('Y-m-d H:i:s');
-        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads, array());
+        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads, array(), $throttles);
         
         $queueSends = Queue_Send::getUnlockedRowIds(1000);
         
@@ -402,8 +411,11 @@ class TestThrottle extends UnitTestCase
             2 => array('build_queue_id' => '3')
         );
         
+        // all throttles
+        $throttles = Throttle::getAllThrottles();
+        
         $startTime = $startTime = time();
-        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads, array());
+        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads, array(), $throttles);
         $send = new Queue_Send(1);
         $delayUntil = $send->getDelayUntil();
         
@@ -537,6 +549,9 @@ class TestThrottle extends UnitTestCase
         // calculate stacking delay
         $stackingDelay = Queue_Send::getExistStackingDelayByTLD();
         
+        // all throttles
+        $throttles = Throttle::getAllThrottles();
+        
         // execute function
         $leads = array(
             0 => array('build_queue_id' => '1'),
@@ -545,7 +560,7 @@ class TestThrottle extends UnitTestCase
         );
         
         $startTime = time();
-        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads, $stackingDelay);
+        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads, $stackingDelay, $throttles);
         $send = new Queue_Send(2);
         $delayUntil = $send->getDelayUntil();
         
@@ -796,8 +811,11 @@ class TestThrottle extends UnitTestCase
             2 => array('build_queue_id' => '3')
         );
         
+        // all throttles
+        $throttles = Throttle::getAllThrottles();
+        
         $startTime = $startTime = time();
-        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads, array());
+        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads, array(), $throttles);
         $send = new Queue_Send(1);
         $delayUntil = $send->getDelayUntil();
         
@@ -914,8 +932,11 @@ class TestThrottle extends UnitTestCase
             2 => array('build_queue_id' => '3')
         );
         
+        // all throttles
+        $throttles = Throttle::getAllThrottles();
+        
         $startTime = $startTime = time();
-        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads, array());
+        Engine_Scheduler::moveRecordsFromBuildQueueToSendQueue($leads, array(), $throttles);
         $send = new Queue_Send(1);
         $delayUntil = $send->getDelayUntil();
         

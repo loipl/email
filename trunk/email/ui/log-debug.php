@@ -22,10 +22,35 @@ $pageTitle = 'Log Debug';
 $pageName = 'Log Debug';
 $pageDescription = 'View, search debug log';
 
-$logs = LogDebug::getAll($fromDate, $toDate, $searchWord, $currentPage);
-$countLog = LogDebug::countAll($fromDate, $toDate, $searchWord);
+$logs = getAllLog($apiBase, $params);
+$countLog = countAllLog($apiBase, $params);
 $pageSize = LogDebug::pageSize;
 $numOfPage = ceil($countLog/$pageSize);
+
+function getAllLog($apiBase, $params) {
+    $apiUrl = $apiBase . '?' . http_build_query($params);
+    $apiResponse = CurlHelper::request($apiUrl);
+    
+    if ($apiResponse['httpCode'] === 200) {
+        $content = json_decode($apiResponse['content'], true);
+        return $content['data']; 
+    } else {
+        return array();
+    }
+}
+
+function countAllLog($apiBase, $params) {
+    $params['action'] = 'count';
+    $apiUrl = $apiBase . '?' . http_build_query($params);
+    $apiResponse = CurlHelper::request($apiUrl);
+    
+    if ($apiResponse['httpCode'] === 200) {
+        $content = json_decode($apiResponse['content'], true);
+        return $content['data']; 
+    } else {
+        return 0;
+    }
+}
 ?>
 
 

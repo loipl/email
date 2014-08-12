@@ -1,11 +1,10 @@
 <?php
 
-class CurlHelper {
-    public function __construct() {
-        ;
-    }
-    
-    public static function request($url, $method = 'GET', $params = array()) {
+class CurlHelper
+{
+
+    public static function request($url, $method = 'GET', $params = array())
+    {
         $options = array(
             CURLOPT_URL				=> $url,
             CURLOPT_CUSTOMREQUEST   => $method,
@@ -15,7 +14,7 @@ class CurlHelper {
             CURLOPT_TIMEOUT			=> 60,
             CURLOPT_POSTFIELDS      => $params
         );
-        
+
         $ch = curl_init();
         curl_setopt_array($ch, $options);
         $content    = curl_exec($ch);
@@ -32,9 +31,3 @@ class CurlHelper {
         );
     }
 }
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-?>

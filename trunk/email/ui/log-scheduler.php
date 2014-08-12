@@ -17,6 +17,7 @@ $sortOrder = !empty($params['sort_order']) ? $params['sort_order'] : 'DESC';
 $currentPage = !empty($params['page']) ? $params['page'] : '1';
 $fromDate = !empty($params['from_date']) ? $params['from_date'] : date('Y-m-d', time() - 86400);
 $toDate = !empty($params['to_date']) ? $params['to_date'] : date('Y-m-d');
+$searchWord = !empty($params['search_word']) ? $params['search_word'] : "";
 
 $sortItems = array(
     'id' => 'Id',
@@ -84,23 +85,33 @@ $pageDescription = 'List of Log Scheduler';
         
         <!-- Filter bar -->
         <div class="filter_bar">  
-            <div class="filter_bar_element" >
-                Sort By: <?php echo Html::getHtmlForSelect($sortItems, $sortBy, 'sort_by')?>
+            <div>
+                <div class="filter_bar_element" >
+                    Sort By: <?php echo Html::getHtmlForSelect($sortItems, $sortBy, 'sort_by')?>
+                </div>
+                <div class="filter_bar_element">
+                    Sort Order: <?php echo Html::getHtmlForSelect($sortOrders, $sortOrder, 'sort_order')?>
+                </div>
+                    <div class="filter_bar_element">
+                   Search:
+                   <input id="search" value="<?php echo $searchWord;?>" placeholder="Enter email to search">
+               </div>
+               <div class="filter_bar_element">
+                   <button class="update_table">Update</button>
+               </div>
             </div>
-            <div class="filter_bar_element">
-                Sort Order: <?php echo Html::getHtmlForSelect($sortOrders, $sortOrder, 'sort_order')?>
+            <div>
+                <div class="filter_bar_element from_date">
+                    From:
+                    <input id="from_date" value="<?php echo $fromDate;?>">
+                </div>
+                <div class="filter_bar_element to_date">
+                    To:
+                    <input id="to_date" value="<?php echo $toDate;?>">
+                </div>
             </div>
-            <div class="filter_bar_element from_date">
-                From:
-                <input id="from_date" value="<?php echo $fromDate;?>">
-            </div>
-            <div class="filter_bar_element to_date">
-                To:
-                <input id="to_date" value="<?php echo $toDate;?>">
-            </div>
-            <div class="filter_bar_element">
-                <button class="update_table">Update</button>
-            </div>
+            
+           
         </div>
         
         <!-- Dynamic table -->
