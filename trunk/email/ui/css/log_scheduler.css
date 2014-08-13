@@ -36,7 +36,7 @@ table.log_table td.leads {
     margin-top: 20px;
 }
 .page_number.current {
-    background-color: #2e6e9e;
+    background-image: url(../images/ui/blueBtn.png);
 }
 button {
     cursor: pointer;

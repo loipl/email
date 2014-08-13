@@ -876,6 +876,8 @@ $(function() {
 	//===== Form elements styling =====//
 	
 	$("input:checkbox, input:radio, input:file").uniform();
+        
+        $('table.sortable thead th div').append('<span></span>');
 
 	
 });

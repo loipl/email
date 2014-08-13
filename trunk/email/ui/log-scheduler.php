@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(__FILE__) . '/../email.php';
+require_once 'api-call.php';
 authenticateUser();
 
 $params = array (
@@ -32,35 +33,10 @@ $sortOrders = array (
     'asc' => 'Asc'
 );
 
-$allLogs = getAllLog($apiBase, $params);
+$allLogs = getAllSchedulerLog($apiBase, $params);
 
-$countLog = countAllLog($apiBase, $params);
+$countLog = countAllSchedulerLog($apiBase, $params);
 $pageSize = LogScheduler::pageSize;
-
-function getAllLog($apiBase, $params) {
-    $apiUrl = $apiBase . '?' . http_build_query($params);
-    $apiResponse = CurlHelper::request($apiUrl);
-    
-    if ($apiResponse['httpCode'] === 200) {
-        $content = json_decode($apiResponse['content'], true);
-        return $content['data']; 
-    } else {
-        return array();
-    }
-}
-
-function countAllLog($apiBase, $params) {
-    $params['action'] = 'count';
-    $apiUrl = $apiBase . '?' . http_build_query($params);
-    $apiResponse = CurlHelper::request($apiUrl);
-    
-    if ($apiResponse['httpCode'] === 200) {
-        $content = json_decode($apiResponse['content'], true);
-        return $content['data']; 
-    } else {
-        return 0;
-    }
-}
 
 $numOfPage = ceil($countLog/$pageSize);
 
@@ -118,42 +94,42 @@ $pageDescription = 'List of Log Scheduler';
         <div class="widget">
             <div class="title"><img src="images/icons/dark/full2.png" alt="" class="titleIcon" /><h6><?php echo $pageName?></h6></div>                          
             <?php if (!empty($allLogs)): ?>
-            <table cellpadding="0" cellspacing="0" border="0" class="display sTable log_table">
+            <table cellpadding="0" cellspacing="0" border="0" class="display sTable log_table sortable">
                 <thead>
                     <tr>
-                        <th>
+                        <th><div>
                             Id
-                        </th>
-                        <th>
+                        </div></th>
+                        <th><div>
                             Scheduler Name
-                        </th>
-                        <th>
+                        </div></th>
+                        <th><div>
                             Eligible Campaign Count
-                        </th>
-                        <th>
+                        </div></th>
+                        <th><div>
                             Eligible Campaign Ids
-                        </th>
-                        <th>
+                        </div></th>
+                        <th><div>
                             Chosen Campaign Id
-                        </th>
-                        <th>
+                        </div></th>
+                        <th><div>
                             Chosen Campaign Attribute
-                        </th>
-                        <th>
+                        </div></th>
+                        <th><div>
                             Lead Count
-                        </th>
-                        <th>
+                        </div></th>
+                        <th><div>
                             Leads
-                        </th>
-                        <th>
+                        </div></th>
+                        <th><div>
                             Queued Count
-                        </th>
-                        <th>
+                        </div></th>
+                        <th><div>
                             Message
-                        </th>
-                        <th>
+                        </div></th>
+                        <th><div>
                             Create Time
-                        </th>
+                        </div></th>
                     </tr>
                 </thead>
 

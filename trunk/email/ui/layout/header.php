@@ -11,6 +11,8 @@
 <link href="css/creatives.css" rel="stylesheet" type="text/css" />
 <?php } elseif ($page === 'log_scheduler') {?>
 <link href="css/log_scheduler.css" rel="stylesheet" type="text/css" />
+<?php } elseif ($page === 'throttle') {?>
+<link href="css/log_scheduler.css" rel="stylesheet" type="text/css" />
 <?php } elseif ($page === 'log_debug') {?>
 <link href="css/log_debug.css" rel="stylesheet" type="text/css" />
 <?php } ?>
@@ -70,6 +72,8 @@
 <script type="text/javascript" src="js/creatives.js"></script>
 <?php } elseif ($page === 'log_scheduler') {?>
 <script type="text/javascript" src="js/log_scheduler.js"></script>
+<?php } elseif ($page === 'throttle') {?>
+<script type="text/javascript" src="js/throttle.js"></script>
 <?php } elseif ($page === 'log_debug') {?>
 <script type="text/javascript" src="js/log_debug.js"></script>
 <?php } elseif ($page === 'reporting' || $page === 'reporting_second') {?>

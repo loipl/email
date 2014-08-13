@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(__FILE__) . '/../email.php';
+require_once 'api-call.php';
 authenticateUser();
 
 $params = array (
@@ -22,35 +23,11 @@ $pageTitle = 'Log Debug';
 $pageName = 'Log Debug';
 $pageDescription = 'View, search debug log';
 
-$logs = getAllLog($apiBase, $params);
-$countLog = countAllLog($apiBase, $params);
+$logs = getAllDebugLog($apiBase, $params);
+$countLog = countAllDebugLog($apiBase, $params);
 $pageSize = LogDebug::pageSize;
 $numOfPage = ceil($countLog/$pageSize);
 
-function getAllLog($apiBase, $params) {
-    $apiUrl = $apiBase . '?' . http_build_query($params);
-    $apiResponse = CurlHelper::request($apiUrl);
-    
-    if ($apiResponse['httpCode'] === 200) {
-        $content = json_decode($apiResponse['content'], true);
-        return $content['data']; 
-    } else {
-        return array();
-    }
-}
-
-function countAllLog($apiBase, $params) {
-    $params['action'] = 'count';
-    $apiUrl = $apiBase . '?' . http_build_query($params);
-    $apiResponse = CurlHelper::request($apiUrl);
-    
-    if ($apiResponse['httpCode'] === 200) {
-        $content = json_decode($apiResponse['content'], true);
-        return $content['data']; 
-    } else {
-        return 0;
-    }
-}
 ?>
 
 
@@ -109,7 +86,9 @@ function countAllLog($apiBase, $params) {
             </tr>
             </thead>
             <tbody>
-                <?php foreach ($logs as $log): ?>
+                <?php 
+                if (!empty($logs)) :
+                    foreach ($logs as $log): ?>
                     <tr abbr="<?php echo $log['id']; ?>" class="campaign_row gradeA">
                         <td><?php echo $log['id']; ?></td>
                         <td><?php echo $log['datetime']; ?></td>
@@ -121,7 +100,9 @@ function countAllLog($apiBase, $params) {
                         </td>
                          
                     </tr>
-                <?php endforeach;?>
+                <?php 
+                    endforeach; 
+                endif;?>
             </tbody>
             </table>  
              <div class="paging_bar">

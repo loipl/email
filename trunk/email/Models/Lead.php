@@ -1273,14 +1273,16 @@ class Lead extends Database
     }
     //--------------------------------------------------------------------------
     
-    public static function deleteRecord($id) {
+    public static function deleteRecord($id) 
+    {
         $db = new Database;
         $sql = "DELETE FROM `" . self::tableName . "` WHERE `email` = '" . mysql_real_escape_string($id) . "';";
         return $db->query($sql);   
     }
     //--------------------------------------------------------------------------
     
-    public static function getLeadDataFromXml($xml) {
+    public static function getLeadDataFromXml($xml) 
+    {
         $parts = explode('@', $xml->lead->email[0]);
 
         $email = (string)$xml->lead->email[0];
@@ -1332,7 +1334,8 @@ class Lead extends Database
     }
     //--------------------------------------------------------------------------
     
-    public static function formatLead($lead, $format = 'xml') {
+    public static function formatLead($lead, $format = 'xml') 
+    {
         if ($format === 'xml') {
             $result = "";
             $result .= "<lead>\n";

@@ -13,6 +13,7 @@ class Throttle extends Database
 
     protected $tableName = 'throttles';
     const      tableName = 'throttles';
+    const      pageSize  = 50;
 
     public function __construct($id)
     {
@@ -251,5 +252,70 @@ class Throttle extends Database
         
         return array_unique($result);
     }
+    // -------------------------------------------------------------------------
+    
+    public static function getAll($start = null, $end = null, $page = '1', $sortBy = null, $sortOrder = null) 
+    {
+            
+        $sql = "SELECT * FROM `". self::tableName ."`";
+        
+        $wheres = array();
+        if (!empty($start)) {
+            $start = mysql_real_escape_string($start . ' 00:00:00');
+            $wheres[] = " `created` >= '$start' ";
+        }
+        
+        if (!empty($end)) {
+            $end = mysql_real_escape_string($end . ' 23:59:59');
+            $wheres[] = " `created` <= '$end' ";
+        }
+        
+        if (!empty($wheres)) {
+            $sql .= " WHERE" . implode('AND', $wheres);
+        }
+        
+        if (!empty($sortBy)) {
+            $sortBy = mysql_real_escape_string($sortBy);
+            $sortOrder = strtoupper($sortOrder) === 'ASC' ? 'ASC' : 'DESC';
+            $sql .= " ORDER BY `$sortBy` $sortOrder";
+        }
+        
+        $page = intval($page) > 0 ? intval($page) : 1;
+        $pageSize = self::pageSize;
+        $start = ($page - 1) * $pageSize;
+        $sql .= " LIMIT $start,$pageSize;";
+        $db = new Database;   
+        return $db->getArray($sql); 
+    }
     //--------------------------------------------------------------------------
+    
+    public static function countAll($start = null, $end = null) 
+    {
+            
+        $sql = "SELECT count(*) as count FROM `". self::tableName ."`";    
+        
+        $wheres = array();
+        if (!empty($start)) {
+            $start = mysql_real_escape_string($start . ' 00:00:00');
+            $wheres[] = " `created` >= '$start' ";
+        }
+        
+        if (!empty($end)) {
+            $end = mysql_real_escape_string($end . ' 23:59:59');
+            $wheres[] = " `created` <= '$end' ";
+        }
+        
+        if (!empty($wheres)) {
+            $sql .= " WHERE" . implode('AND', $wheres);
+        }
+        
+        $db = new Database;   
+        $dbData = $db->getArray($sql); 
+        if (empty($dbData)) {
+            return 0;
+        } else {
+            return intval($dbData[0]['count']);
+        }
+    }
+    // -------------------------------------------------------------------------
 }

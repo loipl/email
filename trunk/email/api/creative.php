@@ -49,6 +49,3 @@
             echo $responseHandler->responseError("Unknown request method");
             break;
     }
-    
-
-?>

@@ -5,19 +5,21 @@ class RequestHandler {
     
     private $_params;
     
-    public function __construct($name) {
+    public function __construct($name) 
+    {
         $this->_name = $name;
         $this->_params = array();
     }
     // -------------------------------------------------------------------------
     
-    public function addParams($key, $value) {
-
+    public function addParams($key, $value) 
+    {
         $this->_params[$key] = $value;
     }
     // -------------------------------------------------------------------------
     
-    public function getRequestParams() {
+    public function getRequestParams() 
+    {
         $result = $this->_params;
         $result += $_GET;
         $result += $_POST;
@@ -25,10 +27,9 @@ class RequestHandler {
     }
     // -------------------------------------------------------------------------
     
-    public function getRequestMethod() {
+    public function getRequestMethod() 
+    {
         return $_SERVER['REQUEST_METHOD'];
     }
     // -------------------------------------------------------------------------
 }
-
-?>

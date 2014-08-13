@@ -22,18 +22,19 @@ class LogDebug extends Database
     
     //--------------------------------------------------------------------------
     
-    public static function getAll($start = null, $end = null, $keyword = null, $page = '1') {
+    public static function getAll($start = null, $end = null, $keyword = null, $page = '1') 
+    {
             
         $sql = "SELECT * FROM `". self::tableName ."`";
         
         $wheres = array();
         if (!empty($start)) {
-            $start = mysql_escape_string($start . ' 00:00:00');
+            $start = mysql_real_escape_string($start . ' 00:00:00');
             $wheres[] = " `datetime` >= '$start' ";
         }
         
         if (!empty($end)) {
-            $end = mysql_escape_string($end . ' 23:59:59');
+            $end = mysql_real_escape_string($end . ' 23:59:59');
             $wheres[] = " `datetime` <= '$end' ";
         }
         
@@ -56,18 +57,19 @@ class LogDebug extends Database
     }
     // -------------------------------------------------------------------------
     
-    public static function countAll($start = null, $end = null, $keyword = null) {
+    public static function countAll($start = null, $end = null, $keyword = null) 
+    {
             
         $sql = "SELECT count(*) as count FROM `". self::tableName ."`";    
         
          $wheres = array();
         if (!empty($start)) {
-            $start = mysql_escape_string($start . ' 00:00:00');
+            $start = mysql_real_escape_string($start . ' 00:00:00');
             $wheres[] = " `datetime` >= '$start' ";
         }
         
         if (!empty($end)) {
-            $end = mysql_escape_string($end . ' 23:59:59');
+            $end = mysql_real_escape_string($end . ' 23:59:59');
             $wheres[] = " `datetime` <= '$end' ";
         }
         

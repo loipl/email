@@ -22,7 +22,7 @@ table.log_table th, table.log_table td, table.log_table button {
     margin-top: 20px;
 }
 .page_number.current {
-    background-color: #2e6e9e;
+    background-image: url(../images/ui/blueBtn.png);
 }
 button {
     cursor: pointer;

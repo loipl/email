@@ -4,11 +4,6 @@ class ResponseHandler {
 
     const STATUS_SUCCESS = '1';
     const STATUS_FAILURE = '0';
-
-    public function __construct() {
-        
-    }
-    // -------------------------------------------------------------------------
     
     public function responseArray($array) {
         $result = array(
@@ -51,9 +46,3 @@ class ResponseHandler {
     // -------------------------------------------------------------------------
 
 }
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-?>

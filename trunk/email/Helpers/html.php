@@ -170,7 +170,8 @@ class HTML
     }
     //--------------------------------------------------------------------------
     
-    public static function getHtmlForCampaignAttributes($attributes) {
+    public static function getHtmlForCampaignAttributes($attributes) 
+    {
         
         $allAttributes = self::getCampaignAttributeDescription();
         
@@ -227,7 +228,8 @@ class HTML
     }
     //--------------------------------------------------------------------------
     
-    public static function getHtmlForSelect($options, $value, $class = null) {
+    public static function getHtmlForSelect($options, $value, $class = null) 
+    {
         $html = '<select class="' . $class .'">';
         foreach ($options as $optionValue => $optionText) {
             if ($optionValue == $value) {
@@ -243,7 +245,8 @@ class HTML
     }
     //--------------------------------------------------------------------------
     
-    public static function getHtmlForPaging($numberOfPage, $pageNumber) {
+    public static function getHtmlForPaging($numberOfPage, $pageNumber) 
+    {
         $displayPages = array($pageNumber - 2, $pageNumber - 1, $pageNumber, $pageNumber + 1, $pageNumber + 2);
         foreach ($displayPages as $key => $value) {
             if ($value <= 0 || $value > $numberOfPage) {
@@ -267,7 +270,8 @@ class HTML
     }
 
     //--------------------------------------------------------------------------
-    public static function getCampaignAttributeDescription() {
+    public static function getCampaignAttributeDescription() 
+    {
         return array (
             'categoryId' => array (
                 'type' => 'number', 'default' => null

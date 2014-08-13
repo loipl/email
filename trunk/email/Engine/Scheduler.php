@@ -13,7 +13,7 @@ class Engine_Scheduler
     protected $stackingDelay;
     protected $throttles;
     
-    public function __construct($email = NULL, $campaignId = NULL, $cronIdentifier = NULL)
+    public function __construct($email = null, $campaignId = null, $cronIdentifier = null)
     {
         if (!empty($cronIdentifier)) {
             $this->cronIdentifier = $cronIdentifier;
@@ -48,7 +48,7 @@ class Engine_Scheduler
         Engine_Scheduler_Channels::pushChannelsToBuildQueue($this->leads);
 
         $this->removeBlankRecordsFromBuildQueue($this->leads);
-        $this->moveRecordsFromBuildQueueToSendQueue($this->leads, $this->stackingDelay, $this->throttles);
+        $this->moveRecordsFromBuildQueueToSendQueue($this->leads, $this->stackingDelay, $this->throttles, $email);
         
         LogScheduler::save();
         LogScheduler::reset();
@@ -76,7 +76,7 @@ class Engine_Scheduler
     //--------------------------------------------------------------------------
 
 
-    private function setupCampaign($campaignId = NULL)
+    private function setupCampaign($campaignId = null)
     {
         if (empty($campaignId)) {
             $this->campaignId = Engine_Scheduler_Leads::getRandomCampaignToProcess();
@@ -106,7 +106,7 @@ class Engine_Scheduler
     //--------------------------------------------------------------------------
 
 
-    private function setupLeads($email = NULL)
+    private function setupLeads($email = null)
     {
         if (empty($email)) {
             if (isset($this->suppressionList) && !empty($this->suppressionList)) {
@@ -118,10 +118,12 @@ class Engine_Scheduler
             $this->leads[] = array('email'  => $email);
         }
         
-        $this->removeExceedingThrottleThresholdLeads($this->leads);
-        
+        if (empty($email)) {
+            $this->removeExceedingThrottleThresholdLeads($this->leads);
+        }
+
         if (empty($this->leads)) {
-            Probability::addRecord('1', $this->campaignId, '2', '100', NULL, NULL, 1800);
+            Probability::addRecord('1', $this->campaignId, '2', '100', null, null, 1800);
 
             self::exitProcess('No Leads to Process');
         }
@@ -205,7 +207,7 @@ class Engine_Scheduler
 
     private function assignCreativesToLeads(&$leads, $creativeIds)
     {
-        foreach ($leads AS &$lead) {
+        foreach ($leads as &$lead) {
             $lead['creative_id'] = Random::getRandomCreativeId($creativeIds);
         }
 
@@ -224,7 +226,7 @@ class Engine_Scheduler
             return false;
         }
 
-        foreach($leads AS &$lead) {
+        foreach ($leads as &$lead) {
             $lead['sub_id'] = Activity::addActivity($lead['email'], $campaignId);
         }
 
@@ -239,7 +241,7 @@ class Engine_Scheduler
             return false;
         }
 
-        foreach($leads AS $lead) {
+        foreach ($leads as $lead) {
             Queue_Build::addSubId($lead['build_queue_id'], $lead['sub_id']);
         }
 
@@ -255,7 +257,7 @@ class Engine_Scheduler
         $blankCount = 0;
 
         if (!empty($blankRecords)) {
-            foreach($blankRecords AS $record) {
+            foreach ($blankRecords as $record) {
                 Queue_Build::removeRecordById($record['id']);
                 Activity::removeActivity($record['sub_id']);
                 Lead::removeLock($record['email']);
@@ -269,7 +271,7 @@ class Engine_Scheduler
         }
 
         if (count($leads) == $blankCount) {
-            Probability::addRecord('1', $this->campaignId, '2', '100', NULL, NULL, 1800);
+            Probability::addRecord('1', $this->campaignId, '2', '100', null, null, 1800);
         }
 
         return true;
@@ -277,7 +279,7 @@ class Engine_Scheduler
     //--------------------------------------------------------------------------
 
 
-    public static function moveRecordsFromBuildQueueToSendQueue($leads, $stackingDelay, $throttles)
+    public static function moveRecordsFromBuildQueueToSendQueue($leads, $stackingDelay, $throttles, $transactionlEmail = null)
     {
         if (empty($leads) || !is_array($leads)) {
             return false;
@@ -285,7 +287,7 @@ class Engine_Scheduler
         
         $sendQueueCount = 0;
 
-        foreach($leads AS $lead) {
+        foreach ($leads as $lead) {
             $record = new Queue_Build($lead['build_queue_id']);
             $email = $record->getEmail();
             
@@ -325,10 +327,16 @@ class Engine_Scheduler
                 }
             }
             
+            // log records that delay second >= threshold
             if ($delaySeconds >= Config::THRESHOLD_DELAY_SECONDS) {
-                Logging::logDebugging('FAILED in later check', $email . ' - ' . $delaySeconds);
+                $description = 'FAILED in later check';
+                
+                if (!empty($transactionlEmail)) {
+                    $description .= ' - Transactional Email';
+                }
+                Logging::logDebugging($description, $email . ' - ' . $delaySeconds);
             }
-            
+
             // if the lead have assigned creative, send it to queue_send
             if ($record->getHtmlBody() != '' || $record->getTextBody() != '') {
 
@@ -361,10 +369,10 @@ class Engine_Scheduler
         return true;
     }
     //--------------------------------------------------------------------------
-    
-    
-    public static function getDelaySeconds($email, $domain, $throttles, $channel = null) {
-        
+
+
+    public static function getDelaySeconds($email, $domain, $throttles, $channel = null)
+    {
         if (!empty($domain)) {
             $throttlesByDomain = Throttle::getThrottlesByDomain($throttles, $domain, $channel);
             

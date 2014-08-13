@@ -9,7 +9,8 @@ class Mailgun extends ESP
     }
     //--------------------------------------------------------------------------
 
-    public function getAuthenticationKey() {
+    public function getAuthenticationKey() 
+    {
         return 'api:' . $this->getApiKey();
     }
 
@@ -90,22 +91,26 @@ class Mailgun extends ESP
     }
     //--------------------------------------------------------------------------
 
-    public function getSentMessages() {
+    public function getSentMessages() 
+    {
         return $this->report('log');
     }
     //--------------------------------------------------------------------------
     
-    public function getUnsubscribeMessages() {
+    public function getUnsubscribeMessages() 
+    {
         return $this->report('unsubscribes');
     }
     //--------------------------------------------------------------------------
     
-    public function getSpamMessages() {
+    public function getSpamMessages() 
+    {
         return $this->report('complaints');
     }
     //--------------------------------------------------------------------------
     
-    public function getBounceMessages() {
+    public function getBounceMessages() 
+    {
         return $this->report('bounces');
     }
     //--------------------------------------------------------------------------
@@ -140,5 +145,4 @@ class Mailgun extends ESP
     }
     //--------------------------------------------------------------------------
 
-    
 }

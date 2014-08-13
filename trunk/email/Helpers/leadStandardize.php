@@ -2,7 +2,8 @@
 
 class LeadStandardize
 {
-    public static function getGenderCode($gender) {
+    public static function getGenderCode($gender) 
+    {
         $stdGender = strtoupper(trim($gender));
         switch ($stdGender) {
             case 'MALE':
@@ -20,7 +21,8 @@ class LeadStandardize
         }
     }
     
-    public static function getCountryCode($countryName) {
+    public static function getCountryCode($countryName) 
+    {
         
         if (empty($countryName)) {
             return "";

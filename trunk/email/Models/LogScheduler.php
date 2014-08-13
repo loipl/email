@@ -72,7 +72,8 @@ class LogScheduler extends Database
     }
     //--------------------------------------------------------------------------
 
-    public static function updateById ($id, $attributes) {
+    public static function updateById ($id, $attributes) 
+    {
         if (empty($id) || !is_array($attributes)) {
             return false;
         }
@@ -92,33 +93,36 @@ class LogScheduler extends Database
             if (empty($value)) {
                 $sql .= " `$key` = null,";
             } else {
-                $sql .= " `$key` = '". mysql_escape_string($value) ."',";
+                $sql .= " `$key` = '". mysql_real_escape_string($value) ."',";
             } 
         }
         $sql = rtrim($sql, ',');
         
-        $sql .= " WHERE `id` = '" . mysql_escape_string($id) . "';";
+        $sql .= " WHERE `id` = '" . mysql_real_escape_string($id) . "';";
         
         $db = new Database;   
         return $db->query($sql);     
     }  
     //--------------------------------------------------------------------------
     
-    public static function getById ($id) {   
+    public static function getById ($id) 
+    {   
         
-        $sql  = "SELECT * FROM `". self::tableName ."` WHERE `id` = '" . mysql_escape_string($id) . "';";
+        $sql  = "SELECT * FROM `". self::tableName ."` WHERE `id` = '" . mysql_real_escape_string($id) . "';";
         
         $db = new Database;   
         return $db->getArray($sql);     
     }  
     //--------------------------------------------------------------------------
     
-    public static function getId () {     
+    public static function getId () 
+    {     
         return self::$id;   
     }  
     //--------------------------------------------------------------------------
     
-    public static function getLeadsToLog ($leads, $limit = self::leadLogLimit) {     
+    public static function getLeadsToLog ($leads, $limit = self::leadLogLimit) 
+    {     
         $result = array();
         $count = 0;
         foreach ($leads as $lead) {
@@ -134,18 +138,19 @@ class LogScheduler extends Database
     }  
     //--------------------------------------------------------------------------
     
-    public static function getAll($start = null, $end = null, $keyword = null, $page = '1', $sortBy = null, $sortOrder = null) {
+    public static function getAll($start = null, $end = null, $keyword = null, $page = '1', $sortBy = null, $sortOrder = null) 
+    {
             
         $sql = "SELECT * FROM `". self::tableName ."`";
         
         $wheres = array();
         if (!empty($start)) {
-            $start = mysql_escape_string($start . ' 00:00:00');
+            $start = mysql_real_escape_string($start . ' 00:00:00');
             $wheres[] = " `create_time` >= '$start' ";
         }
         
         if (!empty($end)) {
-            $end = mysql_escape_string($end . ' 23:59:59');
+            $end = mysql_real_escape_string($end . ' 23:59:59');
             $wheres[] = " `create_time` <= '$end' ";
         }
         
@@ -158,7 +163,7 @@ class LogScheduler extends Database
         }
         
         if (!empty($sortBy)) {
-            $sortBy = mysql_escape_string($sortBy);
+            $sortBy = mysql_real_escape_string($sortBy);
             $sortOrder = strtoupper($sortOrder) === 'ASC' ? 'ASC' : 'DESC';
             $sql .= " ORDER BY `$sortBy` $sortOrder";
         }
@@ -172,18 +177,19 @@ class LogScheduler extends Database
     }
     // -------------------------------------------------------------------------
     
-    public static function countAll($start = null, $end = null, $keyword = null) {
+    public static function countAll($start = null, $end = null, $keyword = null) 
+    {
             
         $sql = "SELECT count(*) as count FROM `". self::tableName ."`";    
         
         $wheres = array();
         if (!empty($start)) {
-            $start = mysql_escape_string($start . ' 00:00:00');
+            $start = mysql_real_escape_string($start . ' 00:00:00');
             $wheres[] = " `create_time` >= '$start' ";
         }
         
         if (!empty($end)) {
-            $end = mysql_escape_string($end . ' 23:59:59');
+            $end = mysql_real_escape_string($end . ' 23:59:59');
             $wheres[] = " `create_time` <= '$end' ";
         }
         
@@ -203,8 +209,10 @@ class LogScheduler extends Database
             return intval($dbData[0]['count']);
         }
     }
+    
     // -------------------------------------------------------------------------
-    public static function formatLog($logs) {
+    public static function formatLog($logs) 
+    {
         foreach ($logs as $index => $log) {
             $logs[$index]['eligible_campaign_ids'] = unserialize($log['eligible_campaign_ids']);
             $logs[$index]['chosen_campaign_attribute'] = unserialize($log['chosen_campaign_attribute']);

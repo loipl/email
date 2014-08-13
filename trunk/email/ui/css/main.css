@@ -459,7 +459,7 @@ ul.sub li ul li { padding-left: 10px; }
 .statsRow { background: url(../images/backgrounds/titleRowBg.png); }
 .statsItems { padding: 20px 0 14px 0; overflow: visible; text-align: center; }
 
-.sItem { width: /*15%*/; margin: 0 1%; display: inline-block; border: 1px solid #d5d5d5; position: relative; background: #eee url(../images/backgrounds/stats.png) repeat-x; }
+.sItem { /*width: 15%;*/ margin: 0 1%; display: inline-block; border: 1px solid #d5d5d5; position: relative; background: #eee url(../images/backgrounds/stats.png) repeat-x; }
 .sItem:first-child {  }
 .sItem > span { display: block; color: #626262;  }
 .sItem > h2 { float: left; }
@@ -842,7 +842,7 @@ html ul.tabs li.activeTab a { color: #2E6B9B; }
 .pLinks { float: right; width: 12px; margin-left: 5px; }
 .pInfo i { display: block; }
 .pLinks a { margin-top: 10px; display: block; }
-.pLinks a:first-child { margin-top: 3px; }.
+.pLinks a:first-child { margin-top: 3px; }
 
 
 /* New updates widget */
@@ -945,6 +945,11 @@ table thead td.sortCol > div { cursor: pointer; position: relative; }
 table thead td span { background: url(../images/icons/sort.png) no-repeat 0; display: block; position: absolute; right: 3px; top: 2px; width: 16px; height: 16px; }
 table thead td.headerSortUp span { background: url(../images/icons/sortUp.png) no-repeat 0; }
 table thead td.headerSortDown span { background: url(../images/icons/sortDown.png) no-repeat 0; }
+
+table.sortable thead th div {float: left;}
+table.sortable thead th span { background: url(../images/icons/sort.png) no-repeat 0; display: inline-block; position: relative; left: 3px; top: 2px; width: 10px; height: 16px; }
+table.sortable thead th.headerSortUp span { background: url(../images/icons/sortUp.png) no-repeat 0; }
+table.sortable thead th.headerSortDown span { background: url(../images/icons/sortDown.png) no-repeat 0; }
 
 .sTable thead td a { color: #878787; }
 .sTable thead td:first-child { border-left: none; }

@@ -24,7 +24,13 @@ class ImpressionWise extends Hygiene
     public function getDecision()
     {
         $parsedData = $this->getParsedResponse();
-
+        
+        if (empty($parsedData['result'])) {
+            Logging::logDebugging('Empty response result - ImpressionWise Reached Default Switch-State', serialize($this->getParsedResponse()));
+            Logging::logImpressionWiseResult('TIMEOUT');
+            return 'retry';
+        }
+        
         switch (strtoupper($parsedData['result'])) {
             case "CERTDOM" :
                 Logging::logImpressionWiseResult('CERTDOM');
