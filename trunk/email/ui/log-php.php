@@ -11,17 +11,17 @@ $params = array (
 $params += $_GET;
 
 $requestUrl = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-$apiBase = preg_replace('/\/ui\/.*$/', '/api/log-debug.php', $requestUrl);
+$apiBase = preg_replace('/\/ui\/.*$/', '/api/log-php.php', $requestUrl);
 
 $currentPage = !empty($params['page']) ? $params['page'] : '1';
 $fromDate = !empty($params['from_date']) ? $params['from_date'] : date('Y-m-d', time() - 86400);
 $toDate = !empty($params['to_date']) ? $params['to_date'] : date('Y-m-d');
 $searchWord = !empty($params['search_word']) ? $params['search_word'] : "";
 
-$page = 'log_debug';
-$pageTitle = 'Log Debug';
-$pageName = 'Log Debug';
-$pageDescription = 'View, search debug log';
+$page = 'log_php';
+$pageTitle = 'Log PHP';
+$pageName = 'Log PHP';
+$pageDescription = 'View, search PHP error log';
 
 $logs = getAllRecords($apiBase, $params);
 $countLog = countAllRecords($apiBase, $params);
@@ -60,6 +60,9 @@ $numOfPage = ceil($countLog/$pageSize);
                 <input id="search" value="<?php echo $searchWord;?>" placeholder="Enter word to search">
             </div>
             <div class="filter_bar_element">
+                <input id="group_result" type="checkbox" name="group_result" <?php if (isset($_GET['group_result']) && (int) $_GET['group_result'] === 1) {echo 'checked = "checked"';}?>> &nbsp; Group result
+            </div>
+            <div class="filter_bar_element">
                 <button class="update_table">Update</button>
             </div>
         </div>
@@ -77,12 +80,17 @@ $numOfPage = ceil($countLog/$pageSize);
                     Time
                 </th>
                 <th>
+                    Error Number
+                </th>
+                <th>
                     Description
                 </th>
                 <th>
-                    Data
+                    File
                 </th>
-                
+                <th>
+                    Line
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -92,13 +100,14 @@ $numOfPage = ceil($countLog/$pageSize);
                     <tr abbr="<?php echo $log['id']; ?>" class="campaign_row gradeA">
                         <td><?php echo $log['id']; ?></td>
                         <td><?php echo $log['datetime']; ?></td>
-                        <td><?php echo $log['description']; ?></td>
+                        <td><?php echo $log['error_number']; ?></td>
                         <td>
-                            <div class="debug_data">
-                                <textarea disabled><?php echo $log['data']; ?></textarea>
+                            <div class="error_string">
+                                <textarea disabled><?php echo $log['error_string']; ?></textarea>
                             </div> 
                         </td>
-                         
+                        <td><?php echo $log['error_file']; ?></td>
+                        <td><?php echo $log['error_line']; ?></td>
                     </tr>
                 <?php 
                     endforeach; 

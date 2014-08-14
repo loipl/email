@@ -34,9 +34,9 @@ $sortOrders = array (
     'asc' => 'Asc'
 );
 
-$allThrottles = getAllThrottle($apiBase, $params);
+$allThrottles = getAllRecords($apiBase, $params);
 
-$countThrottle = countAllThrottle($apiBase, $params);
+$countThrottle = countAllRecords($apiBase, $params);
 $pageSize = Throttle::pageSize;
 
 

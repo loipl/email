@@ -13,6 +13,7 @@ class Mailgun extends ESP
     {
         return 'api:' . $this->getApiKey();
     }
+    //--------------------------------------------------------------------------
 
     public function getName()
     {

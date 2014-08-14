@@ -1,6 +1,6 @@
 <?php
 
-class LogDebug extends Database
+class LogPhp extends Database
 {
 
     // id of processing record
@@ -11,17 +11,20 @@ class LogDebug extends Database
     protected static $tableFields = array (
                                         'id', 
                                         'date_time', 
-                                        'description', 
-                                        'data'
+                                        'error_number', 
+                                        'error_string',
+                                        'error_file',
+                                        'error_line'
                                     );
     
-    const tableName = 'error_log_debug';
+    const tableName = 'error_log_php';
     const pageSize = 20;
+    
 
     
     //--------------------------------------------------------------------------
     
-    public static function getAll($start = null, $end = null, $keyword = null, $page = '1') 
+    public static function getAll($start = null, $end = null, $keyword = null, $page = '1', $groupResult = null) 
     {
             
         $sql = "SELECT * FROM `". self::tableName ."`";
@@ -38,11 +41,15 @@ class LogDebug extends Database
         }
         
         if (!empty($keyword)) {
-            $wheres[] = " `description` like '%$keyword%' OR `data` like '%$keyword%' ";
+            $wheres[] = " `error_string` like '%$keyword%' ";
         }
         
         if (!empty($wheres)) {
             $sql .= " WHERE" . implode('AND', $wheres);
+        }
+        
+        if (!empty($groupResult) && intval($groupResult) === 1) {
+            $sql .= " GROUP BY `error_string`";
         }
         
         $sql .= " ORDER BY `id` DESC";
@@ -52,13 +59,13 @@ class LogDebug extends Database
         $start = ($page - 1) * $pageSize;
         $sql .= " LIMIT $start,$pageSize;";
         
-        $db = new Database;
+        $db = new Database;   
         
-        return $db->getArray($sql);
+        return $db->getArray($sql); 
     }
     // -------------------------------------------------------------------------
     
-    public static function countAll($start = null, $end = null, $keyword = null) 
+    public static function countAll($start = null, $end = null, $keyword = null, $groupResult = null) 
     {
             
         $sql = "SELECT count(*) as count FROM `". self::tableName ."`";    
@@ -75,11 +82,15 @@ class LogDebug extends Database
         }
         
         if (!empty($keyword)) {
-            $wheres[] = " `description` like '%$keyword%' OR `data` like '%$keyword%' ";
+            $wheres[] = " `error_string` like '%$keyword%' ";
         }
         
         if (!empty($wheres)) {
             $sql .= " WHERE" . implode('AND', $wheres);
+        }
+        
+        if (!empty($groupResult) && intval($groupResult) === 1) {
+            $sql .= " GROUP BY `error_string`";
         }
         
         $db = new Database;

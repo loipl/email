@@ -1,0 +1,47 @@
+/* 
+    Document   : log_php
+    Created on : Aug 13, 2014, 5:32:15 PM
+    Author     : loipl
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+.error_string textarea{
+     width: 300px;
+}
+
+table.log_table th, table.log_table td, table.log_table button {
+    vertical-align: middle;
+}
+
+.filter_bar_element {
+    float: left;
+    vertical-align: middle;
+}
+.filter_bar {
+    margin-top: 20px;
+}
+.page_number.current {
+    background-image: url(../images/ui/blueBtn.png);
+}
+button {
+    cursor: pointer;
+}
+.filter_bar {
+    display: inline-block;
+}
+
+.filter_bar div, .filter_bar button  {
+    margin-left:30px;
+}
+
+.paging_bar {
+    float: right;
+    margin-top: 2px;
+}
+

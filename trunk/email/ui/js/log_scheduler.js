@@ -6,7 +6,7 @@
 
 
 $(document).ready(function(){
-    
+     
     $('.show').click(function(){
         $(this).parent().find('table').show();
         $(this).parent().find('.show_hide').show();
@@ -31,13 +31,22 @@ $(document).ready(function(){
     $('.page_number').click(function(){
         var filters = getFilters();
         filters['page'] = $(this).val();
+        if (typeof sort_item !== 'undefined' && typeof sort_order !== 'undefined') {
+            filters.sort_by = sort_item;
+            filters.sort_order = sort_order;
+        }
+        refreshPage(filters);
+    })
+    
+    $('table.sortable thead th').click(function(){          
+        var filters = getFilters();
+        filters.sort_by = $(this).attr('abbr');
+        filters.sort_order = $(this).hasClass('desc') ? 'asc' : 'desc';
         refreshPage(filters);
     })
     
     function getFilters() {
         var result = {
-            sort_by: $('.sort_by').val(),
-            sort_order: $('.sort_order').val(),
             from_date: $('#from_date').val(),
             to_date: $('#to_date').val()
         }
@@ -61,5 +70,17 @@ $(document).ready(function(){
     
    $('.attributes input').attr('disabled','disabled');
    $('.attributes select').attr('disabled','disabled');
+   
+   
+   if (typeof sort_item !== 'undefined' && typeof sort_order !== 'undefined') {
+       var sortHeader = $('.sortable thead th[abbr=' + sort_item + ']');
+       if (sort_order === 'asc') {
+           sortHeader.addClass('asc');
+           sortHeader.find('span').addClass('sortUp');
+       } else {
+           sortHeader.addClass('desc');
+           sortHeader.find('span').addClass('sortDown');
+       }
+   }
     
 });

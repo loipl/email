@@ -33,9 +33,9 @@ $sortOrders = array (
     'asc' => 'Asc'
 );
 
-$allLogs = getAllSchedulerLog($apiBase, $params);
+$allLogs = getAllRecords($apiBase, $params);
 
-$countLog = countAllSchedulerLog($apiBase, $params);
+$countLog = countAllRecords($apiBase, $params);
 $pageSize = LogScheduler::pageSize;
 
 $numOfPage = ceil($countLog/$pageSize);
@@ -61,33 +61,21 @@ $pageDescription = 'List of Log Scheduler';
         
         <!-- Filter bar -->
         <div class="filter_bar">  
-            <div>
-                <div class="filter_bar_element" >
-                    Sort By: <?php echo Html::getHtmlForSelect($sortItems, $sortBy, 'sort_by')?>
-                </div>
-                <div class="filter_bar_element">
-                    Sort Order: <?php echo Html::getHtmlForSelect($sortOrders, $sortOrder, 'sort_order')?>
-                </div>
-                    <div class="filter_bar_element">
-                   Search:
-                   <input id="search" value="<?php echo $searchWord;?>" placeholder="Enter email to search">
-               </div>
-               <div class="filter_bar_element">
-                   <button class="update_table">Update</button>
-               </div>
+            <div class="filter_bar_element from_date">
+                From:
+                <input id="from_date" value="<?php echo $fromDate;?>">
             </div>
-            <div>
-                <div class="filter_bar_element from_date">
-                    From:
-                    <input id="from_date" value="<?php echo $fromDate;?>">
-                </div>
-                <div class="filter_bar_element to_date">
-                    To:
-                    <input id="to_date" value="<?php echo $toDate;?>">
-                </div>
+            <div class="filter_bar_element to_date">
+                To:
+                <input id="to_date" value="<?php echo $toDate;?>">
             </div>
-            
-           
+            <div class="filter_bar_element">
+               Search:
+               <input id="search" value="<?php echo $searchWord;?>" placeholder="Enter email to search">
+           </div>
+           <div class="filter_bar_element">
+               <button class="update_table">Update</button>
+           </div>
         </div>
         
         <!-- Dynamic table -->
@@ -97,37 +85,37 @@ $pageDescription = 'List of Log Scheduler';
             <table cellpadding="0" cellspacing="0" border="0" class="display sTable log_table sortable">
                 <thead>
                     <tr>
-                        <th><div>
+                        <th abbr="id"><div>
                             Id
                         </div></th>
-                        <th><div>
+                        <th abbr="scheduler_name"><div>
                             Scheduler Name
                         </div></th>
-                        <th><div>
+                        <th abbr="eligible_campaign_count"><div>
                             Eligible Campaign Count
                         </div></th>
-                        <th><div>
+                        <th abbr="eligible_campaign_ids"><div>
                             Eligible Campaign Ids
                         </div></th>
-                        <th><div>
+                        <th abbr="chosen_campaign_id"><div>
                             Chosen Campaign Id
                         </div></th>
-                        <th><div>
+                        <th abbr="chosen_campaign_attribute"><div>
                             Chosen Campaign Attribute
                         </div></th>
-                        <th><div>
+                        <th abbr="lead_count"><div>
                             Lead Count
                         </div></th>
-                        <th><div>
+                        <th abbr="leads"><div>
                             Leads
                         </div></th>
-                        <th><div>
+                        <th abbr="queued_lead_count"><div>
                             Queued Count
                         </div></th>
-                        <th><div>
+                        <th abbr="message"><div>
                             Message
                         </div></th>
-                        <th><div>
+                        <th abbr="create_time"><div>
                             Create Time
                         </div></th>
                     </tr>
@@ -219,5 +207,10 @@ $pageDescription = 'List of Log Scheduler';
     </div>
     
 </div>
+
+<script type="text/javascript">
+    var sort_item = <?php echo '"' . $sortBy . '"'; ?>;
+    var sort_order = <?php echo '"' . $sortOrder . '"'; ?>;
+</script>
 
 <?php include('layout/footer.php');?>

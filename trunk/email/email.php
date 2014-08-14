@@ -86,6 +86,7 @@ require_once dirname(__FILE__) . '/Models/Transaction.php';
 require_once dirname(__FILE__) . '/Models/Throttle.php';
 require_once dirname(__FILE__) . '/Models/LogScheduler.php';
 require_once dirname(__FILE__) . '/Models/LogDebug.php';
+require_once dirname(__FILE__) . '/Models/LogPhp.php';
 require_once dirname(__FILE__) . '/Models/User.php';
 
 require_once dirname(__FILE__) . '/Models/Suppression/Email.php';

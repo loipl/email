@@ -15,6 +15,8 @@
 <link href="css/log_scheduler.css" rel="stylesheet" type="text/css" />
 <?php } elseif ($page === 'log_debug') {?>
 <link href="css/log_debug.css" rel="stylesheet" type="text/css" />
+<?php } elseif ($page === 'log_php') {?>
+<link href="css/log_php.css" rel="stylesheet" type="text/css" />
 <?php } ?>
 <link href="css/colorbox.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
@@ -76,6 +78,8 @@
 <script type="text/javascript" src="js/throttle.js"></script>
 <?php } elseif ($page === 'log_debug') {?>
 <script type="text/javascript" src="js/log_debug.js"></script>
+<?php } elseif ($page === 'log_php') {?>
+<script type="text/javascript" src="js/log_php.js"></script>
 <?php } elseif ($page === 'reporting' || $page === 'reporting_second') {?>
 <link rel="stylesheet" type="text/css" href="css/style.css" />
 <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css" />

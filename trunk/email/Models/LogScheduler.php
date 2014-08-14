@@ -26,7 +26,7 @@ class LogScheduler extends Database
                                         'create_time'
                                     );
             
-    //--------------------------------------------------------------------------
+    
     public static function init($id = null)
     {
         
@@ -209,8 +209,8 @@ class LogScheduler extends Database
             return intval($dbData[0]['count']);
         }
     }
-    
     // -------------------------------------------------------------------------
+    
     public static function formatLog($logs) 
     {
         foreach ($logs as $index => $log) {

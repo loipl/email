@@ -948,8 +948,8 @@ table thead td.headerSortDown span { background: url(../images/icons/sortDown.pn
 
 table.sortable thead th div {float: left;}
 table.sortable thead th span { background: url(../images/icons/sort.png) no-repeat 0; display: inline-block; position: relative; left: 3px; top: 2px; width: 10px; height: 16px; }
-table.sortable thead th.headerSortUp span { background: url(../images/icons/sortUp.png) no-repeat 0; }
-table.sortable thead th.headerSortDown span { background: url(../images/icons/sortDown.png) no-repeat 0; }
+table.sortable thead th span.sortUp { background: url(../images/icons/sortUp.png) no-repeat 0; }
+table.sortable thead th span.sortDown { background: url(../images/icons/sortDown.png) no-repeat 0; }
 
 .sTable thead td a { color: #878787; }
 .sTable thead td:first-child { border-left: none; }
